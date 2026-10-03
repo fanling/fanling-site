@@ -1,0 +1,88 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Agentic Creativity · Ling Fan</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+SC:wght@500&display=swap"><style>
+/* Layout: a drawing set. Left-aligned sheets, mono sheet numbers, one blue accent for what Ling designed. */
+:root{--paper:#F5F6F3;--ink:#16191D;--muted:#5B636E;--rule:#C3C8CE;--accent:#2B4BC8;--tint:rgba(43,75,200,.06);
+--serif:'Newsreader',Georgia,'Times New Roman',serif;--sans:'IBM Plex Sans','Helvetica Neue',Arial,sans-serif;
+--mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;--cjk:'Noto Serif SC','Songti SC',serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#121418;--ink:#E7E9EC;--muted:#9AA2AD;--rule:#3A4049;--accent:#8EA2FF;--tint:rgba(142,162,255,.09);color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#121418;--ink:#E7E9EC;--muted:#9AA2AD;--rule:#3A4049;--accent:#8EA2FF;--tint:rgba(142,162,255,.09);color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6}
+.wrap{max-width:1120px;margin:0 auto;padding-inline:clamp(16px,4vw,40px);padding-block:0 64px}
+header.top{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:baseline;justify-content:space-between;padding-block:22px;border-bottom:1px solid var(--ink);margin-bottom:48px}
+.brand{font-family:var(--serif);font-size:22px;text-decoration:none;color:var(--ink)}
+.brand .zh{font-family:var(--cjk);font-size:17px;color:var(--muted);margin-left:6px}
+nav{display:flex;flex-wrap:wrap;gap:6px 20px}
+nav a{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:4px 0;border-bottom:1px solid transparent}
+nav a:hover,nav a[aria-current]{color:var(--ink);border-bottom-color:var(--accent)}
+a{color:inherit;text-decoration-color:var(--accent);text-underline-offset:3px}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.eyebrow b{color:var(--accent);font-weight:500}
+h1,h2,h3{font-family:var(--serif);font-weight:400;margin:0;text-wrap:balance}
+h1{font-size:clamp(40px,7vw,84px);line-height:1;letter-spacing:-.015em}
+h2{font-size:clamp(30px,4.4vw,48px);line-height:1.08}
+h3{font-size:22px;line-height:1.25}
+p{margin:0 0 14px;max-width:66ch}
+.lede{font-family:var(--serif);font-style:italic;font-size:clamp(21px,2.6vw,30px);line-height:1.3;max-width:34ch;margin:22px 0 0}
+section{margin-block:72px}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:clamp(24px,5vw,64px)}
+.split>*{min-width:0}
+@media (max-width:760px){.split{grid-template-columns:minmax(0,1fr)!important}}
+.worklist{border-top:1px solid var(--ink);margin-top:20px}
+.workrow{display:grid;grid-template-columns:90px minmax(0,1fr) minmax(0,1.2fr);gap:24px;padding-block:22px;border-bottom:1px solid var(--rule);text-decoration:none;color:inherit;align-items:start}
+.workrow:hover h3{color:var(--accent)}
+.workrow .n{font-family:var(--serif);font-size:44px;line-height:.9;color:var(--accent)}
+.workrow p{margin:0;color:var(--muted)}
+@media (max-width:760px){.workrow{grid-template-columns:56px minmax(0,1fr)}.workrow p{grid-column:2}.workrow .n{font-size:32px}}
+.num{font-family:var(--serif);font-size:clamp(90px,14vw,170px);line-height:.8;color:var(--accent)}
+.dia-box{overflow-x:auto;margin-block:28px;padding-block:8px}
+.dia-box svg{min-width:640px}
+dl.facts{border-top:1px solid var(--ink);margin:0}
+dl.facts div{display:grid;grid-template-columns:minmax(0,180px) minmax(0,1fr);gap:16px;border-bottom:1px solid var(--rule);padding-block:10px}
+dl.facts dt{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:3px}
+dl.facts dd{margin:0}
+@media (max-width:520px){dl.facts div{grid-template-columns:minmax(0,1fr);gap:2px}}
+.ph{border:1px dashed var(--accent);background:var(--tint);aspect-ratio:16/9;max-width:100%;display:flex;align-items:flex-end;padding:14px;font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.cols3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(24px,3vw,40px);margin-top:56px}.cols3>div{min-width:0}.wcard{display:block;border-top:1px solid var(--ink);padding-block:18px 28px;text-decoration:none;color:inherit}.wcard:hover h3{color:var(--accent)}.wcard .n{display:block;font-family:var(--serif);font-size:34px;line-height:1;color:var(--accent);margin-bottom:12px}.wcard .eyebrow{display:block;margin:8px 0 0;font-size:11px}.wcard p{margin:12px 0 0;color:var(--muted);font-size:15px}@media (max-width:900px){.cols3{grid-template-columns:minmax(0,1fr)}}.stile{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;background:#fff;border:1px solid var(--rule);padding:0;box-sizing:border-box}div.stile{padding:10px}div.stile svg{display:block;width:100%;height:100%}.series{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:48px 32px}@media (max-width:760px){.series{grid-template-columns:minmax(0,1fr)}}.book{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:clamp(20px,4vw,48px);border-top:1px solid var(--ink);padding-block:24px 40px}.book>img{display:block;width:100%;height:auto}@media (max-width:640px){.book{grid-template-columns:minmax(0,1fr)}.book>img{max-width:220px}}.gal{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.gal img{display:block;width:100%;height:auto;border:1px solid var(--rule)}.fig{margin:0}.fig img,.fig video{display:block;width:100%;height:auto;background:#fff;border:1px solid var(--rule)}.portrait{display:block;width:100%;aspect-ratio:4/5;object-fit:cover}.fig figcaption{font-size:13px;line-height:1.5;color:var(--muted);margin-top:10px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:24px}
+.grid4{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:24px}
+.todo{color:var(--accent);font-family:var(--mono);font-size:.82em;border-bottom:1px dashed var(--accent)}
+table{border-collapse:collapse;width:100%;font-size:15px;line-height:1.45}
+.tbl{overflow-x:auto}
+td{border-bottom:1px solid var(--rule);padding:12px 16px 12px 0;vertical-align:top}
+td.y{font-family:var(--mono);font-size:13px;color:var(--muted);white-space:nowrap;width:120px;font-variant-numeric:tabular-nums}
+td .sub{color:var(--muted)}
+.btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}.btns a{font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border:1px solid var(--ink);padding:10px 18px}.btns a:hover{border-color:var(--accent);color:var(--accent)}
+.talk{display:block;border:1px solid var(--ink);padding:22px;text-decoration:none;color:inherit;max-width:640px}
+.talk:hover{border-color:var(--accent)}
+.talk .go{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+footer{border-top:1px solid var(--ink);padding-top:14px;display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+.draft{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--accent);border:1px dashed var(--accent);padding:8px 12px;margin-bottom:28px;display:inline-block}
+@media (prefers-reduced-motion:no-preference){.workrow,.talk,nav a{transition:color .15s,border-color .15s}}
+
+.dia{width:100%;height:auto;display:block;font-family:var(--sans)}
+.dia.sm .h{font-size:18px}.dia.sm .b{font-size:16px}.dia.sm .q{font-size:15px}.dia.sm .m{font-size:12.5px}
+.dia .bx{fill:none;stroke:var(--ink);stroke-width:1.1}
+.dia .ac-b{stroke:var(--accent);stroke-width:1.8;fill:var(--tint)}
+.dia .ln{stroke:var(--ink);stroke-width:1.1}
+.dia .lq{stroke:var(--rule);stroke-width:1}
+.dia .dash{stroke-dasharray:4 4}
+.dia .mk{fill:var(--ink)}
+.dia .dot{fill:var(--ink)}
+.dia .dot-ac{fill:var(--accent)}
+.dia text{fill:var(--ink)}
+.dia .h{font-size:15px;font-weight:600}
+.dia .b{font-size:13px}
+.dia .q{font-size:12.5px;fill:var(--muted)}
+.dia .m{font-family:var(--mono);font-size:11px;letter-spacing:.08em;fill:var(--muted)}
+.dia .ac-t{fill:var(--accent)}
+.dia .big{font-family:var(--serif);font-size:30px}
+</style></head><body><div class="wrap"><header class="top"><a class="brand" href="../">Ling Fan<span class="zh">范凌</span></a><nav aria-label="Main"><a href="../works.html" aria-current="page">Work</a><a href="../news.html">News</a><a href="../talks.html">Talks</a><a href="../writing.html">Writing</a><a href="../about.html">About</a></nav></header>
+<main>
+<p class="eyebrow"><b>Work 03</b> · A long-horizon creative agent</p>
+<div class="split"><div><div class="num">03</div><h1 style="margin-top:24px;font-size:clamp(36px,5vw,60px)">Agentic Creativity</h1><p class="lede">Can an agent take part in the whole arc of creative work, and extend what a team can imagine rather than automate it?</p></div>
+<div style="padding-top:12px"><p>Most AI tools answer one prompt at a time. Product innovation is a long process: sensing what people want, framing an opportunity, generating and testing concepts, and carrying the result to market. Agentic creativity asks how autonomous agents can participate in, and extend, that creative act rather than merely automate parts of it.</p><p>The product-innovation agent, which runs inside atypica.AI, is designed for the whole horizon. Given a brief such as a new spring gift box, it asks the questions that set the bounds, studies what the company already learned and what people are saying, diverges with the Creative Reasoning Model, and tests each direction in parallel with Subjective World Model personas and interviews. It returns a recommendation in which every claim traces back to its evidence.</p><p>People stay in the loop: they set the bounds, approve the plan before costly work starts and make the final call. Every decision, including what was rejected and why, is written back to a graph of the organization's decisions, so the next project starts from it.</p><p>The design builds on the Lab's research on human-centered creativity with vision–language models and on multi-agent collaboration in design workflows, and it runs on Tezign's infrastructure of post-trained models, context systems and agent harnesses.</p></div></div>
+
+<section><p class="eyebrow">Structure</p><div class="dia-box"><svg class="dia" viewBox="0 0 1040 472" role="img" aria-label="A long-running agent carries a product-innovation project from brief to decision, with people setting bounds, approving and deciding" xmlns="http://www.w3.org/2000/svg"><defs><marker id="a-ag" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="mk"/></marker></defs><text x="30" y="18" class="m" text-anchor="start">ONE PRODUCT-INNOVATION PROJECT, FROM BRIEF TO DECISION</text><rect x="30" y="62" width="126" height="74" rx="3" class="bx"/><text x="93" y="86" class="h" text-anchor="middle">Brief</text><text x="93" y="106" class="q" text-anchor="middle">a question</text><text x="93" y="122" class="q" text-anchor="middle">arrives</text><path d="M157 99H168" class="ln" fill="none" marker-end="url(#a-ag)"/><rect x="170" y="62" width="126" height="74" rx="3" class="bx"/><text x="233" y="86" class="h" text-anchor="middle">Clarify</text><text x="233" y="106" class="q" text-anchor="middle">set the bounds</text><text x="233" y="122" class="q" text-anchor="middle">with people</text><path d="M297 99H308" class="ln" fill="none" marker-end="url(#a-ag)"/><path d="M233 138V178" class="lq dash" fill="none"/><circle cx="233" cy="186" r="7" class="dot"/><rect x="310" y="62" width="126" height="74" rx="3" class="bx"/><text x="373" y="86" class="h" text-anchor="middle">Research</text><text x="373" y="106" class="q" text-anchor="middle">past decisions,</text><text x="373" y="122" class="q" text-anchor="middle">public signals</text><path d="M437 99H448" class="ln" fill="none" marker-end="url(#a-ag)"/><rect x="450" y="62" width="126" height="74" rx="3" class="bx ac-b"/><text x="513" y="86" class="h" text-anchor="middle">Diverge</text><text x="513" y="106" class="q" text-anchor="middle">many directions</text><text x="513" y="122" class="q" text-anchor="middle">· Work 02</text><path d="M577 99H588" class="ln" fill="none" marker-end="url(#a-ag)"/><rect x="590" y="62" width="126" height="74" rx="3" class="bx"/><text x="653" y="86" class="h" text-anchor="middle">Confirm</text><text x="653" y="106" class="q" text-anchor="middle">a person</text><text x="653" y="122" class="q" text-anchor="middle">approves the plan</text><path d="M717 99H728" class="ln" fill="none" marker-end="url(#a-ag)"/><path d="M653 138V178" class="lq dash" fill="none"/><circle cx="653" cy="186" r="7" class="dot"/><rect x="730" y="62" width="126" height="74" rx="3" class="bx ac-b"/><text x="793" y="86" class="h" text-anchor="middle">Validate</text><text x="793" y="106" class="q" text-anchor="middle">personas and</text><text x="793" y="122" class="q" text-anchor="middle">interviews · Work 01</text><path d="M857 99H868" class="ln" fill="none" marker-end="url(#a-ag)"/><rect x="870" y="62" width="126" height="74" rx="3" class="bx"/><text x="933" y="86" class="h" text-anchor="middle">Report</text><text x="933" y="106" class="q" text-anchor="middle">every claim</text><text x="933" y="122" class="q" text-anchor="middle">with its evidence</text><path d="M933 138V178" class="lq dash" fill="none"/><circle cx="933" cy="186" r="7" class="dot"/><path d="M913 62V46H93V60" class="ln dash" fill="none" marker-end="url(#a-ag)"/><text x="503" y="40" class="q" text-anchor="middle">decisions, including what was rejected and why, written back for the next project</text><text x="30" y="214" class="m" text-anchor="start">PEOPLE SET THE BOUNDS, APPROVE THE PLAN AND MAKE THE CALL</text><rect x="30" y="232" width="980" height="222" rx="3" class="bx ac-b"/><text x="46" y="256" class="m ac-t" text-anchor="start">WORK 03 · ONE AGENT ACROSS THE WHOLE ARC</text><text x="46" y="280" class="h" text-anchor="start">A long-running, proactive product-innovation agent</text><rect x="46" y="300" width="948" height="40" rx="2" class="bx"/><text x="62" y="325" class="h" text-anchor="start">Agent harness</text><text x="220" y="325" class="b" text-anchor="start">runs many agents in parallel for hours; resumes after failure; every step can be replayed</text><rect x="46" y="350" width="948" height="40" rx="2" class="bx"/><text x="62" y="375" class="h" text-anchor="start">Decision graph</text><text x="220" y="375" class="b" text-anchor="start">the organization&#x27;s past decisions, which start new tasks and rule out rejected directions</text><rect x="46" y="400" width="948" height="40" rx="2" class="bx"/><text x="62" y="425" class="h" text-anchor="start">Models</text><text x="220" y="425" class="b" text-anchor="start">Subjective World Model (Work 01), Creative Reasoning Model (Work 02), and others</text></svg></div><dl class="facts"><div><dt>Used for</dt><dd>consumer insight, product innovation and marketing growth at Tezign</dd></div><div><dt>Runs in</dt><dd>atypica.AI, on Tezign's agent platform</dd></div><div><dt>Research</dt><dd>Aug-Creativity (HCII 2025); multi-agent collaborative design (HCII 2024)</dd></div><div><dt>Research line</dt><dd>Agentic Creativity, Design AI Lab</dd></div></dl></section>
+<section><p class="eyebrow">In use</p><div class="grid2"><figure class="fig"><img loading="lazy" src="../media/agent-loop.png" alt=""><figcaption>The agent's loop: intent becomes a signal, then a plan, new work and evaluations, bounded by a consumer world model and a company world model.</figcaption></figure><figure class="fig"><img loading="lazy" src="../media/agent-timeline.png" alt=""><figcaption>Five days of one long-running task, moving between signal, plan, create and evals.</figcaption></figure></div></section>
+<p><a href="computability-of-creativity.html">Next: Past research · The Computability of Creativity →</a></p></main><footer><span>Ling Fan · Designing AI</span><span>lfan@tongji.edu.cn</span><span>Draft · October 2026</span></footer></div></body></html>

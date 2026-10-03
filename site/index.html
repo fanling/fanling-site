@@ -1,0 +1,90 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Ling Fan</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+SC:wght@500&display=swap"><style>
+/* Layout: a drawing set. Left-aligned sheets, mono sheet numbers, one blue accent for what Ling designed. */
+:root{--paper:#F5F6F3;--ink:#16191D;--muted:#5B636E;--rule:#C3C8CE;--accent:#2B4BC8;--tint:rgba(43,75,200,.06);
+--serif:'Newsreader',Georgia,'Times New Roman',serif;--sans:'IBM Plex Sans','Helvetica Neue',Arial,sans-serif;
+--mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;--cjk:'Noto Serif SC','Songti SC',serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#121418;--ink:#E7E9EC;--muted:#9AA2AD;--rule:#3A4049;--accent:#8EA2FF;--tint:rgba(142,162,255,.09);color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#121418;--ink:#E7E9EC;--muted:#9AA2AD;--rule:#3A4049;--accent:#8EA2FF;--tint:rgba(142,162,255,.09);color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6}
+.wrap{max-width:1120px;margin:0 auto;padding-inline:clamp(16px,4vw,40px);padding-block:0 64px}
+header.top{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:baseline;justify-content:space-between;padding-block:22px;border-bottom:1px solid var(--ink);margin-bottom:48px}
+.brand{font-family:var(--serif);font-size:22px;text-decoration:none;color:var(--ink)}
+.brand .zh{font-family:var(--cjk);font-size:17px;color:var(--muted);margin-left:6px}
+nav{display:flex;flex-wrap:wrap;gap:6px 20px}
+nav a{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:4px 0;border-bottom:1px solid transparent}
+nav a:hover,nav a[aria-current]{color:var(--ink);border-bottom-color:var(--accent)}
+a{color:inherit;text-decoration-color:var(--accent);text-underline-offset:3px}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.eyebrow b{color:var(--accent);font-weight:500}
+h1,h2,h3{font-family:var(--serif);font-weight:400;margin:0;text-wrap:balance}
+h1{font-size:clamp(40px,7vw,84px);line-height:1;letter-spacing:-.015em}
+h2{font-size:clamp(30px,4.4vw,48px);line-height:1.08}
+h3{font-size:22px;line-height:1.25}
+p{margin:0 0 14px;max-width:66ch}
+.lede{font-family:var(--serif);font-style:italic;font-size:clamp(21px,2.6vw,30px);line-height:1.3;max-width:34ch;margin:22px 0 0}
+section{margin-block:72px}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:clamp(24px,5vw,64px)}
+.split>*{min-width:0}
+@media (max-width:760px){.split{grid-template-columns:minmax(0,1fr)!important}}
+.worklist{border-top:1px solid var(--ink);margin-top:20px}
+.workrow{display:grid;grid-template-columns:90px minmax(0,1fr) minmax(0,1.2fr);gap:24px;padding-block:22px;border-bottom:1px solid var(--rule);text-decoration:none;color:inherit;align-items:start}
+.workrow:hover h3{color:var(--accent)}
+.workrow .n{font-family:var(--serif);font-size:44px;line-height:.9;color:var(--accent)}
+.workrow p{margin:0;color:var(--muted)}
+@media (max-width:760px){.workrow{grid-template-columns:56px minmax(0,1fr)}.workrow p{grid-column:2}.workrow .n{font-size:32px}}
+.num{font-family:var(--serif);font-size:clamp(90px,14vw,170px);line-height:.8;color:var(--accent)}
+.dia-box{overflow-x:auto;margin-block:28px;padding-block:8px}
+.dia-box svg{min-width:640px}
+dl.facts{border-top:1px solid var(--ink);margin:0}
+dl.facts div{display:grid;grid-template-columns:minmax(0,180px) minmax(0,1fr);gap:16px;border-bottom:1px solid var(--rule);padding-block:10px}
+dl.facts dt{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:3px}
+dl.facts dd{margin:0}
+@media (max-width:520px){dl.facts div{grid-template-columns:minmax(0,1fr);gap:2px}}
+.ph{border:1px dashed var(--accent);background:var(--tint);aspect-ratio:16/9;max-width:100%;display:flex;align-items:flex-end;padding:14px;font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.cols3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(24px,3vw,40px);margin-top:56px}.cols3>div{min-width:0}.wcard{display:block;border-top:1px solid var(--ink);padding-block:18px 28px;text-decoration:none;color:inherit}.wcard:hover h3{color:var(--accent)}.wcard .n{display:block;font-family:var(--serif);font-size:34px;line-height:1;color:var(--accent);margin-bottom:12px}.wcard .eyebrow{display:block;margin:8px 0 0;font-size:11px}.wcard p{margin:12px 0 0;color:var(--muted);font-size:15px}@media (max-width:900px){.cols3{grid-template-columns:minmax(0,1fr)}}.stile{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;background:#fff;border:1px solid var(--rule);padding:0;box-sizing:border-box}div.stile{padding:10px}div.stile svg{display:block;width:100%;height:100%}.series{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:48px 32px}@media (max-width:760px){.series{grid-template-columns:minmax(0,1fr)}}.book{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:clamp(20px,4vw,48px);border-top:1px solid var(--ink);padding-block:24px 40px}.book>img{display:block;width:100%;height:auto}@media (max-width:640px){.book{grid-template-columns:minmax(0,1fr)}.book>img{max-width:220px}}.gal{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.gal img{display:block;width:100%;height:auto;border:1px solid var(--rule)}.fig{margin:0}.fig img,.fig video{display:block;width:100%;height:auto;background:#fff;border:1px solid var(--rule)}.portrait{display:block;width:100%;aspect-ratio:4/5;object-fit:cover}.fig figcaption{font-size:13px;line-height:1.5;color:var(--muted);margin-top:10px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:24px}
+.grid4{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:24px}
+.todo{color:var(--accent);font-family:var(--mono);font-size:.82em;border-bottom:1px dashed var(--accent)}
+table{border-collapse:collapse;width:100%;font-size:15px;line-height:1.45}
+.tbl{overflow-x:auto}
+td{border-bottom:1px solid var(--rule);padding:12px 16px 12px 0;vertical-align:top}
+td.y{font-family:var(--mono);font-size:13px;color:var(--muted);white-space:nowrap;width:120px;font-variant-numeric:tabular-nums}
+td .sub{color:var(--muted)}
+.btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}.btns a{font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border:1px solid var(--ink);padding:10px 18px}.btns a:hover{border-color:var(--accent);color:var(--accent)}
+.talk{display:block;border:1px solid var(--ink);padding:22px;text-decoration:none;color:inherit;max-width:640px}
+.talk:hover{border-color:var(--accent)}
+.talk .go{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+footer{border-top:1px solid var(--ink);padding-top:14px;display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+.draft{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--accent);border:1px dashed var(--accent);padding:8px 12px;margin-bottom:28px;display:inline-block}
+@media (prefers-reduced-motion:no-preference){.workrow,.talk,nav a{transition:color .15s,border-color .15s}}
+
+.dia{width:100%;height:auto;display:block;font-family:var(--sans)}
+.dia.sm .h{font-size:18px}.dia.sm .b{font-size:16px}.dia.sm .q{font-size:15px}.dia.sm .m{font-size:12.5px}
+.dia .bx{fill:none;stroke:var(--ink);stroke-width:1.1}
+.dia .ac-b{stroke:var(--accent);stroke-width:1.8;fill:var(--tint)}
+.dia .ln{stroke:var(--ink);stroke-width:1.1}
+.dia .lq{stroke:var(--rule);stroke-width:1}
+.dia .dash{stroke-dasharray:4 4}
+.dia .mk{fill:var(--ink)}
+.dia .dot{fill:var(--ink)}
+.dia .dot-ac{fill:var(--accent)}
+.dia text{fill:var(--ink)}
+.dia .h{font-size:15px;font-weight:600}
+.dia .b{font-size:13px}
+.dia .q{font-size:12.5px;fill:var(--muted)}
+.dia .m{font-family:var(--mono);font-size:11px;letter-spacing:.08em;fill:var(--muted)}
+.dia .ac-t{fill:var(--accent)}
+.dia .big{font-family:var(--serif);font-size:30px}
+</style></head><body><div class="wrap"><header class="top"><a class="brand" href="./">Ling Fan<span class="zh">范凌</span></a><nav aria-label="Main"><a href="works.html">Work</a><a href="news.html">News</a><a href="talks.html">Talks</a><a href="writing.html">Writing</a><a href="about.html">About</a></nav></header>
+<main>
+<p class="draft">Draft for review · not yet published at fanling.ai</p>
+<div class="split" style="align-items:center;grid-template-columns:minmax(0,1.5fr) minmax(0,.8fr)"><div><h1 style="font-size:clamp(40px,6vw,68px)">Designing AI, and through it, redesigning systems.</h1>
+<p style="margin-top:24px">Ling Fan is a globally recognized entrepreneur and scholar of design AI. He is a Professor in Design AI at Tongji University, where he founded the Design Artificial Intelligence Lab, and the founder and chairman of Tezign, a unicorn that builds agentic AI for more than 200 Fortune 500 companies around the world. Trained as an architect at Princeton (MArch) and Harvard (Doctor of Design), he works on how designers can shape AI itself and, through it, redesign systems and organizations. Ling is a World Economic Forum Young Global Leader, an Aspen Institute China Fellow and a member of the Aspen Global Leadership Network.</p>
+<div class="btns"><a href="works.html">Work</a><a href="talks.html">Talks</a><a href="writing.html">Writing</a></div></div>
+<img class="portrait" src="media/portrait.jpg" alt="Ling Fan"></div>
+<section><p class="eyebrow">Current research work</p><div class="worklist"><a class="workrow" href="works/subjective-world-model.html"><span class="n">01</span><div><h3>Subjective World Model</h3><span class="eyebrow" style="margin:0">atypica.AI: a foundation model that simulates human behavior, decisions and feelings</span></div><p>Can a model represent people as they actually differ, in taste, judgment and story, rather than as an average?</p></a><a class="workrow" href="works/creative-reasoning-model.html"><span class="n">02</span><div><h3>Creative Reasoning</h3><span class="eyebrow" style="margin:0">A reasoning model that puts divergent thinking before convergent thinking</span></div><p>What would a reasoning model look like if its goal were to discover new possibilities rather than converge on one correct answer?</p></a><a class="workrow" href="works/agentic-creativity.html"><span class="n">03</span><div><h3>Agentic Creativity</h3><span class="eyebrow" style="margin:0">A long-horizon creative agent</span></div><p>Can an agent take part in the whole arc of creative work, and extend what a team can imagine rather than automate it?</p></a></div></section>
+<section><p class="eyebrow">Past research work</p><div class="worklist"><a class="workrow" href="works/computability-of-creativity.html"><span class="n">&nbsp;</span><div><h3>The Computability of Creativity</h3><span class="eyebrow" style="margin:0">Datasets and a knowledge graph</span></div><p>Which parts of creative work can be computed, and what must data and knowledge contain for creativity to be identified, evaluated and generated?</p></a><a class="workrow" href="works/brain-machine-ratio.html"><span class="n">&nbsp;</span><div><h3>Brain–Machine Ratio (BMR)</h3><span class="eyebrow" style="margin:0">A quantitative study and a qualitative study</span></div><p>In a creative process shared by people and machines, which part should each take, and how can that division be measured?</p></a></div></section>
+<section><p class="eyebrow">Entrepreneurship</p><div class="worklist"><a class="workrow" href="works/tezign.html"><span class="n">&nbsp;</span><div><h3>Tezign</h3><span class="eyebrow" style="margin:0">Design science at production scale · Founder and Chairman, 2015–present</span></div><p>Where these works are tested at production scale.</p></a></div></section>
+<section><p class="eyebrow">Selected talks</p><div class="grid2"><a class="talk" href="https://www.youtube.com/watch?v=tCl8s9B2WqU&t=3s" target="_blank" rel="noopener"><span class="eyebrow">2026 · Super AI, Singapore</span><h3>The Subjective World Model</h3><span class="go" style="display:block;margin-top:14px">Watch on YouTube ↗</span></a><a class="talk" href="https://www.youtube.com/watch?v=owxND_hP4nE" target="_blank" rel="noopener"><span class="eyebrow">2025 · Syracuse University School of Architecture</span><h3>L. C. Dillenback Lecture: Design+AI: Research and Entrepreneurship</h3><span class="go" style="display:block;margin-top:14px">Watch on YouTube ↗</span></a><a class="talk" href="https://www.youtube.com/watch?v=4EzYikrUDUg&list=PL16ugZF7jMZWVtZk6_q1OERR8p4aFNer7" target="_blank" rel="noopener"><span class="eyebrow">2023 · Hong Kong Polytechnic University</span><h3>The Computability of Design and Possibilities of Generative Design (keynote)</h3><span class="go" style="display:block;margin-top:14px">Watch on YouTube ↗</span></a></div></section></main><footer><span>Ling Fan · Designing AI</span><span>lfan@tongji.edu.cn</span><span>Draft · October 2026</span></footer></div></body></html>

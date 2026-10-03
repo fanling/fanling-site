@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+.DS_Store
+node_modules/
+# intermediate file built by portfolio.py for the PDF
+src/portfolio.html

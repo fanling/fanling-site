@@ -1,0 +1,88 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>The Computability of Creativity · Ling Fan</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&family=Noto+Serif+SC:wght@500&display=swap"><style>
+/* Layout: a drawing set. Left-aligned sheets, mono sheet numbers, one blue accent for what Ling designed. */
+:root{--paper:#F5F6F3;--ink:#16191D;--muted:#5B636E;--rule:#C3C8CE;--accent:#2B4BC8;--tint:rgba(43,75,200,.06);
+--serif:'Newsreader',Georgia,'Times New Roman',serif;--sans:'IBM Plex Sans','Helvetica Neue',Arial,sans-serif;
+--mono:'IBM Plex Mono',ui-monospace,Menlo,monospace;--cjk:'Noto Serif SC','Songti SC',serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#121418;--ink:#E7E9EC;--muted:#9AA2AD;--rule:#3A4049;--accent:#8EA2FF;--tint:rgba(142,162,255,.09);color-scheme:dark}}
+:root[data-theme="dark"]{--paper:#121418;--ink:#E7E9EC;--muted:#9AA2AD;--rule:#3A4049;--accent:#8EA2FF;--tint:rgba(142,162,255,.09);color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6}
+.wrap{max-width:1120px;margin:0 auto;padding-inline:clamp(16px,4vw,40px);padding-block:0 64px}
+header.top{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:baseline;justify-content:space-between;padding-block:22px;border-bottom:1px solid var(--ink);margin-bottom:48px}
+.brand{font-family:var(--serif);font-size:22px;text-decoration:none;color:var(--ink)}
+.brand .zh{font-family:var(--cjk);font-size:17px;color:var(--muted);margin-left:6px}
+nav{display:flex;flex-wrap:wrap;gap:6px 20px}
+nav a{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:4px 0;border-bottom:1px solid transparent}
+nav a:hover,nav a[aria-current]{color:var(--ink);border-bottom-color:var(--accent)}
+a{color:inherit;text-decoration-color:var(--accent);text-underline-offset:3px}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.eyebrow b{color:var(--accent);font-weight:500}
+h1,h2,h3{font-family:var(--serif);font-weight:400;margin:0;text-wrap:balance}
+h1{font-size:clamp(40px,7vw,84px);line-height:1;letter-spacing:-.015em}
+h2{font-size:clamp(30px,4.4vw,48px);line-height:1.08}
+h3{font-size:22px;line-height:1.25}
+p{margin:0 0 14px;max-width:66ch}
+.lede{font-family:var(--serif);font-style:italic;font-size:clamp(21px,2.6vw,30px);line-height:1.3;max-width:34ch;margin:22px 0 0}
+section{margin-block:72px}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:clamp(24px,5vw,64px)}
+.split>*{min-width:0}
+@media (max-width:760px){.split{grid-template-columns:minmax(0,1fr)!important}}
+.worklist{border-top:1px solid var(--ink);margin-top:20px}
+.workrow{display:grid;grid-template-columns:90px minmax(0,1fr) minmax(0,1.2fr);gap:24px;padding-block:22px;border-bottom:1px solid var(--rule);text-decoration:none;color:inherit;align-items:start}
+.workrow:hover h3{color:var(--accent)}
+.workrow .n{font-family:var(--serif);font-size:44px;line-height:.9;color:var(--accent)}
+.workrow p{margin:0;color:var(--muted)}
+@media (max-width:760px){.workrow{grid-template-columns:56px minmax(0,1fr)}.workrow p{grid-column:2}.workrow .n{font-size:32px}}
+.num{font-family:var(--serif);font-size:clamp(90px,14vw,170px);line-height:.8;color:var(--accent)}
+.dia-box{overflow-x:auto;margin-block:28px;padding-block:8px}
+.dia-box svg{min-width:640px}
+dl.facts{border-top:1px solid var(--ink);margin:0}
+dl.facts div{display:grid;grid-template-columns:minmax(0,180px) minmax(0,1fr);gap:16px;border-bottom:1px solid var(--rule);padding-block:10px}
+dl.facts dt{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:3px}
+dl.facts dd{margin:0}
+@media (max-width:520px){dl.facts div{grid-template-columns:minmax(0,1fr);gap:2px}}
+.ph{border:1px dashed var(--accent);background:var(--tint);aspect-ratio:16/9;max-width:100%;display:flex;align-items:flex-end;padding:14px;font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.cols3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(24px,3vw,40px);margin-top:56px}.cols3>div{min-width:0}.wcard{display:block;border-top:1px solid var(--ink);padding-block:18px 28px;text-decoration:none;color:inherit}.wcard:hover h3{color:var(--accent)}.wcard .n{display:block;font-family:var(--serif);font-size:34px;line-height:1;color:var(--accent);margin-bottom:12px}.wcard .eyebrow{display:block;margin:8px 0 0;font-size:11px}.wcard p{margin:12px 0 0;color:var(--muted);font-size:15px}@media (max-width:900px){.cols3{grid-template-columns:minmax(0,1fr)}}.stile{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;background:#fff;border:1px solid var(--rule);padding:0;box-sizing:border-box}div.stile{padding:10px}div.stile svg{display:block;width:100%;height:100%}.series{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:48px 32px}@media (max-width:760px){.series{grid-template-columns:minmax(0,1fr)}}.book{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:clamp(20px,4vw,48px);border-top:1px solid var(--ink);padding-block:24px 40px}.book>img{display:block;width:100%;height:auto}@media (max-width:640px){.book{grid-template-columns:minmax(0,1fr)}.book>img{max-width:220px}}.gal{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.gal img{display:block;width:100%;height:auto;border:1px solid var(--rule)}.fig{margin:0}.fig img,.fig video{display:block;width:100%;height:auto;background:#fff;border:1px solid var(--rule)}.portrait{display:block;width:100%;aspect-ratio:4/5;object-fit:cover}.fig figcaption{font-size:13px;line-height:1.5;color:var(--muted);margin-top:10px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:24px}
+.grid4{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:24px}
+.todo{color:var(--accent);font-family:var(--mono);font-size:.82em;border-bottom:1px dashed var(--accent)}
+table{border-collapse:collapse;width:100%;font-size:15px;line-height:1.45}
+.tbl{overflow-x:auto}
+td{border-bottom:1px solid var(--rule);padding:12px 16px 12px 0;vertical-align:top}
+td.y{font-family:var(--mono);font-size:13px;color:var(--muted);white-space:nowrap;width:120px;font-variant-numeric:tabular-nums}
+td .sub{color:var(--muted)}
+.btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}.btns a{font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;text-decoration:none;border:1px solid var(--ink);padding:10px 18px}.btns a:hover{border-color:var(--accent);color:var(--accent)}
+.talk{display:block;border:1px solid var(--ink);padding:22px;text-decoration:none;color:inherit;max-width:640px}
+.talk:hover{border-color:var(--accent)}
+.talk .go{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+footer{border-top:1px solid var(--ink);padding-top:14px;display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase}
+.draft{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--accent);border:1px dashed var(--accent);padding:8px 12px;margin-bottom:28px;display:inline-block}
+@media (prefers-reduced-motion:no-preference){.workrow,.talk,nav a{transition:color .15s,border-color .15s}}
+
+.dia{width:100%;height:auto;display:block;font-family:var(--sans)}
+.dia.sm .h{font-size:18px}.dia.sm .b{font-size:16px}.dia.sm .q{font-size:15px}.dia.sm .m{font-size:12.5px}
+.dia .bx{fill:none;stroke:var(--ink);stroke-width:1.1}
+.dia .ac-b{stroke:var(--accent);stroke-width:1.8;fill:var(--tint)}
+.dia .ln{stroke:var(--ink);stroke-width:1.1}
+.dia .lq{stroke:var(--rule);stroke-width:1}
+.dia .dash{stroke-dasharray:4 4}
+.dia .mk{fill:var(--ink)}
+.dia .dot{fill:var(--ink)}
+.dia .dot-ac{fill:var(--accent)}
+.dia text{fill:var(--ink)}
+.dia .h{font-size:15px;font-weight:600}
+.dia .b{font-size:13px}
+.dia .q{font-size:12.5px;fill:var(--muted)}
+.dia .m{font-family:var(--mono);font-size:11px;letter-spacing:.08em;fill:var(--muted)}
+.dia .ac-t{fill:var(--accent)}
+.dia .big{font-family:var(--serif);font-size:30px}
+</style></head><body><div class="wrap"><header class="top"><a class="brand" href="../">Ling Fan<span class="zh">范凌</span></a><nav aria-label="Main"><a href="../works.html" aria-current="page">Work</a><a href="../news.html">News</a><a href="../talks.html">Talks</a><a href="../writing.html">Writing</a><a href="../about.html">About</a></nav></header>
+<main>
+<p class="eyebrow"><b>Past research</b> · Datasets and a knowledge graph</p>
+<div class="split"><div><h1 style="margin-top:24px;font-size:clamp(36px,5vw,60px)">The Computability of Creativity</h1><p class="lede">Which parts of creative work can be computed, and what must data and knowledge contain for creativity to be identified, evaluated and generated?</p></div>
+<div style="padding-top:12px"><p>This series is the ground beneath the three models. Each project gathers a body of design knowledge into a form a machine can learn from, and in doing so tests where creative work can be computed and where it resists.</p><p>The datasets come from places design research rarely looks: the colour cultures of Chinese youth subcultures, the fast-moving world of blind-box designer toys, and traditional crafts such as Jinshan farmer painting. Prometheus goes a step further and constructs design knowledge itself as a knowledge graph that models can reason over.</p><p>Together they make three things possible: identifying creativity, evaluating it, and generating creative work.</p></div></div>
+
+<section><p class="eyebrow">Structure</p><div class="dia-box"><svg class="dia" viewBox="0 0 1040 360" role="img" aria-label="Datasets and a knowledge graph make it possible to identify, evaluate and generate creative work" xmlns="http://www.w3.org/2000/svg"><defs><marker id="a-co" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="mk"/></marker></defs><text x="30" y="30" class="m" text-anchor="start">DESIGN KNOWLEDGE, MADE COMPUTABLE</text><rect x="30" y="46" width="330" height="62" rx="3" class="bx"/><text x="44" y="68" class="h" text-anchor="start">(a) Youth-subculture colour</text><text x="44" y="88" class="b" text-anchor="start">palettes from Chinese youth subcultures</text><path d="M360 77H400" class="ln" fill="none"/><rect x="30" y="122" width="330" height="62" rx="3" class="bx"/><text x="44" y="144" class="h" text-anchor="start">(b) Blind-box dataset</text><text x="44" y="164" class="b" text-anchor="start">designer toys sold as blind boxes</text><path d="M360 153H400" class="ln" fill="none"/><rect x="30" y="198" width="330" height="62" rx="3" class="bx"/><text x="44" y="220" class="h" text-anchor="start">(c) Chinese traditional craft</text><text x="44" y="240" class="b" text-anchor="start">including Jinshan farmer painting</text><path d="M360 229H400" class="ln" fill="none"/><rect x="30" y="274" width="330" height="62" rx="3" class="bx ac-b"/><text x="44" y="296" class="h" text-anchor="start">(d) Prometheus</text><text x="44" y="316" class="b" text-anchor="start">a knowledge graph of design knowledge</text><path d="M360 305H400" class="ln" fill="none"/><path d="M400 77V305" class="ln" fill="none"/><text x="440" y="68" class="m" text-anchor="start">WHAT BECOMES POSSIBLE</text><path d="M400 115H438" class="ln" fill="none" marker-end="url(#a-co)"/><rect x="440" y="84" width="260" height="62" rx="3" class="bx"/><text x="570" y="120" class="h" text-anchor="middle">Identify creativity</text><path d="M700 115H740" class="ln" fill="none"/><path d="M400 191H438" class="ln" fill="none" marker-end="url(#a-co)"/><rect x="440" y="160" width="260" height="62" rx="3" class="bx"/><text x="570" y="196" class="h" text-anchor="middle">Evaluate creativity</text><path d="M700 191H740" class="ln" fill="none"/><path d="M400 267H438" class="ln" fill="none" marker-end="url(#a-co)"/><rect x="440" y="236" width="260" height="62" rx="3" class="bx"/><text x="570" y="272" class="h" text-anchor="middle">Generate creative work</text><path d="M700 267H740" class="ln" fill="none"/><path d="M740 115V267" class="ln" fill="none"/><path d="M740 191H778" class="ln" fill="none" marker-end="url(#a-co)"/><rect x="780" y="136" width="230" height="110" rx="3" class="bx"/><text x="794" y="158" class="m" text-anchor="start">BUILT ON THIS GROUND</text><text x="794" y="180" class="b" text-anchor="start">Work 01 Subjective World Model</text><text x="794" y="197" class="b" text-anchor="start">Work 02 Creative Reasoning</text><text x="794" y="214" class="b" text-anchor="start">Work 03 Agentic Creativity</text></svg></div><dl class="facts"><div><dt>Talks</dt><dd>The Computability of Design, Brown University (2024); keynote, Hong Kong Polytechnic University (2023)</dd></div><div><dt>Research line</dt><dd>The Computability of Creativity, Design AI Lab</dd></div></dl></section>
+<section><p class="eyebrow">The series</p><div class="series"><div><figure class="fig"><video controls playsinline preload="none" poster="../media/pw-colour.jpg"><source src="../media/pw-colour.mp4" type="video/mp4"></video><figcaption>Palette generation and colorization for Chinese youth subcultures (film, 43 s).</figcaption></figure><p class="eyebrow" style="margin:12px 0 4px"><b>(a)</b></p><h3>Youth-subculture colour dataset</h3><p style="margin-top:8px">Colour palettes drawn from Chinese youth subcultures, used for culture-inspired multimodal palette generation and colorization (IEEE MIPR 2021).</p></div><div><figure class="fig"><video controls playsinline preload="none" poster="../media/pw-blindbox.jpg"><source src="../media/pw-blindbox.mp4" type="video/mp4"></video><figcaption>New blind-box figures, outfits and scenes generated in 3D (film, 50 s).</figcaption></figure><p class="eyebrow" style="margin:12px 0 4px"><b>(b)</b></p><h3>Blind-box dataset</h3><p style="margin-top:8px">A dataset of blind-box designer toys, a consumer form where taste, rarity and collecting meet, used to generate new figures, outfits, props and scenes in 3D. <span class="todo">To add: scale of the dataset</span></p></div><div><figure class="fig"><video controls playsinline preload="none" poster="../media/pw-craft.jpg"><source src="../media/pw-craft.mp4" type="video/mp4"></video><figcaption>A visitor's sketch painted in the Jinshan farmer-painting style (film, 3.5 min; interface in Chinese).</figcaption></figure><p class="eyebrow" style="margin:12px 0 4px"><b>(c)</b></p><h3>Chinese traditional craft dataset</h3><p style="margin-top:8px">Traditional crafts including Jinshan farmer painting, used to study how AI can support the inheritance of craft (Decoration, 2022). In an installation built on it, visitors sketch a person, a house or a tree, and the system paints the scene in the Jinshan style.</p></div><div><figure class="fig"><video controls playsinline preload="none" poster="../media/pw-prometheus.jpg"><source src="../media/pw-prometheus.mp4" type="video/mp4"></video><figcaption>Asking Prometheus about design (film, 77 s; interface in Chinese).</figcaption></figure><p class="eyebrow" style="margin:12px 0 4px"><b>(d)</b></p><h3>Prometheus</h3><p style="margin-top:8px">A knowledge graph that constructs design knowledge in a form machines can reason over. Ask it a question about design and it unfolds the concepts and sources linked to the answer. <span class="todo">To add: what the graph contains and its scale</span></p></div></div></section>
+<p><a href="brain-machine-ratio.html">Next: Past research · Brain–Machine Ratio (BMR) →</a></p></main><footer><span>Ling Fan · Designing AI</span><span>lfan@tongji.edu.cn</span><span>Draft · October 2026</span></footer></div></body></html>
