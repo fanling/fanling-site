@@ -10,7 +10,7 @@ TMP="$(mktemp -d)"
 git clone -q "https://github.com/$REPO.git" "$TMP/repo"
 cd "$TMP/repo"
 git ls-files -z | xargs -0 -r rm -f
-tar -C "$SRC" --exclude=.git --exclude-from="$SRC/.gitignore" -cf - . | tar -xf -
+tar -C "$SRC" --exclude=.git --exclude-from="$SRC/.gitignore" -cf - . | tar --no-same-owner -xf -
 git add -A
 if git diff --cached --quiet; then echo "No changes."; else
   git commit -q -m "$MSG" && git push -q origin HEAD && echo "Pushed to $REPO"; fi
