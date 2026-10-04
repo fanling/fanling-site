@@ -77,7 +77,7 @@ SHORT_BIO = text(_f(_b, "Short bio"))
 CONTACT = text(_f(_b, "Contact email"))
 PROFILES = facts(_f(_b, "Profiles"))
 HEADLINE = text(_f(_b, "Headline"))
-BLOG = rows(_f(_b, "Blog"), 2)[0]
+BLOG = (rows(_f(_b, "Blog"), 2) or [None])[0]   # None while the blog is hidden
 
 STATEMENT = paras(_f(_sec("Statement")[1], "Text"))
 

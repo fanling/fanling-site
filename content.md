@@ -33,10 +33,14 @@ lfan@tongji.edu.cn
 
 ## Profiles (name: link)
 - LinkedIn: https://www.linkedin.com/in/ling-fan/
+<!-- Substack hidden until Ling has updated it (2026-10-04); remove these comment marks to restore:
 - Substack: https://fanling.substack.com/
+-->
 
+<!-- Blog hidden until Ling has updated Substack (2026-10-04); remove these comment marks to restore:
 ## Blog (name | description)
 - Fatflatfloat | Ling's blog on Substack, on design, AI and education, in English and Chinese.
+-->
 
 # Research
 

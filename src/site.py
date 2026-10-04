@@ -1,7 +1,9 @@
 """Builds the fanling.ai static site from content.py.
 python3 site.py <outdir>            -> full static site (each page a complete HTML document)
 python3 site.py <outdir> --artifact -> same, but index.html without the document wrapper (for Claude preview)"""
+import json
 import os
+import re
 import shutil
 import sys
 from html import escape
@@ -55,6 +57,7 @@ section{margin-block:72px}
 .num{font-family:var(--serif);font-size:clamp(90px,14vw,170px);line-height:.8;color:var(--accent)}
 .dia-box{overflow-x:auto;margin-block:28px;padding-block:8px}
 .dia-box svg{min-width:640px}
+@media (max-width:600px){td.y{width:64px!important;font-size:12px;padding-right:10px;white-space:normal!important}.workrow.nonum{grid-template-columns:minmax(0,1fr)}.workrow.nonum .n{display:none}.workrow.nonum p{grid-column:1}.dia-box::before{content:"Swipe to see the full diagram →";display:block;font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--muted);margin-bottom:8px;position:sticky;left:0}}
 dl.facts{border-top:1px solid var(--ink);margin:0}
 dl.facts div{display:grid;grid-template-columns:minmax(0,180px) minmax(0,1fr);gap:16px;border-bottom:1px solid var(--rule);padding-block:10px}
 dl.facts dt{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:3px}
@@ -87,6 +90,64 @@ def facts(rows):
     return '<dl class="facts">' + "".join(f"<div><dt>{k}</dt><dd>{v}</dd></div>" for k, v in rows) + "</dl>"
 
 
+SITE = "https://www.fanling.ai"
+_plain = lambda t: re.sub(r"<[^>]+>", "", t).strip()
+DESC = {
+    "index.html": C.SHORT_BIO,
+    "works.html": " ".join(C.RESEARCH["body"]),
+    "lab.html": "The Design AI Lab at Tongji University, founded by Ling Fan in 2017: research on creative reasoning, subjective world models and agentic creativity, research funding and doctoral and master's advising.",
+    "works/tezign.html": " ".join(C.TEZIGN["body"]),
+    "talks.html": "Talks and lectures by Ling Fan on Design AI and the computability of creativity, agentic transformation for business, and subjective world models.",
+    "writing.html": "Books and publications by Ling Fan on design, artificial intelligence and the computability of creativity.",
+    "about.html": "Ling Fan (范凌): education, academic appointments, service and recognition.",
+    "news.html": "News about Ling Fan (范凌): talks, exhibitions, papers and press coverage.",
+}
+PERSON = {
+    "@context": "https://schema.org", "@type": "Person",
+    "name": "Ling Fan", "alternateName": ["范凌", "Fan Ling"],
+    "url": SITE + "/", "image": SITE + "/media/portrait.jpg", "email": "mailto:lfan@tongji.edu.cn",
+    "jobTitle": ["Professor in Design AI", "Founder and Chairman of Tezign"],
+    "description": None,
+    "affiliation": {"@type": "CollegeOrUniversity", "name": "Tongji University", "url": "https://www.tongji.edu.cn/"},
+    "worksFor": [{"@type": "CollegeOrUniversity", "name": "Tongji University"}, {"@type": "Organization", "name": "Tezign", "url": "https://www.tezign.com/en"}],
+    "alumniOf": [{"@type": "CollegeOrUniversity", "name": "Harvard University Graduate School of Design"}, {"@type": "CollegeOrUniversity", "name": "Princeton University"}, {"@type": "CollegeOrUniversity", "name": "Tongji University"}],
+    "knowsAbout": ["Design AI", "Computability of creativity", "Creative reasoning", "Subjective world models", "Agentic creativity", "Agentic transformation", "Design research", "Architecture"],
+    "sameAs": None,
+}
+
+
+def _short(t, n=170):
+    """Whole sentences up to about n characters, for meta descriptions."""
+    out = ""
+    for sent in re.split(r"(?<=[.?!])\s+", t):
+        if out and len(out) + len(sent) + 1 > n:
+            break
+        out = (out + " " + sent).strip()
+    return out if len(out) <= n + 60 else out[:n].rsplit(" ", 1)[0] + "…"
+
+
+def seo_desc(path):
+    if path.startswith("works/") and path != "works/tezign.html":
+        w = next((w for w in C.WORKS if w["slug"] == path[6:-5]), None)
+        return w["question"] if w else C.SHORT_BIO
+    return DESC.get(path, C.SHORT_BIO)
+
+
+def seo_head(path, title):
+    url = SITE + "/" + ("" if path == "index.html" else path[:-5])
+    desc = escape(_short(_plain(seo_desc(path))), quote=True)
+    t = escape(title, quote=True)
+    h = (f'<meta name="description" content="{desc}"><link rel="canonical" href="{url}">'
+         f'<meta property="og:type" content="{"profile" if path == "index.html" else "website"}"><meta property="og:site_name" content="Ling Fan">'
+         f'<meta property="og:title" content="{t}"><meta property="og:description" content="{desc}"><meta property="og:url" content="{url}">'
+         f'<meta property="og:image" content="{SITE}/media/portrait.jpg"><meta name="twitter:card" content="summary_large_image">'
+         f'<meta name="author" content="Ling Fan">')
+    if path == "index.html":
+        person = dict(PERSON, description=_plain(C.SHORT_BIO), sameAs=[u for _, u in C.PROFILES])
+        h += '<script type="application/ld+json">' + json.dumps(person, ensure_ascii=False) + "</script>"
+    return h
+
+
 def page(path, title, body, artifact=False):
     depth = path.count("/")
     pre = "../" * depth
@@ -95,7 +156,7 @@ def page(path, title, body, artifact=False):
     nav = "".join(f'<a href="{home if h == "index.html" else pre + h}"{CUR if h == cur or (h == "works.html" and (cur.startswith("works/") or cur == "lab.html") and cur != "works/tezign.html") else ""}>{t}</a>' for h, t in NAV)
     inner = f"""<div class="wrap"><header class="top"><a class="brand" href="{home}">Ling Fan<span class="zh">{C.NAME_ZH}</span></a><nav aria-label="Main">{nav}</nav></header>
 <main>{body}</main><footer><span>Ling Fan · Design AI</span><span>{C.CONTACT}{"".join(f' · <a href="{u}" target="_blank" rel="noopener" style="color:inherit">{n}</a>' for n, u in C.PROFILES)}</span><span>© 2026 Ling Fan</span></footer></div>"""
-    head = f"<title>{escape(title)}</title>{FONTS}<style>{CSS}</style>"
+    head = f"<title>{escape(title)}</title>{'' if artifact else seo_head(path, title)}{FONTS}<style>{CSS}</style>"
     if artifact and path == "index.html":
         return head + inner
     return (f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">'
@@ -108,7 +169,7 @@ def work_row(w, pre=""):
 
 
 TEZIGN_LINE = "Where these works are tested at production scale."
-TEZIGN_ROW = (f'<a class="workrow" href="works/tezign.html"><span class="n">&nbsp;</span><div><h3>Tezign</h3>'
+TEZIGN_ROW = (f'<a class="workrow nonum" href="works/tezign.html"><span class="n">&nbsp;</span><div><h3>Tezign</h3>'
               f'<span class="eyebrow" style="margin:0">{C.TEZIGN["sub"]}</span></div><p>{TEZIGN_LINE}</p></a>')
 
 
@@ -158,7 +219,7 @@ def build(out, artifact=False):
     pages = {}
     ps = lambda xs: "".join(f"<p>{x}</p>" for x in xs)
 
-    pages["index.html"] = ("Ling Fan", f"""
+    pages["index.html"] = ("Ling Fan 范凌 · Researcher, Entrepreneur in Design AI", f"""
 <div class="split" style="align-items:center;grid-template-columns:minmax(0,1.5fr) minmax(0,.8fr)"><div><h1 style="font-size:clamp(40px,6vw,68px)">{C.HEADLINE}</h1>
 <p style="margin-top:24px">{C.SHORT_BIO}</p>
 <div class="btns"><a href="works.html">Research</a><a href="works/tezign.html">Entrepreneurship</a><a href="writing.html">Writing</a></div></div>
@@ -170,7 +231,7 @@ def build(out, artifact=False):
     pages["works.html"] = ("Research · Ling Fan", f"""
 <p class="eyebrow">Research</p><h1>{C.RESEARCH['title']}</h1>
 {''.join(f'<p class="lede">{p}</p>' for p in C.RESEARCH['body'])}
-<section><p class="eyebrow">The Lab</p><div class="worklist"><a class="workrow" href="lab.html"><span class="n">&nbsp;</span><div><h3>{C.LAB['title']}</h3><span class="eyebrow" style="margin:0">Tongji University, since 2017</span></div><p>{ADVISING_LINE}</p></a></div></section>
+<section><p class="eyebrow">The Lab</p><div class="worklist"><a class="workrow nonum" href="lab.html"><span class="n">&nbsp;</span><div><h3>{C.LAB['title']}</h3><span class="eyebrow" style="margin:0">Tongji University, since 2017</span></div><p>{ADVISING_LINE}</p></a></div></section>
 <section><p class="eyebrow">Current research</p><div class="worklist">{''.join(work_row(w, "") for w in C.CURRENT_WORKS)}</div></section>
 <section><p class="eyebrow">Past research</p><div class="worklist">{''.join(work_row(w, "") for w in C.PAST_WORKS)}</div></section>""")
 
@@ -224,7 +285,7 @@ def build(out, artifact=False):
     pages["works/tezign.html"] = ("Tezign · Ling Fan", f"""
 <p class="eyebrow">Entrepreneurship</p><h1>{C.TEZIGN['page_title']}</h1>
 {''.join(f'<p class="lede">{p}</p>' for p in C.TEZIGN['body'])}
-<section><p class="eyebrow">The Company</p><div class="worklist"><a class="workrow" href="https://www.tezign.com/en" target="_blank" rel="noopener"><span class="n">&nbsp;</span><div><h3>Tezign ↗</h3><span class="eyebrow" style="margin:0">{C.TEZIGN['sub']}</span></div><p>{" ".join(C.TEZIGN['company'])}</p></a></div></section>
+<section><p class="eyebrow">The Company</p><div class="worklist"><a class="workrow nonum" href="https://www.tezign.com/en" target="_blank" rel="noopener"><span class="n">&nbsp;</span><div><h3>Tezign ↗</h3><span class="eyebrow" style="margin:0">{C.TEZIGN['sub']}</span></div><p>{" ".join(C.TEZIGN['company'])}</p></a></div></section>
 <section><p class="eyebrow">Products</p><div class="series">{"".join(product_tile(*p_, pre="../") for p_ in C.TEZIGN["products"])}</div></section>""")
 
     pub_row = lambda y, a, t, v, d: (f'<tr><td class="y">{y}</td><td>{a} {t} <i>{v}</i>' + (f' <a href="{d}" target="_blank" rel="noopener">{d.replace("https://doi.org/", "doi:").replace("https://arxiv.org/abs/", "arXiv:")}</a>' if d else "") + "</td></tr>")
@@ -246,9 +307,10 @@ def build(out, artifact=False):
         sp = "".join(f'<figure class="fig"><img loading="lazy" src="media/{f}" alt=""><figcaption>{c}</figcaption></figure>' for f, c in spreads)
         return (f'<div class="book"><img src="media/{cover}" alt="Cover of {escape(t)}"><div><p class="eyebrow">{y} · {p}</p>'
                 f'<h3><i>{t}</i></h3><div class="grid2" style="margin-top:24px">{sp}</div></div></div>')
+    BLOG_SECTION = (f'''<section><p class="eyebrow">Blog</p><p><a href="{dict(C.PROFILES)['Substack']}" target="_blank" rel="noopener"><i>{C.BLOG[0]}</i> ↗</a><br><span style="color:var(--muted)">{C.BLOG[1]}</span></p></section>''' if C.BLOG and 'Substack' in dict(C.PROFILES) else '')
     pages["writing.html"] = ("Writing · Ling Fan", f"""
-<p class="eyebrow">Writing</p><h1>Blog, books and publications</h1>
-<section><p class="eyebrow">Blog</p><p><a href="{dict(C.PROFILES)['Substack']}" target="_blank" rel="noopener"><i>{C.BLOG[0]}</i> ↗</a><br><span style="color:var(--muted)">{C.BLOG[1]}</span></p></section>
+<p class="eyebrow">Writing</p><h1>{"Blog, books and publications" if C.BLOG else "Books and publications"}</h1>
+{BLOG_SECTION}
 <section><p class="eyebrow">Books</p>{''.join(book(*b) for b in C.WRITING['books'])}</section>
 <section><p class="eyebrow">Publications</p><p>Authored or co-authored more than 100 articles and papers in academic journals, professional magazines and conference proceedings.</p>{pubs}</section>""")
 
@@ -279,7 +341,25 @@ def build(out, artifact=False):
         fp = os.path.join(out, path)
         os.makedirs(os.path.dirname(fp), exist_ok=True)
         open(fp, "w").write(page(path, title, body, artifact))
+    if not artifact:
+        urls = "".join(f"<url><loc>{SITE}/{'' if p == 'index.html' else p[:-5]}</loc></url>" for p in pages)
+        open(os.path.join(out, "sitemap.xml"), "w").write('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + urls + "</urlset>\n")
+        open(os.path.join(out, "robots.txt"), "w").write(f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")
+        open(os.path.join(out, "llms.txt"), "w").write(llms_txt(pages))
     return list(pages)
+
+
+def llms_txt(pages):
+    """A plain-text summary for AI search engines and assistants (llmstxt.org)."""
+    L = [f"# Ling Fan (范凌)", "", f"> {_plain(C.SHORT_BIO)}", "",
+         f"Research question: {_plain(' '.join(C.RESEARCH['body']))}", "",
+         f"Contact: {C.CONTACT}. Talks: {_plain(C.TALKS_INTRO['body'])} " + "; ".join(C.TALKS_INTRO["topics"]) + ".", "", "## Pages", ""]
+    for p, (title, _) in pages.items():
+        L.append(f"- [{title}]({SITE}/{'' if p == 'index.html' else p[:-5]}): {_plain(seo_desc(p))}")
+    L += ["", "## Current research", ""] + [f"- {w['title']}: {_plain(w['question'])}" for w in C.CURRENT_WORKS]
+    L += ["", "## Entrepreneurship", "", _plain(" ".join(C.TEZIGN["company"]))]
+    L += [f"- {n} ({u}): {_plain(d)}" for n, u, d, _ in C.TEZIGN["products"]]
+    return "\n".join(L) + "\n"
 
 
 if __name__ == "__main__":

@@ -1,0 +1,36 @@
+# Ling Fan (范凌)
+
+> Ling Fan is Professor in Design AI at Tongji University, founding director of its Design Artificial Intelligence Lab, and founder and chairman of Tezign. Trained as an architect at Princeton and the Harvard Graduate School of Design, he studies the computability of creativity: how designers can shape AI itself and, through it, redesign systems and organizations. His research is carried into AI systems used by more than 200 enterprises and over one million professionals.
+
+Research question: Past and present, the research asks one question: how creativity can be computationally represented, reasoned through and enacted, while preserving the subjectivity and plurality on which it depends.
+
+Contact: lfan@tongji.edu.cn. Talks: Ling Fan is a frequent speaker at universities, forums and platforms on design, AI and agentic transformation. Recurring topics: Design AI: The Computability of Creativity; Agentic Transformation for Business; Subjective World Model: Simulating People's Preferences and Decisions.
+
+## Pages
+
+- [Ling Fan 范凌 · Researcher, Entrepreneur in Design AI](https://www.fanling.ai/): Ling Fan is Professor in Design AI at Tongji University, founding director of its Design Artificial Intelligence Lab, and founder and chairman of Tezign. Trained as an architect at Princeton and the Harvard Graduate School of Design, he studies the computability of creativity: how designers can shape AI itself and, through it, redesign systems and organizations. His research is carried into AI systems used by more than 200 enterprises and over one million professionals.
+- [Research · Ling Fan](https://www.fanling.ai/works): Past and present, the research asks one question: how creativity can be computationally represented, reasoned through and enacted, while preserving the subjectivity and plurality on which it depends.
+- [Design AI Lab · Ling Fan](https://www.fanling.ai/lab): The Design AI Lab at Tongji University, founded by Ling Fan in 2017: research on creative reasoning, subjective world models and agentic creativity, research funding and doctoral and master's advising.
+- [Subjective World Model · Ling Fan](https://www.fanling.ai/works/subjective-world-model): Can a model represent people as they actually differ, in taste, judgment and story, rather than as an average?
+- [Creative Reasoning · Ling Fan](https://www.fanling.ai/works/creative-reasoning-model): What would a reasoning model look like if its goal were to discover new possibilities rather than converge on one correct answer?
+- [Agentic Creativity · Ling Fan](https://www.fanling.ai/works/agentic-creativity): Can an agent take part in the whole arc of creative work, and extend what a team can imagine rather than automate it?
+- [Datafying Creativity · Ling Fan](https://www.fanling.ai/works/computability-of-creativity): Which parts of creative work can be computed, and what must data and knowledge contain for creativity to be identified, evaluated and generated?
+- [Brain–Machine Ratio (BMR) · Ling Fan](https://www.fanling.ai/works/brain-machine-ratio): In a creative process shared by people and machines, which part should each take, and how can that division be measured?
+- [Tezign · Ling Fan](https://www.fanling.ai/works/tezign): Entrepreneurship extends the research into practice: models and agents developed through research are carried into products that organizations use, responsibly and at scale, to understand people, make decisions and create.
+- [Talks · Ling Fan](https://www.fanling.ai/talks): Talks and lectures by Ling Fan on Design AI and the computability of creativity, agentic transformation for business, and subjective world models.
+- [Writing · Ling Fan](https://www.fanling.ai/writing): Books and publications by Ling Fan on design, artificial intelligence and the computability of creativity.
+- [About · Ling Fan](https://www.fanling.ai/about): Ling Fan (范凌): education, academic appointments, service and recognition.
+- [News · Ling Fan](https://www.fanling.ai/news): News about Ling Fan (范凌): talks, exhibitions, papers and press coverage.
+
+## Current research
+
+- Subjective World Model: Can a model represent people as they actually differ, in taste, judgment and story, rather than as an average?
+- Creative Reasoning: What would a reasoning model look like if its goal were to discover new possibilities rather than converge on one correct answer?
+- Agentic Creativity: Can an agent take part in the whole arc of creative work, and extend what a team can imagine rather than automate it?
+
+## Entrepreneurship
+
+Founded in 2015 to translate research into technologies deployed at scale, Tezign builds agentic AI systems for organizations. It serves more than 200 enterprises and over one million professional users, and has raised more than US$150 million from investors including Temasek, Sequoia Capital and Hearst Ventures.
+- Tezign (https://www.tezign.com/en): The Generative Enterprise Agent (GEA) platform: post-trained models, context systems, agent harnesses and long-running, proactive agents for consumer insight, product innovation and marketing growth.
+- atypica.AI (https://atypica.ai): A social-simulation agent built on subjective world models, with more than one million users of its own.
+- MuseDAM (https://www.musedam.cc/en-US): An AI-native content system that makes the right content reliably available to the right people and AI.

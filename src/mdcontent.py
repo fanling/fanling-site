@@ -30,7 +30,8 @@ def from_md(s):
 def parse(path):
     """Return {section: {field: [lines]}}; text before the first field is stored under ''."""
     doc, sec, field = {}, None, None
-    for raw in open(path, encoding="utf-8").read().splitlines():
+    src = re.sub(r"<!--.*?-->", "", open(path, encoding="utf-8").read(), flags=re.S)   # hidden lines
+    for raw in src.splitlines():
         line = re.sub(r"\\([\[\]*_|#.!()\-+`])", r"\1", raw.rstrip())   # undo escapes added by a doc export
         if line.startswith("# "):
             sec = line[2:].strip(); field = ""
