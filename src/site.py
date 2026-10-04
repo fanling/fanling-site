@@ -94,7 +94,7 @@ def page(path, title, body, artifact=False):
     home = pre or "./"
     nav = "".join(f'<a href="{home if h == "index.html" else pre + h}"{CUR if h == cur or (h == "works.html" and (cur.startswith("works/") or cur == "lab.html") and cur != "works/tezign.html") else ""}>{t}</a>' for h, t in NAV)
     inner = f"""<div class="wrap"><header class="top"><a class="brand" href="{home}">Ling Fan<span class="zh">{C.NAME_ZH}</span></a><nav aria-label="Main">{nav}</nav></header>
-<main>{body}</main><footer><span>Ling Fan · Design AI</span><span>{C.CONTACT}{"".join(f' · <a href="{u}" target="_blank" rel="noopener" style="color:inherit">{n}</a>' for n, u in C.PROFILES)}</span><span>Draft · October 2026</span></footer></div>"""
+<main>{body}</main><footer><span>Ling Fan · Design AI</span><span>{C.CONTACT}{"".join(f' · <a href="{u}" target="_blank" rel="noopener" style="color:inherit">{n}</a>' for n, u in C.PROFILES)}</span><span>© 2026 Ling Fan</span></footer></div>"""
     head = f"<title>{escape(title)}</title>{FONTS}<style>{CSS}</style>"
     if artifact and path == "index.html":
         return head + inner
@@ -159,7 +159,6 @@ def build(out, artifact=False):
     ps = lambda xs: "".join(f"<p>{x}</p>" for x in xs)
 
     pages["index.html"] = ("Ling Fan", f"""
-<p class="draft">Draft for review · not yet published at fanling.ai</p>
 <div class="split" style="align-items:center;grid-template-columns:minmax(0,1.5fr) minmax(0,.8fr)"><div><h1 style="font-size:clamp(40px,6vw,68px)">{C.HEADLINE}</h1>
 <p style="margin-top:24px">{C.SHORT_BIO}</p>
 <div class="btns"><a href="works.html">Research</a><a href="works/tezign.html">Entrepreneurship</a><a href="writing.html">Writing</a></div></div>
