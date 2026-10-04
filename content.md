@@ -196,9 +196,9 @@ Founder and Chairman, 2015–present
 Ling founded Tezign in 2015 to translate the Lab's research into technologies deployed at scale. Tezign builds agentic AI systems that help organizations understand people, make decisions and create. It serves more than 200 enterprises and over one million professional users, and has raised more than US$150 million from investors including Temasek, Sequoia Capital and Hearst Ventures.
 
 ## Products (name | link | description | image)
-- Tezign | https://www.tezign.com/en | The Generative Enterprise Agent (GEA) platform: post-trained models, context systems, agent harnesses and long-running, proactive agents for consumer insight, product innovation and marketing growth. | diagram:tezign
-- atypica.AI | https://atypica.ai | A social-simulation agent built on the Design AI Lab's subjective world models, with more than one million users of its own. | atypica-report.jpg
-- MuseDAM | https://www.musedam.cc/en-US | An AI-native content system that makes the right content reliably available to the right people and AI. | —
+- Tezign | https://www.tezign.com/en | The Generative Enterprise Agent (GEA) platform: post-trained models, context systems, agent harnesses and long-running, proactive agents for consumer insight, product innovation and marketing growth. | tezign-home.jpg
+- atypica.AI | https://atypica.ai | A social-simulation agent built on the Design AI Lab's subjective world models, with more than one million users of its own. | atypica-home.jpg
+- MuseDAM | https://www.musedam.cc/en-US | An AI-native content system that makes the right content reliably available to the right people and AI. | musedam-home.jpg
 
 # Lab
 
