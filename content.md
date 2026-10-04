@@ -192,12 +192,18 @@ It is studied in two ways, side by side. The quantitative study measures how the
 ## Subtitle
 Founder and Chairman, 2015–present
 
+## Page title
+From Research to Practice
+
 ## Text
-Ling founded Tezign in 2015 to translate the Lab's research into technologies deployed at scale. Tezign builds agentic AI systems that help organizations understand people, make decisions and create. It serves more than 200 enterprises and over one million professional users, and has raised more than US$150 million from investors including Temasek, Sequoia Capital and Hearst Ventures.
+Entrepreneurship extends the research into practice: models and agents developed through research are carried into products that organizations use, responsibly and at scale, to understand people, make decisions and create.
+
+## Company
+Founded in 2015 to translate research into technologies deployed at scale, Tezign builds agentic AI systems for organizations. It serves more than 200 enterprises and over one million professional users, and has raised more than US$150 million from investors including Temasek, Sequoia Capital and Hearst Ventures.
 
 ## Products (name | link | description | image)
 - Tezign | https://www.tezign.com/en | The Generative Enterprise Agent (GEA) platform: post-trained models, context systems, agent harnesses and long-running, proactive agents for consumer insight, product innovation and marketing growth. | tezign-home.jpg
-- atypica.AI | https://atypica.ai | A social-simulation agent built on the Design AI Lab's subjective world models, with more than one million users of its own. | atypica-home.jpg
+- atypica.AI | https://atypica.ai | A social-simulation agent built on subjective world models, with more than one million users of its own. | atypica-home.jpg
 - MuseDAM | https://www.musedam.cc/en-US | An AI-native content system that makes the right content reliably available to the right people and AI. | musedam-home.jpg
 
 # Lab

@@ -163,7 +163,7 @@ def build():
             series_page()
 
     # Tezign
-    tb_ = "".join(f"<p>{p}</p>" for p in C.TEZIGN["body"])
+    tb_ = "".join(f"<p>{p}</p>" for p in C.TEZIGN["body"] + C.TEZIGN["company"])
     def ptile(name, link, desc, img):
         if img and img.startswith("diagram:"):
             vis = f'<div class="stl" style="height:1.75in;border:1px solid var(--rule);background:#fff;padding:.06in;overflow:hidden"><style>.stl svg{{display:block;width:100%;height:100%}}</style>{getattr(D, img[8:])()}</div>'

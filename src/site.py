@@ -222,8 +222,9 @@ def build(out, artifact=False):
 <p><a href="{nxt['slug']}.html">Next: {nxt['label']} · {nxt['title']} →</a></p>""")
 
     pages["works/tezign.html"] = ("Tezign · Ling Fan", f"""
-<p class="eyebrow"><b>Entrepreneurship</b> · {C.TEZIGN['sub']}</p>
-<div class="split"><h1>Tezign</h1><div>{ps(C.TEZIGN['body'])}</div></div>
+<p class="eyebrow">Entrepreneurship</p><h1>{C.TEZIGN['page_title']}</h1>
+{''.join(f'<p class="lede">{p}</p>' for p in C.TEZIGN['body'])}
+<section><p class="eyebrow">The Company</p><div class="worklist"><a class="workrow" href="https://www.tezign.com/en" target="_blank" rel="noopener"><span class="n">&nbsp;</span><div><h3>Tezign ↗</h3><span class="eyebrow" style="margin:0">{C.TEZIGN['sub']}</span></div><p>{" ".join(C.TEZIGN['company'])}</p></a></div></section>
 <section><p class="eyebrow">Products</p><div class="series">{"".join(product_tile(*p_, pre="../") for p_ in C.TEZIGN["products"])}</div></section>""")
 
     pub_row = lambda y, a, t, v, d: (f'<tr><td class="y">{y}</td><td>{a} {t} <i>{v}</i>' + (f' <a href="{d}" target="_blank" rel="noopener">{d.replace("https://doi.org/", "doi:").replace("https://arxiv.org/abs/", "arXiv:")}</a>' if d else "") + "</td></tr>")

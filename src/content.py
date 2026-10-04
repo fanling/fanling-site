@@ -104,6 +104,7 @@ PAST_WORKS = [w for w in WORKS if w["group"] == "past"]
 
 _t = _sec("Tezign")[1]
 TEZIGN = {"title": "Tezign", "sub": text(_f(_t, "Subtitle")), "body": paras(_f(_t, "Text")),
+          "page_title": text(_f(_t, "Page title")), "company": paras(_f(_t, "Company")),
           "products": rows(_f(_t, "Products"), 4, none_if_empty=(3,))}
 
 _l = _sec("Lab")[1]
