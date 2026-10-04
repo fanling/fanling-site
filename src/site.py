@@ -94,7 +94,7 @@ def page(path, title, body, artifact=False):
     home = pre or "./"
     nav = "".join(f'<a href="{home if h == "index.html" else pre + h}"{CUR if h == cur or (h == "works.html" and cur.startswith("works/")) else ""}>{t}</a>' for h, t in NAV)
     inner = f"""<div class="wrap"><header class="top"><a class="brand" href="{home}">Ling Fan<span class="zh">{C.NAME_ZH}</span></a><nav aria-label="Main">{nav}</nav></header>
-<main>{body}</main><footer><span>Ling Fan · Designing AI</span><span>{C.CONTACT}</span><span>Draft · October 2026</span></footer></div>"""
+<main>{body}</main><footer><span>Ling Fan · Designing AI</span><span>{C.CONTACT}{"".join(f' · <a href="{u}" target="_blank" rel="noopener" style="color:inherit">{n}</a>' for n, u in C.PROFILES)}</span><span>Draft · October 2026</span></footer></div>"""
     head = f"<title>{escape(title)}</title>{FONTS}<style>{CSS}</style>"
     if artifact and path == "index.html":
         return head + inner
@@ -223,6 +223,7 @@ def build(out, artifact=False):
     pages["writing.html"] = ("Writing · Ling Fan", f"""
 <p class="eyebrow">Writing</p><h1>Books and publications</h1>
 <section><p class="eyebrow">Books</p>{''.join(book(*b) for b in C.WRITING['books'])}</section>
+<section><p class="eyebrow">Substack</p><p><a href="{dict(C.PROFILES)['Substack']}" target="_blank" rel="noopener"><i>{C.SUBSTACK[0]}</i> ↗</a><br><span style="color:var(--muted)">{C.SUBSTACK[1]}</span></p></section>
 <section><p class="eyebrow">Publications</p><p>Papers and essays, newest first, selected from more than 100. {C.TODO('full publication list or Google Scholar profile')}</p><div class="tbl"><table>{pubs}</table></div></section>""")
 
     appts = "".join(f'<tr><td class="y">{y or "—"}</td><td><b style="font-weight:500">{i}</b><br>{r}</td></tr>' for y, i, r in C.APPOINTMENTS)
@@ -234,7 +235,7 @@ def build(out, artifact=False):
 <p class="eyebrow">About</p><h1>Ling Fan <span style="font-family:var(--cjk);font-size:.55em;color:var(--muted)">{C.NAME_ZH}</span></h1>
 <div class="split" style="margin-top:36px"><div><img class="portrait" src="media/portrait.jpg" alt="Ling Fan"></div><div>{ps([C.SHORT_BIO])}
 <p>His work has been covered by Bloomberg, Forbes and Harvard Business Review.</p>
-<p>Contact: <span style="user-select:all">{C.CONTACT}</span></p></div></div>
+<p>Contact: <span style="user-select:all">{C.CONTACT}</span></p><p>{" · ".join(f'<a href="{u}" target="_blank" rel="noopener">{n} ↗</a>' for n, u in C.PROFILES)}</p></div></div>
 <section class="split"><h2>Education</h2><div class="tbl"><table>{edu}</table></div></section>
 <section class="split"><h2>Academic experience</h2><div class="tbl"><table>{appts}</table></div></section>
 <section class="split"><h2>Other service</h2><div class="tbl"><table>{svc}</table></div></section>

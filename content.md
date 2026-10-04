@@ -28,6 +28,13 @@ Ling Fan is a globally recognized entrepreneur and scholar of design AI. He is a
 ## Contact email
 lfan@tongji.edu.cn
 
+## Profiles (name: link)
+- LinkedIn: https://www.linkedin.com/in/ling-fan/
+- Substack: https://fanling.substack.com/
+
+## Substack (name | description)
+- Fatflatfloat | Ling's newsletter on design, AI and education, in English and Chinese.
+
 # Statement
 
 ## Text

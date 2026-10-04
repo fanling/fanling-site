@@ -75,6 +75,8 @@ NAME_ZH = text(_f(_b, "Chinese name"))
 THESIS = text(_f(_b, "Thesis"))
 SHORT_BIO = text(_f(_b, "Short bio"))
 CONTACT = text(_f(_b, "Contact email"))
+PROFILES = facts(_f(_b, "Profiles"))
+SUBSTACK = rows(_f(_b, "Substack"), 2)[0]
 
 STATEMENT = paras(_f(_sec("Statement")[1], "Text"))
 

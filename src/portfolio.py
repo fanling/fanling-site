@@ -229,7 +229,7 @@ def build():
     # Back
     page(f"""<div style="display:grid;align-content:center;height:100%;gap:18px">
 <h2>Ling Fan</h2><p class="lede" style="margin:0">{C.THESIS}</p>
-<p class="eyebrow" style="margin-top:20px">{C.CONTACT}</p></div>""", "Contact", "Z-00")
+<p class="eyebrow" style="margin-top:20px">{C.CONTACT}</p><p class="eyebrow" style="margin-top:6px;text-transform:none">{" · ".join(u.replace("https://", "").replace("www.", "").rstrip("/") for n, u in C.PROFILES)}</p></div>""", "Contact", "Z-00")
 
     return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Ling Fan — Portfolio</title>
 <link rel="stylesheet" href="fonts.css"><style>{CSS}</style></head><body>{''.join(pages)}</body></html>"""
