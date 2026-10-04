@@ -44,7 +44,7 @@ a{color:inherit;text-decoration:none;border-bottom:1px solid var(--accent)}
 
 
 def tb(left, sheet, n):
-    return f'<div class="tb"><span>Ling Fan · Designing AI</span><span>{left}</span><span>{sheet} · {n:02d}</span></div>'
+    return f'<div class="tb"><span>Ling Fan · Design AI</span><span>{left}</span><span>{sheet} · {n:02d}</span></div>'
 
 
 def facts(rows):
@@ -65,7 +65,7 @@ def build():
  <p class="eyebrow">Portfolio · R. Buckminster Fuller Professor in Practice of Design Science · Harvard Graduate School of Design</p>
  <div style="align-self:center;display:grid;grid-template-columns:1fr 2.9in;gap:.45in;align-items:center">
   <div><h1>Ling Fan <span class="zh" style="font-size:40pt;color:var(--muted)">{C.NAME_ZH}</span></h1>
-  <p class="lede" style="font-size:24pt;max-width:30ch">{C.THESIS}</p></div>
+  <p class="lede" style="font-size:24pt;max-width:30ch">{C.HEADLINE}</p></div>
   <img src="media/portrait.jpg" alt="" style="display:block;width:2.9in;height:3.62in;object-fit:cover">
  </div>
  <div style="display:grid;grid-template-columns:1fr 1fr;gap:.45in;align-items:end">
@@ -75,10 +75,10 @@ def build():
 </div>""", "Portfolio", "A-00")
 
     # Contents
-    toc = [("Statement", "Designing AI"), ("Overview", "The body of work")]
+    toc = [("Statement", "Design AI"), ("Overview", "The body of work")]
     toc += [(w["label"], w["title"]) for w in C.WORKS]
-    toc += [("Entrepreneurship", "Tezign"), ("Research", "Design AI Lab, Tongji University"), ("Teaching", "Courses, programs, students"),
-            ("Talks and writing", "Selected"), ("Publications", "Selected"), ("Record", "Appointments, education, recognition")]
+    toc += [("Entrepreneurship", "Tezign"), ("Research", "Design AI Lab, Tongji University"), ("Student advising", "Doctoral and master's students"),
+            ("Talks", "Selected talks and keynotes"), ("Publications", "Selected"), ("Record", "Appointments, education, recognition")]
     rows = "".join(f'<tr><td class="y">{a}</td><td style="font-family:var(--serif);font-size:13pt">{b}</td></tr>' for a, b in toc)
     page(f"""<p class="eyebrow">Contents</p><div class="cols"><div><h2>The works in this portfolio are models, datasets, agents and institutions.</h2>
 <p style="margin-top:18px">Each is presented as an architect presents a project: the question it answers, its structure, how it performs in use. Links in this document are live.</p></div>
@@ -86,7 +86,7 @@ def build():
 
     # Statement
     paras = "".join(f"<p>{p}</p>" for p in C.STATEMENT)
-    page(f"""<div style="display:grid;grid-template-columns:auto 1fr;gap:.5in;align-items:end;margin-bottom:22px"><div><p class="eyebrow">Statement</p><h2>Designing AI</h2></div>
+    page(f"""<div style="display:grid;grid-template-columns:auto 1fr;gap:.5in;align-items:end;margin-bottom:22px"><div><p class="eyebrow">Statement</p><h2>Design AI</h2></div>
 <p class="lede" style="margin:0;max-width:none">{C.THESIS}</p></div>
 <div style="columns:3;column-gap:.35in;font-size:0">{paras.replace('<p>','<p style="font-size:9.8pt">')}</div>
 <div style="position:absolute;left:.7in;right:.7in;bottom:1.05in">{D.lineage()}</div>""", "Statement", "A-02")
@@ -164,33 +164,40 @@ def build():
 
     # Tezign
     tb_ = "".join(f"<p>{p}</p>" for p in C.TEZIGN["body"])
+    def ptile(name, link, desc, img):
+        if img and img.startswith("diagram:"):
+            vis = f'<div class="stl" style="height:1.75in;border:1px solid var(--rule);background:#fff;padding:.06in;overflow:hidden"><style>.stl svg{{display:block;width:100%;height:100%}}</style>{getattr(D, img[8:])()}</div>'
+        elif img:
+            vis = f'<img src="media/{img}" alt="" style="display:block;width:100%;height:1.75in;object-fit:cover;object-position:top;border:1px solid var(--rule)">'
+        else:
+            vis = f'<div class="ph" style="height:1.75in">Image to add: {name}</div>'
+        host = link.split("//")[1].split("/")[0].replace("www.", "")
+        return f'<div>{vis}<h3 style="margin-top:10px">{name}</h3><p style="font-size:9pt;margin-top:4px">{desc}</p><p style="font-size:9pt;margin-top:4px"><a href="{link}">{host}</a></p></div>'
     page(f"""<p class="eyebrow"><b>Entrepreneurship</b> · {C.TEZIGN['sub']}</p>
-<div class="cols" style="grid-template-columns:1fr 1.3fr"><div><h2>Tezign</h2><div style="margin-top:16px">{tb_}</div></div>
-<div>{facts(C.TEZIGN['facts'])}</div></div>
-<div style="position:absolute;left:.7in;right:.7in;bottom:1.1in">{D.tezign()}</div>""", "Tezign", "E-01")
+<div class="cols" style="grid-template-columns:1fr 2.2fr;align-items:start"><h2>Tezign</h2><div>{tb_}</div></div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.3in;margin-top:.25in">{"".join(ptile(*p_) for p_ in C.TEZIGN["products"])}</div>""", "Tezign", "E-01")
 
     # Lab and teaching
     lab = "".join(f"<p>{p}</p>" for p in C.LAB["body"])
     fund = "".join(f'<tr><td class="y">{y}</td><td>{t}<br><span style="color:var(--muted)">{s}</span></td></tr>' for y, t, s in C.LAB["funded"])
-    teach = "".join(f"<p>{p}</p>" for p in C.TEACHING["body"] + C.TEACHING["supervision"])
+    adv = "".join(f"<p>{p}</p>" for p in C.ADVISING["body"])
+    advw = "".join(f'<tr><td class="y">{y}</td><td><b style="font-weight:500">{n}</b><br>{t}</td></tr>' for y, n, t in C.ADVISING["doctoral"])
     page(f"""<p class="eyebrow"><b>Research</b></p>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:.45in">
 <div><h3>{C.LAB['title']}</h3><div style="margin-top:10px">{lab}</div>{facts(C.LAB['facts']).replace('class="facts"','class="facts stack"')}</div>
 <div><h3>Representative funded projects</h3><table style="margin-top:10px">{fund}</table></div>
 </div>""", "Research", "R-01")
-    page(f"""<p class="eyebrow"><b>Teaching</b></p>
-<div class="cols" style="grid-template-columns:1fr 1.5fr"><div><h2>Teaching design with and for AI</h2>
-<p style="margin-top:18px">{C.TEACHING['todo']}</p></div><div style="columns:2;column-gap:.35in">{teach}</div></div>""", "Teaching", "R-02")
+    page(f"""<p class="eyebrow"><b>Research</b> · Student advising</p>
+<div class="cols" style="grid-template-columns:1fr 1.5fr"><div><h2>Student advising</h2>
+<div style="margin-top:18px">{adv}</div></div><div><h3>Doctoral students</h3><p style="font-size:9pt;color:var(--muted);margin-top:4px">By year of entry, with dissertation titles.</p><table style="margin-top:8px">{advw}</table></div></div>""", "Student advising", "R-02")
 
-    # Talks and writing
+    # Talks
     talks = "".join(
-        f'<tr><td class="y">{y}</td><td><b style="font-weight:500">{v}</b><br>{t}'
-        + (f'<br><a href="{u}">Watch the lecture</a>' if u else "") + "</td></tr>" for y, v, t, u in C.TALKS)
-    books = "".join(f'<tr><td class="y">{y}</td><td><i>{t}</i><br><span style="color:var(--muted)">{p}</span></td></tr>' for y, t, p in C.WRITING["books"])
-    page(f"""<p class="eyebrow"><b>Talks and writing</b> · Selected</p>
-<div class="cols"><div><h3>Talks</h3><table style="margin-top:10px">{talks}</table><p style="margin-top:8px">{C.TODO('video links for further talks')}</p></div>
-<div><h3>Books</h3><table style="margin-top:10px">{books}</table></div></div>""",
-         "Talks and writing", "T-01")
+        f'<tr><td class="y" style="width:.45in">{y}</td><td><b style="font-weight:500">{t}</b>{"" if t[-1] in "?!" else "."} {v}'
+        + (f' · <a href="{u}">{"summary" if "sohu.com" in u else "video"}</a>' if u else "") + "</td></tr>" for y, v, t, u in C.TALKS)
+    page(f"""<p class="eyebrow"><b>Talks</b> · Selected talks and keynotes</p>
+<div class="pubcols" style="columns:2;column-gap:.35in;column-fill:auto;height:5.75in"><style>.pubcols tr{{break-inside:avoid}}.pubcols td{{padding-top:2px;padding-bottom:2px}}</style><table style="font-size:7.4pt;line-height:1.25">{talks}</table></div>""",
+         "Talks", "T-01")
 
     # Book
     for y, t, p in C.WRITING["books"]:
@@ -206,29 +213,35 @@ def build():
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:.18in .25in;align-content:start">{sp}</div></div>""", "Book", "T-01.1")
 
     # Publications
-    pubs = "".join(
-        f'<tr><td class="y">{y}</td><td>{a} {t} <i>{v}</i>' + (f' <a href="{d}">{d.replace("https://doi.org/", "doi:")}</a>' if d else "") + "</td></tr>"
-        for y, a, t, v, d in C.PUBLICATIONS)
+    def pub_block(cat, rs):
+        trs = "".join(f'<tr><td class="y" style="width:.55in">{y}</td><td>{a} {t} <i>{v}</i>'
+                      + (f' <a href="{d}">{d.replace("https://doi.org/", "doi:").replace("https://arxiv.org/abs/", "arXiv:")}</a>' if d else "") + "</td></tr>" for y, a, t, v, d in rs)
+        return f'<h3 style="font-size:10.5pt;margin:0 0 4px;break-after:avoid">{cat}</h3><table style="font-size:7pt;line-height:1.25;margin-bottom:10px">{trs}</table>'
     pats = "".join(f'<tr><td class="y" style="width:1.6in">{no}</td><td>{t}</td></tr>' for t, no in C.PATENTS)
-    page(f"""<p class="eyebrow"><b>Publications</b> · Papers and essays, selected from more than 100</p>
-<div class="cols" style="grid-template-columns:1.7fr 1fr"><table>{pubs}</table>
-<div><h3>Patents (selected)</h3><table style="margin-top:10px">{pats}</table>
-<p style="font-size:9.5pt">{C.TODO('full publication list or Google Scholar profile')}</p></div></div>""", "Publications", "T-02")
+    groups = [C.PUBLICATIONS[:2], C.PUBLICATIONS[2:]]
+    for gi, grp in enumerate(groups):
+        extra = (f'<div style="break-inside:avoid-column"><h3 style="font-size:10.5pt;margin:0 0 4px">Patents (selected)</h3><table style="font-size:7.6pt">{pats}</table></div>' if gi == len(groups) - 1 else "")
+        page(f"""<p class="eyebrow"><b>Publications</b> · More than 100 articles and papers{" (continued)" if gi else ""}</p>
+<div style="columns:2;column-gap:.35in;column-fill:auto;height:5.75in;margin-top:0" class="pubcols"><style>.pubcols tr{{break-inside:avoid}}.pubcols td{{padding-top:3px;padding-bottom:3px}}</style>{"".join(pub_block(c, r) for c, r in grp)}{extra}</div>""", "Publications", f"T-02.{gi + 1}")
 
     # Record
     appts = "".join(f'<tr><td class="y">{y or "—"}</td><td><b style="font-weight:500">{i}</b><br>{r}</td></tr>' for y, i, r in C.APPOINTMENTS)
     edu = "".join(f'<tr><td class="y">{y}</td><td><b style="font-weight:500">{i}</b>, {d}</td></tr>' for y, i, d in C.EDUCATION)
-    hon = "".join(f'<tr><td class="y">{y or "—"}</td><td>{t}</td></tr>' for y, t in C.HONORS)
-    svc = "".join(f'<tr><td class="y">{y}</td><td>{t}</td></tr>' for y, t in C.SERVICE)
+    hon = "".join(f'<tr><td class="y">{y or "—"}</td><td><b style="font-weight:500">{o}</b><br>{t}</td></tr>' for y, o, t in C.HONORS)
+    svc = "".join(f'<tr><td class="y">{y}</td><td><b style="font-weight:500">{o}</b><br>{t}</td></tr>' for y, o, t in C.SERVICE)
+    sm = 'class="rec" style="margin-top:8px;font-size:8.2pt;line-height:1.25"'
     page(f"""<p class="eyebrow"><b>Record</b></p>
-<div style="display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:.35in">
+<div style="display:grid;grid-template-columns:1.3fr 1fr;gap:.45in">
 <div><h3>Academic appointments</h3><table style="margin-top:10px">{appts}</table></div>
-<div><h3>Education</h3><table style="margin:10px 0 18px">{edu}</table><h3>Service</h3><table style="margin-top:10px">{svc}</table></div>
-<div><h3>Recognition</h3><table style="margin-top:10px">{hon}</table></div></div>""", "Record", "T-03")
+<div><h3>Education</h3><table style="margin-top:10px">{edu}</table></div></div>""", "Record", "T-03.1")
+    page(f"""<style>.rec td{{padding-top:4px;padding-bottom:4px}}</style><p class="eyebrow"><b>Record</b> · Service and recognition</p>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:.45in">
+<div><h3>Service</h3><table {sm}>{svc}</table></div>
+<div><h3>Recognition</h3><table {sm}>{hon}</table></div></div>""", "Record", "T-03.2")
 
     # Back
     page(f"""<div style="display:grid;align-content:center;height:100%;gap:18px">
-<h2>Ling Fan</h2><p class="lede" style="margin:0">{C.THESIS}</p>
+<h2>Ling Fan</h2><p class="lede" style="margin:0">{C.HEADLINE}</p>
 <p class="eyebrow" style="margin-top:20px">{C.CONTACT}</p><p class="eyebrow" style="margin-top:6px;text-transform:none">{" · ".join(u.replace("https://", "").replace("www.", "").rstrip("/") for n, u in C.PROFILES)}</p></div>""", "Contact", "Z-00")
 
     return f"""<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Ling Fan — Portfolio</title>

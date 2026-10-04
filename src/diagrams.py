@@ -66,7 +66,7 @@ def lineage():
            ("1950s–60s", "Buckminster Fuller", ["comprehensive anticipatory", "design science"]),
            ("1964", "Christopher Alexander", ["Notes on the", "Synthesis of Form"]),
            ("1970", "Nicholas Negroponte", ["The Architecture", "Machine"]),
-           ("Today", "Designing AI", ["the designer designs", "the intelligence"])]
+           ("Today", "Design AI", ["the designer designs", "the intelligence"])]
     b = ['<path d="M30 70H1010" class="lq" fill="none"/>']
     for i, (yr, name, ls) in enumerate(pts):
         x = 95 + i * 170
@@ -76,7 +76,7 @@ def lineage():
         b.append(_t(x, 104, name, "h ac-t" if last else "h", "middle"))
         for j, ln in enumerate(ls):
             b.append(_t(x, 124 + j * 17, ln, "b", "middle"))
-    return _svg(170, "".join(b), "From Vitruvius to designing AI", m)
+    return _svg(170, "".join(b), "From Vitruvius to Design AI", m)
 
 
 def world_model():
@@ -271,7 +271,7 @@ def diverge_example():
 
 def tezign():
     m = "a-tz"
-    b = [_t(30, 22, "TEZIGN\u2019S AGENT STACK, GEA (GENERAL-PURPOSE ENTERPRISE AGENT)", "m")]
+    b = [_t(30, 22, "TEZIGN\u2019S AGENT STACK, GEA (GENERATIVE ENTERPRISE AGENT)", "m")]
     b.append(_box(30, 36, 730, 52))
     b.append(_t(46, 60, "Proactive agents", "h")); b.append(_t(46, 78, "start work on their own", "q"))
     for i, t in enumerate(["Insight", "Innovation", "Marketing"]):

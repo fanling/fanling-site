@@ -61,7 +61,7 @@ dl.facts dt{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-tra
 dl.facts dd{margin:0}
 @media (max-width:520px){dl.facts div{grid-template-columns:minmax(0,1fr);gap:2px}}
 .ph{border:1px dashed var(--accent);background:var(--tint);aspect-ratio:16/9;max-width:100%;display:flex;align-items:flex-end;padding:14px;font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
-.cols3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(24px,3vw,40px);margin-top:56px}.cols3>div{min-width:0}.wcard{display:block;border-top:1px solid var(--ink);padding-block:18px 28px;text-decoration:none;color:inherit}.wcard:hover h3{color:var(--accent)}.wcard .n{display:block;font-family:var(--serif);font-size:34px;line-height:1;color:var(--accent);margin-bottom:12px}.wcard .eyebrow{display:block;margin:8px 0 0;font-size:11px}.wcard p{margin:12px 0 0;color:var(--muted);font-size:15px}@media (max-width:900px){.cols3{grid-template-columns:minmax(0,1fr)}}.stile{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;background:#fff;border:1px solid var(--rule);padding:0;box-sizing:border-box}div.stile{padding:10px}div.stile svg{display:block;width:100%;height:100%}.series{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:48px 32px}@media (max-width:760px){.series{grid-template-columns:minmax(0,1fr)}}.book{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:clamp(20px,4vw,48px);border-top:1px solid var(--ink);padding-block:24px 40px}.book>img{display:block;width:100%;height:auto}@media (max-width:640px){.book{grid-template-columns:minmax(0,1fr)}.book>img{max-width:220px}}.gal{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.gal img{display:block;width:100%;height:auto;border:1px solid var(--rule)}.fig{margin:0}.fig img,.fig video{display:block;width:100%;height:auto;background:#fff;border:1px solid var(--rule)}.portrait{display:block;width:100%;aspect-ratio:4/5;object-fit:cover}.fig figcaption{font-size:13px;line-height:1.5;color:var(--muted);margin-top:10px}
+.cols3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(24px,3vw,40px);margin-top:56px}.cols3>div{min-width:0}.wcard{display:block;border-top:1px solid var(--ink);padding-block:18px 28px;text-decoration:none;color:inherit}.wcard:hover h3{color:var(--accent)}.wcard .n{display:block;font-family:var(--serif);font-size:34px;line-height:1;color:var(--accent);margin-bottom:12px}.wcard .eyebrow{display:block;margin:8px 0 0;font-size:11px}.wcard p{margin:12px 0 0;color:var(--muted);font-size:15px}@media (max-width:900px){.cols3{grid-template-columns:minmax(0,1fr)}}.stile{display:block;width:100%;aspect-ratio:16/10;object-fit:cover;background:#fff;border:1px solid var(--rule);padding:0;box-sizing:border-box}div.stile{padding:10px}div.stile svg{display:block;width:100%;height:100%}.series{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:48px 32px}@media (max-width:760px){.series{grid-template-columns:minmax(0,1fr)}}.book{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:clamp(20px,4vw,48px);border-top:1px solid var(--ink);padding-block:24px 40px}.book>img{display:block;width:100%;height:auto}@media (max-width:640px){.book{grid-template-columns:minmax(0,1fr)}.book>img{max-width:220px}}.gal{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.gal img{display:block;width:100%;height:auto;border:1px solid var(--rule)}.fig{margin:0}.fig img,.fig video{display:block;width:100%;height:auto;background:#fff;border:1px solid var(--rule)}.portrait{display:block;width:100%;aspect-ratio:4/5;object-fit:cover}.fig figcaption{font-size:13px;line-height:1.5;color:var(--muted);margin-top:10px}
 .grid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:24px}
 .grid4{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:24px}
 .todo{color:var(--accent);font-family:var(--mono);font-size:.82em;border-bottom:1px dashed var(--accent)}
@@ -80,7 +80,7 @@ footer{border-top:1px solid var(--ink);padding-top:14px;display:flex;flex-wrap:w
 """ + D.SVG_CSS
 
 CUR = ' aria-current="page"'
-NAV = [("works.html", "Work"), ("news.html", "News"), ("talks.html", "Talks"), ("writing.html", "Writing"), ("about.html", "About")]
+NAV = [("works.html", "Research"), ("works/tezign.html", "Entrepreneurship"), ("talks.html", "Talks"), ("writing.html", "Writing"), ("about.html", "About"), ("news.html", "News")]
 
 
 def facts(rows):
@@ -92,9 +92,9 @@ def page(path, title, body, artifact=False):
     pre = "../" * depth
     cur = path
     home = pre or "./"
-    nav = "".join(f'<a href="{home if h == "index.html" else pre + h}"{CUR if h == cur or (h == "works.html" and cur.startswith("works/")) else ""}>{t}</a>' for h, t in NAV)
+    nav = "".join(f'<a href="{home if h == "index.html" else pre + h}"{CUR if h == cur or (h == "works.html" and (cur.startswith("works/") or cur == "lab.html") and cur != "works/tezign.html") else ""}>{t}</a>' for h, t in NAV)
     inner = f"""<div class="wrap"><header class="top"><a class="brand" href="{home}">Ling Fan<span class="zh">{C.NAME_ZH}</span></a><nav aria-label="Main">{nav}</nav></header>
-<main>{body}</main><footer><span>Ling Fan · Designing AI</span><span>{C.CONTACT}{"".join(f' · <a href="{u}" target="_blank" rel="noopener" style="color:inherit">{n}</a>' for n, u in C.PROFILES)}</span><span>Draft · October 2026</span></footer></div>"""
+<main>{body}</main><footer><span>Ling Fan · Design AI</span><span>{C.CONTACT}{"".join(f' · <a href="{u}" target="_blank" rel="noopener" style="color:inherit">{n}</a>' for n, u in C.PROFILES)}</span><span>Draft · October 2026</span></footer></div>"""
     head = f"<title>{escape(title)}</title>{FONTS}<style>{CSS}</style>"
     if artifact and path == "index.html":
         return head + inner
@@ -110,6 +110,24 @@ def work_row(w, pre=""):
 TEZIGN_LINE = "Where these works are tested at production scale."
 TEZIGN_ROW = (f'<a class="workrow" href="works/tezign.html"><span class="n">&nbsp;</span><div><h3>Tezign</h3>'
               f'<span class="eyebrow" style="margin:0">{C.TEZIGN["sub"]}</span></div><p>{TEZIGN_LINE}</p></a>')
+
+
+ADVISING_LINE = "More than US$5 million in research funding; 8 doctoral and about 15 master's students today, and 15 master's graduates."
+ADVISING_STATS = "".join(f'<div style="border-top:1px solid var(--ink);padding:12px 0 20px"><span style="display:block;font-family:var(--serif);font-size:44px;line-height:1;color:var(--accent)">{n}</span><span class="eyebrow" style="margin:8px 0 0;display:block">{l}</span></div>'
+                         for n, l in [("US$5M+", "Research funding"), ("8", "Doctoral students, current"), ("~15", "Master's students, current"), ("15", "Master's graduates")])
+
+
+def product_tile(name, link, desc, img, pre=""):
+    if img and img.startswith("diagram:"):
+        vis = f'<div class="stile">{getattr(D, img[8:])()}</div>'
+    elif img:
+        vis = f'<img class="stile" src="{pre}media/{img}" alt="{name}">'
+    else:
+        vis = f'<div class="ph stile" style="display:flex;align-items:center;justify-content:center">Image to add: {name}</div>'
+    host = link.split("//")[1].split("/")[0].replace("www.", "")
+    return (f'<div><a href="{link}" target="_blank" rel="noopener" style="text-decoration:none;color:inherit">{vis}</a>'
+            f'<h3 style="margin-top:14px">{name}</h3><p style="margin-top:8px">{desc}</p>'
+            f'<p style="margin-top:8px"><a href="{link}" target="_blank" rel="noopener">{host} ↗</a></p></div>')
 
 
 def talk_card(t):
@@ -142,23 +160,28 @@ def build(out, artifact=False):
 
     pages["index.html"] = ("Ling Fan", f"""
 <p class="draft">Draft for review · not yet published at fanling.ai</p>
-<div class="split" style="align-items:center;grid-template-columns:minmax(0,1.5fr) minmax(0,.8fr)"><div><h1 style="font-size:clamp(40px,6vw,68px)">Designing AI, and through it, redesigning systems.</h1>
+<div class="split" style="align-items:center;grid-template-columns:minmax(0,1.5fr) minmax(0,.8fr)"><div><h1 style="font-size:clamp(40px,6vw,68px)">{C.HEADLINE}</h1>
 <p style="margin-top:24px">{C.SHORT_BIO}</p>
-<div class="btns"><a href="works.html">Work</a><a href="talks.html">Talks</a><a href="writing.html">Writing</a></div></div>
+<div class="btns"><a href="works.html">Research</a><a href="works/tezign.html">Entrepreneurship</a><a href="writing.html">Writing</a></div></div>
 <img class="portrait" src="media/portrait.jpg" alt="Ling Fan"></div>
-<section><p class="eyebrow">Current research work</p><div class="worklist">{''.join(work_row(w) for w in C.CURRENT_WORKS)}</div></section>
-<section><p class="eyebrow">Past research work</p><div class="worklist">{''.join(work_row(w) for w in C.PAST_WORKS)}</div></section>
+<section><p class="eyebrow">Current research · {C.RESEARCH['title']}</p><div class="worklist">{''.join(work_row(w) for w in C.CURRENT_WORKS)}</div></section>
 <section><p class="eyebrow">Entrepreneurship</p><div class="worklist">{TEZIGN_ROW}</div></section>
 <section><p class="eyebrow">Selected talks</p><div class="grid2">{''.join(talk_card(t) for t in C.TALKS if t[3] and "youtu" in t[3])}</div></section>""")
 
-    pages["works.html"] = ("Works · Ling Fan", f"""
-<p class="eyebrow">Work</p><h1>Designing AI</h1>
-<p class="lede">Each work is presented the way an architect presents a project: the question, the structure, the use.</p>
-<div class="cols3">
-<div><p class="eyebrow">Current research work</p>{''.join(work_card(w) for w in C.CURRENT_WORKS)}</div>
-<div><p class="eyebrow">Past research work</p>{''.join(work_card(w) for w in C.PAST_WORKS)}</div>
-<div><p class="eyebrow">Entrepreneurship</p><a class="wcard" href="works/tezign.html"><h3>Tezign</h3><span class="eyebrow">{C.TEZIGN['sub']}</span><p>{TEZIGN_LINE}</p></a></div>
-</div>""")
+    pages["works.html"] = ("Research · Ling Fan", f"""
+<p class="eyebrow">Research</p><h1>{C.RESEARCH['title']}</h1>
+{''.join(f'<p class="lede">{p}</p>' for p in C.RESEARCH['body'])}
+<section><p class="eyebrow">The Lab</p><div class="worklist"><a class="workrow" href="lab.html"><span class="n">&nbsp;</span><div><h3>{C.LAB['title']}</h3><span class="eyebrow" style="margin:0">Tongji University, since 2017</span></div><p>{ADVISING_LINE}</p></a></div></section>
+<section><p class="eyebrow">Current research</p><div class="worklist">{''.join(work_row(w, "") for w in C.CURRENT_WORKS)}</div></section>
+<section><p class="eyebrow">Past research</p><div class="worklist">{''.join(work_row(w, "") for w in C.PAST_WORKS)}</div></section>""")
+
+    fund_rows = "".join(f'<tr><td class="y">{y}</td><td><b style="font-weight:500">{t}</b><br><span class="sub">{f}</span></td></tr>' for y, t, f in C.LAB["funded"])
+    adv = "".join(f'<tr><td class="y">{y}</td><td><b style="font-weight:500">{n}</b><br>{t}</td></tr>' for y, n, t in C.ADVISING["doctoral"])
+    pages["lab.html"] = ("Design AI Lab · Ling Fan", f"""
+<p class="eyebrow">Research</p><h1>{C.LAB['title']}</h1>
+<div class="split" style="margin-top:36px"><div>{ps(C.LAB['body'])}</div><div class="stats">{ADVISING_STATS}</div></div>
+<section><p class="eyebrow">Research funding</p><p>More than US$5 million in cumulative research funding. Representative projects:</p><div class="tbl"><table>{fund_rows}</table></div></section>
+<section><p class="eyebrow">Student advising · doctoral students</p><p>Listed by year of entry, with dissertation titles.</p><div class="tbl"><table>{adv}</table></div></section>""")
 
     for i, w in enumerate(C.WORKS):
         nxt = C.WORKS[(i + 1) % len(C.WORKS)]
@@ -202,16 +225,19 @@ def build(out, artifact=False):
     pages["works/tezign.html"] = ("Tezign · Ling Fan", f"""
 <p class="eyebrow"><b>Entrepreneurship</b> · {C.TEZIGN['sub']}</p>
 <div class="split"><h1>Tezign</h1><div>{ps(C.TEZIGN['body'])}</div></div>
-<section><div class="dia-box">{D.tezign()}</div>{facts(C.TEZIGN['facts'])}</section>""")
+<section><p class="eyebrow">Products</p><div class="series">{"".join(product_tile(*p_, pre="../") for p_ in C.TEZIGN["products"])}</div></section>""")
 
-    pubs = "".join(f'<tr><td class="y">{y}</td><td>{a} {t} <i>{v}</i>' + (f' <a href="{d}" target="_blank" rel="noopener">{d.replace("https://doi.org/", "doi:")}</a>' if d else "") + "</td></tr>" for y, a, t, v, d in C.PUBLICATIONS)
+    pub_row = lambda y, a, t, v, d: (f'<tr><td class="y">{y}</td><td>{a} {t} <i>{v}</i>' + (f' <a href="{d}" target="_blank" rel="noopener">{d.replace("https://doi.org/", "doi:").replace("https://arxiv.org/abs/", "arXiv:")}</a>' if d else "") + "</td></tr>")
+    pubs = "".join(f'<h3 style="margin:40px 0 8px;font-size:20px">{cat}</h3><div class="tbl"><table>{"".join(pub_row(*r) for r in rs)}</table></div>' for cat, rs in C.PUBLICATIONS)
     fund = "".join(f'<tr><td class="y">{y}</td><td>{t}<br><span class="sub">{s}</span></td></tr>' for y, t, s in C.LAB["funded"])
     pats = "".join(f'<tr><td class="y">{no}</td><td>{t}</td></tr>' for t, no in C.PATENTS)
-    talks = "".join(f'<tr><td class="y">{y}</td><td><b style="font-weight:500">{v}</b><br>{t}' + (f'<br><a href="{u}" target="_blank" rel="noopener">Watch ↗</a>' if u else "") + "</td></tr>" for y, v, t, u in C.TALKS)
+    talks = "".join(f'<tr><td class="y">{y}</td><td><b style="font-weight:500">{v}</b><br>{t}' + (f'<br><a href="{u}" target="_blank" rel="noopener">{"Course summary ↗" if "sohu.com" in u else "Watch ↗"}</a>' if u else "") + "</td></tr>" for y, v, t, u in C.TALKS)
     pages["talks.html"] = ("Talks · Ling Fan", f"""
 <p class="eyebrow">Talks</p><h1>Talks and lectures</h1>
-<p class="lede">At universities and forums including Harvard, Brown, Syracuse, Hong Kong Polytechnic University, Super AI in Singapore and the World AI Conference in Shanghai.</p>
-<section><div class="tbl"><table>{talks}</table></div><p style="margin-top:14px">{C.TODO('video links for further talks')}</p></section>""")
+<p class="lede">{C.TALKS_INTRO["body"]}</p>
+<ol style="margin:14px 0 20px;padding-left:24px;font-size:19px;line-height:1.6">{"".join(f"<li>{t}</li>" for t in C.TALKS_INTRO["topics"])}</ol>
+<p>{C.TALKS_INTRO["contact"].replace("lfan@tongji.edu.cn", '<a href="mailto:lfan@tongji.edu.cn">lfan@tongji.edu.cn</a>')}</p>
+<section><div class="tbl"><table>{talks}</table></div></section>""")
 
     def book(y, t, p):
         if y not in C.BOOK_PHOTOS:
@@ -221,15 +247,15 @@ def build(out, artifact=False):
         return (f'<div class="book"><img src="media/{cover}" alt="Cover of {escape(t)}"><div><p class="eyebrow">{y} · {p}</p>'
                 f'<h3><i>{t}</i></h3><div class="grid2" style="margin-top:24px">{sp}</div></div></div>')
     pages["writing.html"] = ("Writing · Ling Fan", f"""
-<p class="eyebrow">Writing</p><h1>Books and publications</h1>
+<p class="eyebrow">Writing</p><h1>Blog, books and publications</h1>
+<section><p class="eyebrow">Blog</p><p><a href="{dict(C.PROFILES)['Substack']}" target="_blank" rel="noopener"><i>{C.BLOG[0]}</i> ↗</a><br><span style="color:var(--muted)">{C.BLOG[1]}</span></p></section>
 <section><p class="eyebrow">Books</p>{''.join(book(*b) for b in C.WRITING['books'])}</section>
-<section><p class="eyebrow">Substack</p><p><a href="{dict(C.PROFILES)['Substack']}" target="_blank" rel="noopener"><i>{C.SUBSTACK[0]}</i> ↗</a><br><span style="color:var(--muted)">{C.SUBSTACK[1]}</span></p></section>
-<section><p class="eyebrow">Publications</p><p>Papers and essays, newest first, selected from more than 100. {C.TODO('full publication list or Google Scholar profile')}</p><div class="tbl"><table>{pubs}</table></div></section>""")
+<section><p class="eyebrow">Publications</p><p>Authored or co-authored more than 100 articles and papers in academic journals, professional magazines and conference proceedings.</p>{pubs}</section>""")
 
     appts = "".join(f'<tr><td class="y">{y or "—"}</td><td><b style="font-weight:500">{i}</b><br>{r}</td></tr>' for y, i, r in C.APPOINTMENTS)
     edu = "".join(f'<tr><td class="y">{y}</td><td><b style="font-weight:500">{i}</b>, {d}</td></tr>' for y, i, d in C.EDUCATION)
-    hon = "".join(f'<tr><td class="y">{y or "—"}</td><td>{t}</td></tr>' for y, t in C.HONORS)
-    svc = "".join(f'<tr><td class="y">{y}</td><td>{t}</td></tr>' for y, t in C.SERVICE)
+    hon = "".join(f'<tr><td class="y">{y or "—"}</td><td><b style="font-weight:500">{o}</b><br>{t}</td></tr>' for y, o, t in C.HONORS)
+    svc = "".join(f'<tr><td class="y">{y}</td><td><b style="font-weight:500">{o}</b><br>{t}</td></tr>' for y, o, t in C.SERVICE)
     media = "".join(f"<li>{m}</li>" for m in C.MEDIA)
     pages["about.html"] = ("About · Ling Fan", f"""
 <p class="eyebrow">About</p><h1>Ling Fan <span style="font-family:var(--cjk);font-size:.55em;color:var(--muted)">{C.NAME_ZH}</span></h1>

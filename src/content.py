@@ -76,7 +76,8 @@ THESIS = text(_f(_b, "Thesis"))
 SHORT_BIO = text(_f(_b, "Short bio"))
 CONTACT = text(_f(_b, "Contact email"))
 PROFILES = facts(_f(_b, "Profiles"))
-SUBSTACK = rows(_f(_b, "Substack"), 2)[0]
+HEADLINE = text(_f(_b, "Headline"))
+BLOG = rows(_f(_b, "Blog"), 2)[0]
 
 STATEMENT = paras(_f(_sec("Statement")[1], "Text"))
 
@@ -102,15 +103,18 @@ CURRENT_WORKS = [w for w in WORKS if w["group"] == "current"]
 PAST_WORKS = [w for w in WORKS if w["group"] == "past"]
 
 _t = _sec("Tezign")[1]
-TEZIGN = {"title": "Tezign", "sub": text(_f(_t, "Subtitle")), "body": paras(_f(_t, "Text")), "facts": facts(_f(_t, "Facts"))}
+TEZIGN = {"title": "Tezign", "sub": text(_f(_t, "Subtitle")), "body": paras(_f(_t, "Text")),
+          "products": rows(_f(_t, "Products"), 4, none_if_empty=(3,))}
 
 _l = _sec("Lab")[1]
 LAB = {"title": text(_f(_l, "Title")), "body": paras(_f(_l, "Text")), "facts": facts(_f(_l, "Facts")),
        "funded": rows(_f(_l, "Funded projects"), 3)}
 
-_e = _sec("Teaching")[1]
-TEACHING = {"body": paras(_f(_e, "Text")), "supervision": paras(_f(_e, "Supervision and programs")),
-            "todo": text(_f(_e, "Still to add"))}
+_r = _sec("Research")[1]
+RESEARCH = {"title": text(_f(_r, "Title")), "body": paras(_f(_r, "Text"))}
+
+_e = _sec("Student advising")[1]
+ADVISING = {"body": paras(_f(_e, "Text")), "doctoral": rows(_f(_e, "Doctoral students"), 3)}
 
 _w = _sec("Writing")[1]
 WRITING = {"books": rows(_f(_w, "Books"), 3)}
@@ -124,10 +128,12 @@ BOOK_PHOTOS = {"2019": ("book-2019-cover.jpg", [
 
 NEWS = rows(_f(_sec("News")[1], "News"), 3, none_if_empty=(2,))
 TALKS = rows(_f(_sec("Talks")[1], "Talks"), 4, none_if_empty=(3,))
-PUBLICATIONS = rows(_f(_sec("Publications")[1], "Publications"), 5, none_if_empty=(4,))
+_tk = _sec("Talks")[1]
+TALKS_INTRO = {"body": text(_f(_tk, "Text")), "topics": [t for t, in rows(_f(_tk, "Topics"), 1)], "contact": text(_f(_tk, "Contact"))}
+PUBLICATIONS = [(k.split(" (")[0], rows(v, 5, none_if_empty=(4,))) for k, v in _sec("Publications")[1].items() if k.endswith("DOI or link)")]
 PATENTS = rows(_f(_sec("Patents")[1], "Patents"), 2)
 APPOINTMENTS = rows(_f(_sec("Appointments")[1], "Appointments"), 3)
 EDUCATION = rows(_f(_sec("Education")[1], "Degrees"), 3)
-HONORS = rows(_f(_sec("Honors")[1], "Honors"), 2)
-SERVICE = rows(_f(_sec("Service")[1], "Service"), 2)
+HONORS = rows(_f(_sec("Honors")[1], "Honors"), 3)
+SERVICE = rows(_f(_sec("Service")[1], "Service"), 3)
 MEDIA = items(_f(_sec("Media")[1], "Media"))
