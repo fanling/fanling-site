@@ -6,7 +6,7 @@
 
 - 网站已上线：https://www.fanling.ai （`fanling.ai` 会 308 跳转到 `www`）。Vercel 备用地址 https://fanling-site.vercel.app/
 - 仓库：https://github.com/fanling/fanling-site 。`main` 分支就是线上版本，最后一次上线是 2026-10-04 11:36（移动端修复、隐藏 Substack、SEO/GEO）。
-- **还没上线的改动**在分支 `claude/project-thread-drmsah`（2026-10-06 推送，含这份文件）。它是 2026-10-04 下午之后的最新源文件，包括下面“待上线修改”里的两处事实更正。Vercel 只会给这个分支生成预览，不影响线上。范老师确认后，把它合并到 `main` 就会自动上线。
+- **还没上线的改动**在分支 `claude/project-thread-drmsah`（2026-10-06 推送，含这份文件）。它是 2026-10-04 下午之后的最新源文件，包括下面“待上线修改”里的两处事实更正。Vercel 只会给这个分支生成预览，不影响线上。已开 PR：https://github.com/fanling/fanling-site/pull/1 。范老师确认后，合并这个 PR 到 `main` 就会自动上线。
 
 ## 二、待上线修改（已改好，在上面的分支里）
 
@@ -79,7 +79,7 @@
 
 ## 九、还没做的事
 
-- 合并分支 `claude/project-thread-drmsah` 上线（第二节的两处更正），等范老师确认。
+- 合并 PR #1（分支 `claude/project-thread-drmsah`）上线（第二节的两处更正），等范老师确认。
 - BMR 页面里团队成员的英文名是 Claude 按拼音转写的，范老师还没确认。
 - 可选：Substack 开始维护后，在 `content.md` 里去掉注释，重新打开博客栏目。
 - 可选：把 Claude Doc 和 `content.md` 重新同步一次，避免以后改文字时用到旧版本。
