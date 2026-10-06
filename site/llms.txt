@@ -32,5 +32,5 @@ Contact: lfan@tongji.edu.cn. Talks: Ling Fan is a frequent speaker at universiti
 
 Founded in 2015 to translate research into technologies deployed at scale, Tezign builds agentic AI systems for organizations. It serves more than 200 enterprises and over one million professional users, and has raised more than US$150 million from investors including Temasek, Sequoia Capital and Hearst Ventures.
 - Tezign (https://www.tezign.com/en): The Generative Enterprise Agent (GEA) platform: post-trained models, context systems, agent harnesses and long-running, proactive agents for consumer insight, product innovation and marketing growth.
-- atypica.AI (https://atypica.ai): A social-simulation agent built on subjective world models, with more than one million users of its own.
-- MuseDAM (https://www.musedam.cc/en-US): An AI-native content system that makes the right content reliably available to the right people and AI.
+- atypica.AI (https://atypica.ai): A social-simulation agent built on subjective world models.
+- MuseDAM (https://www.musedam.cc/en-US): An AI-native context system that makes the right content reliably available to the right people and AI.

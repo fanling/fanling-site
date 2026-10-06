@@ -212,6 +212,8 @@ def media_html(m, pre=""):
     if "video" in m:
         return (f'<figure class="fig" style="grid-column:1/-1"><video controls playsinline preload="none" poster="{pre}media/{m["poster"]}">'
                 f'<source src="{pre}media/{m["video"]}" type="video/mp4"></video>{cap}</figure>')
+    if "svg" in m:
+        return f'<figure class="fig" style="grid-column:1/-1"><div class="dia-box" style="margin:0">{getattr(D, m["svg"])()}</div>{cap}</figure>'
     return f'<figure class="fig"><img loading="lazy" src="{pre}media/{m["image"]}" alt="">{cap}</figure>'
 
 
