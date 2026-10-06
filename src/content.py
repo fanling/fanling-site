@@ -34,26 +34,30 @@ _WORK_SETTINGS = {
                      "caption": "A research report atypica.AI wrote from its simulated interviews."}]},
     "Work 02": {"no": "02", "group": "current", "slug": "creative-reasoning-model", "diagram": "creative_reasoning",
                 "figure_fn": "diverge_example", "dia_w": "80%", "fig_side": "right", "media": [
-                    {"image": "cr-four-step.png",
+                    {"svg": "cr_tree", "pdf": False,
                      "caption": "Four-step tree-structured divergence: extract, diverge, expand, converge."},
-                    {"video": "cr.mp4", "poster": "cr-video-frame.jpg", "pdf_image": "cr-video-frame.jpg",
+                    {"video": "cr.mp4", "poster": "cr-video-frame.jpg", "pdf": False,
                      "caption": "The model turning one intent into several scored directions (film, 30 s)."}]},
-    "Work 03": {"no": "03", "group": "current", "slug": "agentic-creativity", "diagram": "agent", "media": [
-                    {"image": "agent-loop.png", "opener": True,
-                     "caption": "The agent's loop: intent becomes a signal, then a plan, new work and evaluations, "
-                                "bounded by a consumer world model and a company world model."},
-                    {"image": "agent-timeline.png",
+    "Work 03": {"no": "03", "group": "current", "slug": "agentic-creativity", "diagram": "agent_loop", "diagram_label": "Structure · the agent's loop", "media": [
+                    {"svg": "agent_timeline", "pdf_label": "A long-horizon agent",
                      "caption": "Five days of one long-running task, moving between signal, plan, create and evals."}]},
     "Past work 01": {"no": "", "group": "past", "label": "Past research", "sheet": "PW-01",
                      "slug": "computability-of-creativity", "diagram": "computability", "media": [
                          {"video": "pw-colour.mp4", "poster": "pw-colour.jpg", "part": "a",
-                          "caption": "Palette generation and colorization for Chinese youth subcultures (film, 43 s)."},
+                          "caption": "Palette generation and colorization for Chinese youth subcultures (film, 43 s).",
+                          "shots": ["colour-stripes-1.jpg", "colour-pattern.jpg", "colour-tool-1.jpg", "colour-tool-2.jpg"],
+                          "shots_cap": "(1) Palettes of one subculture from the dataset; (2) a pattern coloured with a generated palette; (3) choosing a subculture and a feeling; (4) adjusting the palette."},
                          {"video": "pw-blindbox.mp4", "poster": "pw-blindbox.jpg", "part": "b",
-                          "caption": "New blind-box figures, outfits and scenes generated in 3D (film, 50 s)."},
+                          "caption": "New blind-box figures, outfits and scenes generated in 3D (film, 50 s).",
+                          "dataset": [("bb-shape.jpg", "Shape"), ("bb-theme.jpg", "Theme"), ("bb-price.jpg", "Price"), ("bb-colour.jpg", "Colour")]},
                          {"video": "pw-craft.mp4", "poster": "pw-craft.jpg", "part": "c",
-                          "caption": "A visitor's sketch painted in the Jinshan farmer-painting style (film, 3.5 min; interface in Chinese)."},
+                          "caption": "A visitor's sketch painted in the Jinshan farmer-painting style (film, 3.5 min; interface in Chinese).",
+                          "shots": ["craft-dataset.jpg", "craft-layout.jpg", "craft-themes.jpg", "craft-result-1.jpg"],
+                          "shots_cap": "(1) The Jinshan farmer painting dataset; (2) elements and background are laid out, then filled in the Jinshan style; (3) AI Zanhui: choosing a theme; (4) a generated painting (interface in Chinese)."},
                          {"video": "pw-prometheus.mp4", "poster": "pw-prometheus.jpg", "part": "d",
-                          "caption": "Asking Prometheus about design (film, 77 s; interface in Chinese)."}]},
+                          "caption": "Asking Prometheus about design (film, 77 s; interface in Chinese).",
+                          "dataset": [("prom-1.jpg", "Design → creativity ← AI"), ("prom-2.jpg", "\u201cWhat is design?\u201d"),
+                                      ("prom-3.jpg", "\u201cHow do green and warm colours relate?\u201d"), ("prom-4.jpg", "\u201cWhat is a serif?\u201d: answers traced to sources")]}]},
     "Past work 02": {"no": "", "group": "past", "label": "Past research", "sheet": "PW-02",
                      "slug": "brain-machine-ratio", "diagram": "bmr_quadrant", "dia_w": "74%", "diagram_extra": "bmr_versions",
                      "parts_first": True, "diagram_label": "(a) Quantitative study · the BMR quadrant", "extra_label": "(a) Quantitative study · three versions", "gallery_label": "(b) Qualitative study · the nine timeline panels",
@@ -74,6 +78,7 @@ NAME = text(_f(_b, "Name"))
 NAME_ZH = text(_f(_b, "Chinese name"))
 THESIS = text(_f(_b, "Thesis"))
 SHORT_BIO = text(_f(_b, "Short bio"))
+BIOGRAPHY = paras(_f(_b, "Biography"))
 CONTACT = text(_f(_b, "Contact email"))
 PROFILES = facts(_f(_b, "Profiles"))
 HEADLINE = text(_f(_b, "Headline"))
@@ -90,6 +95,13 @@ for key, cfg in _WORK_SETTINGS.items():
          "sub": text(_f(s, "Subtitle")), "question": text(_f(s, "Question")), "body": paras(_f(s, "Text")),
          "facts": facts(_f(s, "Facts")), "links": facts(_f(s, "Links")), "images": items(_f(s, "Images to add")),
          "diagram": cfg["diagram"]}
+    for k in ("Training", "atypica"):
+        if _f(s, k):
+            w[k.lower()] = paras(_f(s, k))
+    if _f(s, "Cases"):
+        w["cases"] = rows(_f(s, "Cases"), 4)
+    if _f(s, "Project a"):
+        w["projects"] = {x: paras(_f(s, f"Project {x}")) for x in "abcd" if _f(s, f"Project {x}")}
     if _f(s, "Series"):
         w["parts"] = rows(_f(s, "Series"), 3)
     if "figure_fn" in cfg:
@@ -105,7 +117,8 @@ PAST_WORKS = [w for w in WORKS if w["group"] == "past"]
 _t = _sec("Tezign")[1]
 TEZIGN = {"title": "Tezign", "sub": text(_f(_t, "Subtitle")), "body": paras(_f(_t, "Text")),
           "page_title": text(_f(_t, "Page title")), "company": paras(_f(_t, "Company")),
-          "products": rows(_f(_t, "Products"), 4, none_if_empty=(3,))}
+          "products": rows(_f(_t, "Products"), 4, none_if_empty=(3,)),
+          "product_pages": rows(_f(_t, "Product pages"), 3)}
 
 _l = _sec("Lab")[1]
 LAB = {"title": text(_f(_l, "Title")), "body": paras(_f(_l, "Text")), "facts": facts(_f(_l, "Facts")),

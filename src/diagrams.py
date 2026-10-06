@@ -66,7 +66,7 @@ def lineage():
            ("1950s–60s", "Buckminster Fuller", ["comprehensive anticipatory", "design science"]),
            ("1964", "Christopher Alexander", ["Notes on the", "Synthesis of Form"]),
            ("1970", "Nicholas Negroponte", ["The Architecture", "Machine"]),
-           ("Today", "Design AI", ["the designer designs", "the intelligence"])]
+           ("Today", "Design AI", ["designing AI, and", "through it, systems"])]
     b = ['<path d="M30 70H1010" class="lq" fill="none"/>']
     for i, (yr, name, ls) in enumerate(pts):
         x = 95 + i * 170
@@ -122,7 +122,7 @@ def world_model():
 
 def creative_reasoning():
     m = "a-cr"
-    b = [_t(30, 30, "CONVERGENT REASONING", "m")]
+    b = [_t(30, 30, "EXISTING REASONING MODELS (E.G. GPT, CLAUDE)", "m")]
     b.append('<circle cx="60" cy="80" r="14" class="bx"/>' + _t(60, 85, "Q", "h", "middle"))
     for x in [220, 380, 540, 700]:
         b.append(f'<circle cx="{x}" cy="80" r="6" class="dot"/>')
@@ -131,7 +131,7 @@ def creative_reasoning():
     b.append(_box(860, 58, 150, 44, None, None))
     b.append(_t(935, 85, "One answer", "h", "middle"))
     b.append('<path d="M30 130H1010" class="lq" fill="none"/>')
-    b.append(_t(30, 164, "CREATIVE REASONING · WORK 02", "m ac-t"))
+    b.append(_t(30, 164, "CREATIVE REASONING MODEL", "m ac-t"))
     for x, n in [(230, "UNFOLD"), (430, "COMPARE"), (620, "PRUNE"), (800, "FUSE")]:
         b.append(_t(x, 200, n, "m", "middle"))
     b.append('<circle cx="60" cy="320" r="14" class="bx"/>' + _t(60, 325, "Q", "h", "middle"))
@@ -210,7 +210,7 @@ def computability():
     b = [_t(30, 30, "DESIGN KNOWLEDGE, MADE COMPUTABLE", "m")]
     items = [("(a) Youth-subculture colour", "palettes from Chinese youth subcultures"),
              ("(b) Blind-box dataset", "designer toys sold as blind boxes"),
-             ("(c) Chinese traditional craft", "including Jinshan farmer painting"),
+             ("(c) Chinese folk craft", "including Jinshan farmer painting"),
              ("(d) Prometheus", "a knowledge graph of design knowledge")]
     for i, (t, d) in enumerate(items):
         y = 46 + i * 76
@@ -302,6 +302,192 @@ def tezign():
     return _svg(310, "".join(b), "Tezign's agent stack: proactive agents on an agent operating system, a decision graph, a content library and models", m)
 
 
+def cr_tree():
+    """Four-step tree-structured divergence: extract, diverge, expand, converge."""
+    m = "a-ct"
+    cy = 190
+    b = []
+    cols = [("1 · EXTRACT", 200), ("2 · DIVERGE", 410), ("3 · EXPAND", 630), ("4 · CONVERGE", 850)]
+    for lab, x in cols:
+        b.append(_t(x + 60, 30, lab, "m", "middle"))
+    b.append(f'<circle cx="60" cy="{cy}" r="30" class="dot"/>')
+    b.append('<text x="60" y="{}" class="h" text-anchor="middle" style="fill:var(--paper)">In</text>'.format(cy + 5))
+    b.append(f'<circle cx="990" cy="{cy}" r="30" class="dot-ac"/>')
+    b.append('<text x="990" y="{}" class="h" text-anchor="middle" style="fill:var(--paper)">Out</text>'.format(cy + 5))
+    b.append(_arrow(f"M90 {cy}H198", m))
+    b.append(_box(200, cy - 22, 120, 44, title=None)); b.append(_t(260, cy + 5, "the intent", "b", "middle"))
+    div = [(cy - 100, "Direction A", [cy - 140, cy - 80]), (cy, "Direction B", [cy - 20, cy + 40]), (cy + 100, "Direction C", [cy + 120])]
+    exp = []
+    for y, lab, kids in div:
+        b.append(_arrow(f"M320 {cy}C365 {cy} 365 {y} 408 {y}", m))
+        b.append(_box(410, y - 20, 140, 40)); b.append(_t(480, y + 5, lab, "b", "middle"))
+        for k, ky in enumerate(kids):
+            b.append(_arrow(f"M550 {y}C590 {y} 590 {ky} 628 {ky}", m, dashed=True))
+            exp.append((ky, lab[-1] + str(k + 1)))
+    for ky, lab in exp:
+        b.append(_box(630, ky - 18, 140, 36)); b.append(_t(700, ky + 5, f"Expansion {lab}", "q", "middle"))
+        b.append(_arrow(f"M770 {ky}C810 {ky} 810 {cy} 848 {cy}", m, dashed=True))
+    b.append(_box(850, cy - 22, 100, 44, accent=True)); b.append(_t(900, cy + 5, "scored", "b", "middle"))
+    b.append(_arrow(f"M950 {cy}H958", m))
+    notes = [(260, "what is really being asked"), (480, "several distinct directions"), (700, "each developed in depth"), (900, "compared and chosen")]
+    for x, n in notes:
+        b.append(_t(x, 360, n, "q", "middle"))
+    b = b[:4] + ['<g transform="translate(0,34)">'] + b[4:] + ["</g>"]
+    return _svg(414, "".join(b), "Four-step tree-structured divergence: the model extracts the intent, diverges into several directions, expands each, then converges on scored options", m)
+
+
+def agent_loop():
+    """The agent's loop, redrawn after Ling's figure: intent enters the loop of signal, plan, create and evals,
+    bounded by the consumer world model outside and the company world model inside, and leaves as cognitive scaffolding."""
+    ink = "var(--ink)"
+    def pill(x, y, w, t, sz=34):
+        return (f'<rect x="{x}" y="{y}" width="{w}" height="80" rx="40" fill="#fff" stroke="{ink}" stroke-width="8"/>'
+                f'<text x="{x + w / 2}" y="{y + 52}" text-anchor="middle" style="font-family:var(--serif);font-size:{sz}px;fill:{ink}">{t}</text>')
+    def tri(pts):
+        return f'<polygon points="{pts}" fill="{ink}"/>'
+    b = ['<rect x="425" y="218" width="1220" height="465" rx="232" fill="none" stroke="#d5d5d5" stroke-width="42"/>',
+         '<rect x="540" y="322" width="995" height="257" rx="128" fill="none" stroke="#959595" stroke-width="44"/>',
+         f'<rect x="485" y="268" width="1100" height="365" rx="182" fill="#fff" fill-opacity="0" stroke="{ink}" stroke-width="30"/>',
+         f'<path d="M410 268H800" stroke="{ink}" stroke-width="30"/>', tri("796,212 866,268 796,326"),
+         f'<path d="M870 636H490" stroke="{ink}" stroke-width="30"/>', tri("494,576 420,636 494,690"),
+         f'<text x="1030" y="472" text-anchor="middle" style="font-family:var(--sans);font-size:58px;font-weight:500;fill:{ink}">LOOP</text>',
+         pill(38, 230, 377, "Intent"), pill(862, 230, 333, "Signal"), pill(322, 410, 340, "Evals"),
+         pill(1408, 410, 337, "Plan"), pill(862, 596, 333, "Create"), pill(38, 596, 380, "Cognitive Scaffolding"),
+         pill(1580, 62, 388, "Consumer World Model"), pill(1580, 658, 388, "Company World Model"),
+         f'<path d="M1580 101H1493L1384 210" fill="none" stroke="{ink}" stroke-width="4"/>', tri("1368,224 1378,198 1394,214"),
+         f'<path d="M1580 697H1493L1384 588" fill="none" stroke="{ink}" stroke-width="4"/>', tri("1368,574 1394,584 1378,600")]
+    return (f'<svg class="dia" viewBox="0 0 2000 770" role="img" aria-label="The agent\'s loop: intent enters a loop of signal, plan, create and evals, bounded by the consumer world model outside and the company world model inside, and leaves as cognitive scaffolding" '
+            f'xmlns="http://www.w3.org/2000/svg">{"".join(b)}</svg>')
+
+def agent_timeline():
+    """Five days of one long-running task, moving between signal, plan, create and evals."""
+    m = "a-at"
+    X = lambda x: round(200 + (x - 415) * 0.537, 1)
+    L = {"S": 80, "P": 150, "C": 220, "E": 290}
+    b = []
+    for i, (k, name) in enumerate([("S", "Signal"), ("P", "Plan"), ("C", "Create"), ("E", "Evals")]):
+        y = L[k]
+        b.append(f'<rect x="10" y="{y - 17}" width="140" height="34" rx="17" class="bx" style="stroke-width:1.8"/>' + _t(80, y + 5, name, "h", "middle"))
+        b.append(f'<path d="M{X(415)} {y}H1030" class="lq dash" fill="none"/>')
+    for d, x in enumerate([592, 905, 1207, 1507, 1825]):
+        b.append(_t(X(x), 34, f"Day {d + 1}", "m", "middle"))
+    def c(a, bb, dashed=False):
+        (x1, l1), (x2, l2) = a, bb
+        x1, x2, y1, y2 = X(x1), X(x2), L[l1], L[l2]
+        mx = (x1 + x2) / 2
+        return f'<path d="M{x1} {y1}C{mx} {y1} {mx} {y2} {x2} {y2}" class="ln{" dash" if dashed else ""}" fill="none"/>'
+    links = [((510, "S"), (560, "P")), ((560, "P"), (610, "C")), ((610, "C"), (655, "E")), ((655, "E"), (737, "S")),
+             ((737, "S"), (777, "P")), ((777, "P"), (836, "C")), ((777, "P"), (905, "C")), ((777, "P"), (976, "C")),
+             ((905, "C"), (1035, "E")), ((1035, "E"), (1207, "S")), ((1207, "S"), (1267, "P")),
+             ((1267, "P"), (1312, "C")), ((1267, "P"), (1382, "C")), ((1267, "P"), (1615, "C")), ((1615, "C"), (1692, "C")),
+             ((1692, "C"), (1825, "E"))]
+    dashed = [((976, "C"), (1035, "E")), ((836, "C"), (1035, "E")), ((1312, "C"), (1825, "E")), ((1382, "C"), (1825, "E"))]
+    b += [c(a, z) for a, z in links] + [c(a, z, True) for a, z in dashed]
+    def node(x, lane, shape, cls):
+        x, y = X(x), L[lane]
+        if shape == "d":
+            return f'<path d="M{x} {y - 10}L{x + 10} {y}L{x} {y + 10}L{x - 10} {y}Z" class="{cls}"/>'
+        if shape == "s":
+            return f'<rect x="{x - 8}" y="{y - 8}" width="16" height="16" class="{cls}"/>'
+        if shape == "t":
+            return f'<path d="M{x - 8} {y - 10}L{x + 10} {y}L{x - 8} {y + 10}Z" class="{cls}"/>'
+        return f'<circle cx="{x}" cy="{y}" r="9" class="{cls}"/>'
+    N = "bx pf"; A = "dot-ac"; K = "dot"
+    for x, lane, sh, cls in [(510, "S", "d", K), (737, "S", "d", N), (1207, "S", "d", N), (560, "P", "s", N), (777, "P", "s", N),
+                             (1267, "P", "s", A), (610, "C", "c", N), (836, "C", "c", N), (905, "C", "c", N), (976, "C", "c", N),
+                             (1312, "C", "c", N), (1382, "C", "c", N), (1615, "C", "c", N), (1692, "C", "c", A),
+                             (655, "E", "t", A), (1035, "E", "t", N), (1825, "E", "t", K)]:
+        b.append(node(x, lane, sh, cls))
+    return _svg(312, "".join(b), "Five days of one long-running task, moving between signal, plan, create and evals", m)
+
+
+def body_of_work():
+    """One body of work: the Lab's models and data, the computability of creativity, and Tezign's deployment at scale."""
+    m = "a-bw"
+    b = [_t(0, 22, "DESIGN AI LAB · RESEARCH", "m"), _t(0, 50, "Models and data", "h2"),
+         _t(360, 22, "THE COMPUTABILITY OF CREATIVITY", "m ac-t"), _t(360, 50, "One question", "h2"),
+         _t(740, 22, "TEZIGN · ENTREPRENEURSHIP", "m"), _t(740, 50, "Deployment and scale", "h2")]
+    rows = [("Work 01", "Subjective World Model", "models people as they differ", ["Creativity is judged by people", "who differ: represent them."]),
+            ("Work 02", "Creative Reasoning", "divergent before convergent", ["It begins by opening possibilities:", "reason divergently."]),
+            ("Work 03", "Agentic Creativity", "the whole arc of creative work", ["It unfolds over a long horizon:", "enact it with agents."]),
+            ("Past research", "Datafying Creativity · BMR", "datasets, knowledge, division of work", ["It must first become data", "and context: datafy it."])]
+    y0, rh, gap = 82, 92, 14
+    for i, (lab, ti, d, claim) in enumerate(rows):
+        y = y0 + i * (rh + gap)
+        b.append(_box(0, y, 300, rh, lab.upper(), ti, [d]))
+        b.append(_box(360, y, 320, rh, accent=True))
+        b.append(_t(376, y + 38, claim[0], "b")); b.append(_t(376, y + 60, claim[1], "b"))
+        b.append(_arrow(f"M302 {y + rh / 2}H356", m))
+    ys = [y0 + i * (rh + gap) for i in range(4)]
+    b.append(_box(740, ys[0], 300, rh, "SOCIAL SIMULATION AGENT", "atypica.AI", ["simulates how people respond"]))
+    b.append(_box(740, ys[1], 300, 2 * rh + gap, "GENERATIVE ENTERPRISE AGENT", "Tezign GEA", ["agents that reason with the", "Creative Reasoning Model and", "carry work through to delivery"]))
+    b.append(_box(740, ys[3], 300, rh, "AI-NATIVE CONTEXT SYSTEM", "MuseDAM", ["an organization's creative", "assets as context"]))
+    for i in range(4):
+        b.append(_arrow(f"M682 {ys[i] + rh / 2}H736", m))
+    yb = ys[3] + rh + 34
+    b.append(_arrow(f"M890 {ys[3] + rh + 2}V{yb}H150V{ys[3] + rh + 6}", m, dashed=True))
+    b.append(_t(520, yb + 22, "use returns evidence and new questions to the research", "q", "middle"))
+    return _svg(yb + 34, '<g transform="translate(3,0)">' + "".join(b) + "</g>", "One body of work: the Design AI Lab builds models and data, the computability of creativity links each work to a product, and Tezign deploys them at scale", m, vb_w=1048)
+
+def swm_training():
+    """How a subjective world model is trained and calibrated."""
+    m = "a-st"
+    b = [_t(0, 20, "1 · EVIDENCE FROM REAL USERS", "m"), _t(270, 20, "2 · ONE PERSON AS STATE", "m"), _t(560, 20, "3 · ROLLOUT", "m"), _t(830, 20, "4 · MEASUREMENT", "m")]
+    layers = [("Expression", "reviews, posts, surveys"), ("Story", "self-narrative, identity"),
+              ("Cognition", "decision weights, inferred"), ("Behavior", "orders, clicks, repeats")]
+    for i, (k, d) in enumerate(layers):
+        y = 44 + i * 70
+        b.append(_box(0, y, 200, 54)); b.append(_t(14, y + 23, k, "h")); b.append(_t(14, y + 42, d, "q"))
+        b.append(_arrow(f"M202 {y + 27}C236 {y + 27} 236 170 266 170", m))
+    b.append(_box(270, 60, 240, 220, accent=True))
+    b.append(_t(290, 88, "persona", "h ac-t"))
+    for j, ln in enumerate(["four layers of evidence,", "checked against each other", "", "contradictions kept as", "features, not averaged", "", "decision weights inferred", "from what the person did"]):
+        b.append(_t(290, 116 + j * 19, ln, "b"))
+    b.append(_arrow("M512 170H556", m))
+    b.append(_t(560, 52, "a new event", "q"))
+    for i in range(7):
+        y = 70 + i * 26
+        b.append(f'<path d="M560 170C600 170 600 {y} 640 {y}H730" class="lq" fill="none"/>')
+        b.append(f'<circle cx="736" cy="{y}" r="4" class="dot"/>')
+    b.append(_t(560, 270, "many independent runs", "b")); b.append(_t(560, 288, "→ a distribution of reactions", "b"))
+    b.append(_arrow("M770 170H826", m))
+    b.append(_box(830, 60, 206, 96)); b.append(_t(844, 86, "Real interviews", "h"))
+    b.append(_t(844, 106, "AI-led in-depth interviews", "q")); b.append(_t(844, 123, "with the same people, unseen", "q")); b.append(_t(844, 140, "by the model", "q"))
+    b.append(_box(830, 172, 206, 96)); b.append(_t(844, 198, "Game Lab", "h"))
+    b.append(_t(844, 218, "personas and humans play", "q")); b.append(_t(844, 235, "the same behavioral games", "q")); b.append(_t(844, 252, "(after Park et al., 2024)", "q"))
+    b.append(_arrow("M935 270V330H390V284", m, dashed=True))
+    b.append(_t(662, 322, "the gap between predicted and actual response recalibrates the persona's weights", "q", "middle"))
+    return _svg(340, "".join(b), "Training a subjective world model: four layers of evidence form one person, rollouts give a distribution of reactions, which is measured against real interviews and games and used to recalibrate", m)
+
+
+
+def atypica_studio():
+    """atypica.AI: an agentic research studio built on the Subjective World Model."""
+    m = "a-as"
+    b = []
+
+    def cell(x, y, w, h, s, accent=False):
+        return _box(x, y, w, h, accent=accent) + _t(x + w / 2, y + h / 2 + 5, s, "h ac-t" if accent else "b", "middle")
+
+    for x, head, items in ((0, "QUESTIONS", ["Marketing", "Product R&D", "Strategy", "Ideas", "Entrepreneurs"]),
+                           (890, "RESULTS", ["Insight", "Testing", "Pricing", "Prediction", "Co-creation"])):
+        b.append(_t(x + 75, 22, head, "m", "middle"))
+        for i, it in enumerate(items):
+            b.append(cell(x, 40 + i * 66, 150, 52, it))
+    for x, head, items in ((200, "AI PERSONA", ["Context", "Multi-modal data", "CRM / CDP"]),
+                           (420, "AI PANEL", ["Expert discussion", "Focus group", "Workshop"]),
+                           (640, "AI INTERVIEW", ["AI interviews human", "AI interviews AI", "Human interviews AI"])):
+        b.append(_t(x + 100, 22, head, "m", "middle"))
+        for i, it in enumerate(items):
+            b.append(cell(x, 40 + i * 62, 200, 48, it))
+    b.append(cell(200, 236, 640, 44, "Subjective World Model", accent=True))
+    b.append(f'<rect x="200" y="296" width="640" height="100" rx="3" class="bx" style="stroke-dasharray:4 3"/>')
+    b.append(_t(520, 318, "AI RESEARCH", "m", "middle"))
+    for i, it in enumerate(["Research intent", "Research automation", "Artefacts"]):
+        b.append(cell(216 + i * 208, 332, 192, 46, it))
+    b.append(_arrow("M152 355H196", m)); b.append(_arrow("M842 355H886", m))
+    return _svg(400, "".join(b), "atypica.AI as an agentic research studio: business questions go to AI personas, panels and interviews built on the Subjective World Model and automated AI research, which return insight, testing, pricing, prediction and co-creation", m)
+
 SVG_CSS = """
 .dia{width:100%;height:auto;display:block;font-family:var(--sans)}
 .dia.sm .h{font-size:18px}.dia.sm .b{font-size:16px}.dia.sm .q{font-size:15px}.dia.sm .m{font-size:12.5px}
@@ -313,6 +499,8 @@ SVG_CSS = """
 .dia .mk{fill:var(--ink)}
 .dia .dot{fill:var(--ink)}
 .dia .dot-ac{fill:var(--accent)}
+.dia .pf{fill:var(--paper)}
+.dia .thick{stroke-width:3}
 .dia text{fill:var(--ink)}
 .dia .h{font-size:15px;font-weight:600}
 .dia .b{font-size:13px}
@@ -320,6 +508,7 @@ SVG_CSS = """
 .dia .m{font-family:var(--mono);font-size:11px;letter-spacing:.08em;fill:var(--muted)}
 .dia .ac-t{fill:var(--accent)}
 .dia .big{font-family:var(--serif);font-size:30px}
+.dia .h2{font-family:var(--serif);font-size:26px}
 """
 
 

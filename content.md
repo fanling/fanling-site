@@ -28,6 +28,15 @@ Researcher, Entrepreneur in Design AI.
 ## Short bio
 Ling Fan is Professor in Design AI at Tongji University, founding director of its Design Artificial Intelligence Lab, and founder and chairman of Tezign. Trained as an architect at Princeton and the Harvard Graduate School of Design, he studies the computability of creativity: how designers can shape AI itself and, through it, redesign systems and organizations. His research is carried into AI systems used by more than 200 enterprises and over one million professionals.
 
+## Biography (from Ling's CV, October 2026)
+Ling Fan is an internationally recognized researcher and entrepreneur whose work has helped shape the emerging field of Design AI.
+
+Fan is a Professor in Design AI at Tongji University and the Founding Director of the Tongji University Design AI Lab. At the center of his research is the computability of creativity: how creativity can be computationally represented, understood, reasoned through, and enacted while preserving the subjectivity and plurality on which it depends. He approaches this question through three interconnected areas. Creative Reasoning investigates how to train reasoning models to generate, evaluate, and develop divergent possibilities. Subjective World Models explore how to train foundation models that can represent differences in human perception, preference, values, and judgment. Agentic Creativity examines how to design and develop autonomous AI systems that can initiate, participate in, and extend creative work. Fan has authored or co-authored more than 100 publications on design and artificial intelligence. The research and technology teams he has led have developed an intellectual property portfolio comprising more than 200 invention patent applications across AI foundation models, systems, and applications.
+
+Fan founded Tezign to translate this research into technologies deployed at scale. The company has raised more than US$150 million from investors including Temasek, Sequoia Capital, and Hearst Ventures, and reached a valuation exceeding US$1 billion. Serving over one million professional users, Tezign builds and deploys agentic AI systems to address real-world problems and help organizations transform how they understand people, make decisions, and create. For Fan, this practice is an extension of research: a way to examine how AI operates within real social and organizational contexts, understand its consequences for people and institutions, and explore how it can be designed and deployed responsibly.
+
+Trained as an architect, Fan approaches AI as an extension of architecture’s broader capacity to synthesize knowledge across design, technology, business, and the humanities. His work asks how designers can shape AI itself and, through it, reshape systems, organizations, and the possibilities of human creativity. Fan holds a Doctor of Design from Harvard University and a Master of Architecture from Princeton University. He is a World Economic Forum Young Global Leader, an Aspen Institute China Fellow, and a member of the Aspen Global Leadership Network.
+
 ## Contact email
 lfan@tongji.edu.cn
 
@@ -79,12 +88,28 @@ The model is checked against people. Its predictions are compared with in-depth 
 atypica.AI puts this research into use. It builds AI personas and lets them take part in interviews, user tests and discussions, so that designers, researchers and businesses can simulate how different people would respond to a product, a message or a policy before it exists. Its premise is a design premise: people do not choose between things; they choose between descriptions of things.
 
 ## Facts
-- Used by: more than one million people in 50 countries
 - Validation: against in-depth interviews with real people, and behavioral-economics games played by personas and humans
 - Research line: Subjective World Models, Design AI Lab, Tongji University
 
 ## Links
 - atypica.ai: https://atypica.ai/about
+
+## Training
+The model is trained on data from real users, person by person. Each persona is assembled from four layers of evidence that come from different sources and carry different weight: expression (reviews, posts and survey answers, cheap to collect and self-reported), story (how the person narrates their own life and identity), cognition (decision weights for price, brand, health, convenience, social approval and novelty, inferred from behavior rather than asked) and behavior (orders, clicks, repeat purchases and lapses, costly to collect but already fact).
+
+The layers are checked against each other. When they disagree, as when someone ticks "cutting down on sugar" in a survey and orders sweet tea four times that month, the contradiction is not averaged away but kept as a feature of that person.
+
+Given the person's history and a new event, the model rolls the person forward many times, independently, and returns a distribution of reactions rather than one answer. That distribution is the form in which it is tested: against AI-led in-depth interviews with the same real people, run without the model seeing the interviews, and against behavioral-economics games played by personas and humans alike, following Park et al. (2024). Once a design reaches the market, the gap between predicted and actual response is used to recalibrate the decision weights of the personas concerned, and the next rollout starts from the calibrated state.
+
+## atypica
+atypica.AI is a subjective-world simulation agent built on the model. Given a research question, it assembles the relevant personas, interviews them one by one, runs discussions and user tests among them, and writes up what it finds, with every claim traced back to the persona evidence behind it.
+
+It turns the model into a research instrument that designers, researchers and businesses can use before anything exists: to see how different people would respond to a product, a message or a policy, and why.
+
+## Cases (kind | title | text | figures)
+- Enterprise | Global food brand: concept testing in days | For a Lunar New Year chocolate launch, the team used AI consumers to co-create and filter concepts, then cross-checked the signal against real interviews. Three routes were scored (Gift Box Edition 84, Lunar Mini Bar 71, Festival Tin 63) and the gift box was chosen for markets including China, Singapore and Malaysia. Concept testing went from months to days, weak ideas were filtered early, and the AI-selected concept outperformed the control by 23 per cent in market validation. | 6× R&D throughput; 80% cost saving; 5 markets
+- Enterprise | Power tools brand: an always-on panel of professionals | Professional users are expensive and hard to recruit. Personas built from real interview data now serve as an always-on panel for concept, interface and CAD review, giving feedback on prototypes such as grip angle, weight balance and trigger reach in gloves. Product teams test industrial-design decisions immediately instead of waiting on recruiting cycles. | $0 recruiting cost; real-time feedback
+- Academic | University research team: household-scale policy simulation | Researchers interviewed core family members one by one, built AI personas from the interviews and assembled them into 17,647 household-scale virtual family panels to simulate responses to policy. Testing that would have taken years of qualitative fieldwork ran in days, while keeping household-level nuance. | 17,647 family panels; 200+ archetypes; days, not years
 
 # Work 02 | Creative Reasoning
 
@@ -152,7 +177,7 @@ Together they make three things possible: identifying creativity, evaluating it,
 ## Series (letter | name | description)
 - a | Youth-subculture colour dataset | Colour palettes drawn from Chinese youth subcultures, used for culture-inspired multimodal palette generation and colorization (IEEE MIPR 2021).
 - b | Blind-box dataset | A dataset of blind-box designer toys, a consumer form where taste, rarity and collecting meet, used to generate new figures, outfits, props and scenes in 3D. [To add: scale of the dataset]
-- c | Chinese traditional craft dataset | Traditional crafts including Jinshan farmer painting, used to study how AI can support the inheritance of craft (Decoration, 2022). In an installation built on it, visitors sketch a person, a house or a tree, and the system paints the scene in the Jinshan style.
+- c | Chinese folk craft dataset | Traditional crafts including Jinshan farmer painting, used to study how AI can support the inheritance of craft (Decoration, 2022). In an installation built on it, visitors sketch a person, a house or a tree, and the system paints the scene in the Jinshan style.
 - d | Prometheus | A knowledge graph that constructs design knowledge in a form machines can reason over. Ask it a question about design and it unfolds the concepts and sources linked to the answer. [To add: what the graph contains and its scale]
 
 ## Facts
@@ -160,6 +185,34 @@ Together they make three things possible: identifying creativity, evaluating it,
 - Research line: The Computability of Creativity, Design AI Lab
 
 ## Links
+
+## Project a
+Colour carries meaning differently in different cultures, and Chinese youth subcultures have developed colour languages of their own. The project collected and annotated colour palettes from these subcultures and built them into a dataset; each band of stripes shows the palettes of one subculture, read side by side.
+
+On the dataset the Lab trained models for culture-inspired, multimodal palette generation and colorization. A designer chooses a subculture, such as electronic music, enters the feeling they want in a few words ("sunny, joyful, passionate") and uploads an image; the tool proposes a palette in that subculture's idiom, lets the designer adjust each colour by hue, lightness and saturation, and colours the design with the result.
+
+It asks whether a culture's taste in colour can be represented explicitly enough for a machine to learn it without flattening it. Published as "Culture-Inspired Multi-Modal Color Palette Generation and Colorization: A Chinese Youth Subculture Case" (IEEE MIPR 2021), with a related study of music visualization through multimodal colour generation (NIME 2021); the dataset is the subject of Li Yufan's doctoral dissertation, "Subcultural Color: The Study and Construction of a Color Dataset" (2020).
+
+## Project b
+Blind-box designer toys are a consumer form in which taste, rarity and collecting meet, and new series succeed or fail quickly. The project assembled a dataset of 211 figures from leading blind-box series and analysed each one along four dimensions: shape, theme, price and colour.
+
+Shape: animals make up 39.3 per cent of the figures, humanoids 35.2, fantastical creatures 15.6, licensed collaborations 6.5 and figures from legend 3.3; the proportion of eye to face was measured on every figure and abstracted into face templates. Theme: figures were coded by scene, daily life, tradition, story, companionship, desire and function, with animals and monsters (47) and food (28) the largest groups. Price: every series was placed on radial charts by price. Colour: a palette was extracted from every figure and grouped by series.
+
+The dataset was then used to generate new figures, outfits, props and scenes in 3D, so that designers can explore a series before it is modelled by hand. It tests how far a fast-moving, trend-driven design language can be captured as data, and where the designer's judgment of what will be loved remains decisive.
+
+## Project c
+Folk crafts are passed on by apprenticeship and are at risk when that chain breaks. The project built a dataset of Chinese folk craft, beginning with Jinshan farmer painting from the outskirts of Shanghai, and studied how AI can support the inheritance of a craft rather than replace its makers.
+
+On the dataset the Lab built AI Zanhui, an installation in which anyone can paint in the Jinshan style. A visitor chooses one of three themes drawn from the paintings themselves (Living and Working in Peace, Land of Fish and Rice, A New Era), sketches a house, a tree or a person, and signs the drawing; the system then paints the scene in the Jinshan palette and composition, with the signature set as a seal. The sketch decides what is in the picture, and the craft decides how it is painted.
+
+It lets people take part in a craft they could not otherwise practise, and it asks which parts of a folk style can be learned from examples and which still belong to its makers. Published as "AI Empowering the Inheritance of Traditional Craft Art: A Case Study of Jinshan Farmer Paintings" (Decoration, 2022).
+
+## Project d
+Datasets record examples of design; Prometheus records design knowledge itself. Named after the figure who brought fire and knowledge to humankind, it is a knowledge graph that links the concepts, methods, works and sources of design through typed relations (is a, belongs to, visual element, relational element, principle, period, modern category), so that models can reason over design knowledge rather than only imitate examples.
+
+A visitor asks a question in plain language. Asked "What is design?", it unfolds design into its visual elements (texture, colour, shape, size), its principles (usability), its periods (prehistoric, ancient, modern) and its fields (product, environmental, visual communication, new media). Asked how green relates to warm colours, it traces the path between them. Asked what a serif is, it returns the sentences in its sources behind the answer and links each one to the concept it supports.
+
+It is the step from datafying creative work to making design knowledge computable, at the meeting point of design and AI that the project calls creativity.
 
 # Past work 02 | Brain–Machine Ratio (BMR)
 
@@ -207,8 +260,13 @@ Founded in 2015 to translate research into technologies deployed at scale, Tezig
 
 ## Products (name | link | description | image)
 - Tezign | https://www.tezign.com/en | The Generative Enterprise Agent (GEA) platform: post-trained models, context systems, agent harnesses and long-running, proactive agents for consumer insight, product innovation and marketing growth. | tezign-home.jpg
-- atypica.AI | https://atypica.ai | A social-simulation agent built on subjective world models, with more than one million users of its own. | atypica-home.jpg
-- MuseDAM | https://www.musedam.cc/en-US | An AI-native content system that makes the right content reliably available to the right people and AI. | musedam-home.jpg
+- atypica.AI | https://atypica.ai | A social-simulation agent built on subjective world models. | atypica-home.jpg
+- MuseDAM | https://www.musedam.cc/en-US | An AI-native context system that makes the right content reliably available to the right people and AI. | musedam-home.jpg
+
+## Product pages (name | kind | text)
+- Tezign | Generative Enterprise Agent | GEA is the platform on which Tezign's agents run. It is built in layers: models, including the Subjective World Model, the Creative Reasoning Model and a hub of third-party models; a context layer that organizes a company's content, knowledge and past decisions into a context graph; an agent operating system that builds, connects and supervises agents; and proactive agents for consumer insight, product innovation and marketing growth. Agents start from one verifiable business loop, work continuously within governed boundaries, and expand to more teams as they prove themselves. In a 2025 blind test, client brand managers and creative directors preferred the full system built on the two models to a base model in 970 of 1,260 votes.
+- atypica.AI | Social simulation agent | atypica.AI simulates the human response to a business or social decision. Grounded in real-world attitudinal and behavioral data, it creates simulated people that teams can interview, test and learn from, and then evaluates its predictions against responses from real people. It is where the Subjective World Model meets its users.
+- MuseDAM | AI-native context system | MuseDAM is an AI-native system for an organization's creative assets and the context around them. It organizes, tags and parses images, video, 3D and documents automatically, lets teams find assets by conversation rather than folders, and keeps versions, comments, permissions and usage in one place, so that the right content is reliably available to the right people and to the organization's AI agents.
 
 # Lab
 
@@ -238,7 +296,7 @@ Ling currently advises 8 doctoral students and about 15 master's students, and 1
 Graduates lead AI product design and development at technology companies, or go on to research at universities and research institutions.
 
 ## Doctoral students (year of entry | name | dissertation title; from Ling's CV, October 2026)
-- 2024 | Ahmed Mudasir | Generative Ethnography: AI-Based Simulation of Social Dynamics for Small and Medium-Sized Enterprises in ASEAN Countries
+- 2024 | Mudasir Ahmed | Generative Ethnography: AI-Based Simulation of Social Dynamics for Small and Medium-Sized Enterprises in Pakistan
 - 2023 | Li Dan | A Quantitative Study of Tool Effects on Creativity in Design Practice
 - 2022 | Xia Lei | Digital Embodiment in Human–AI Collaborative Design Processes
 - 2022 | Chen Danyang | Multi-Agent Design Teams in Brand Marketing: Theory, Architecture, and Implementation
