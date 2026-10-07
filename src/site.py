@@ -34,6 +34,8 @@ header.top{display:flex;flex-wrap:wrap;gap:12px 28px;align-items:baseline;justif
 nav{display:flex;flex-wrap:wrap;gap:6px 20px}
 nav a{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:4px 0;border-bottom:1px solid transparent}
 nav a:hover,nav a[aria-current]{color:var(--ink);border-bottom-color:var(--accent)}
+.menu-btn{display:none;font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink);background:none;border:0;padding:4px 0;cursor:pointer}
+@media (max-width:600px){header.top{padding-block:16px;margin-bottom:36px;align-items:center}.js .menu-btn{display:block}.js header.top nav{display:none;flex-basis:100%;flex-direction:column;gap:0}.js header.top.open nav{display:flex}.js header.top nav a{padding:10px 0;border-bottom:1px solid var(--rule)}.js header.top nav a[aria-current]{border-bottom-color:var(--accent)}}
 a{color:inherit;text-decoration-color:var(--accent);text-underline-offset:3px}
 a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
@@ -159,12 +161,12 @@ def page(path, title, body, artifact=False):
     cur = path
     home = pre or "./"
     nav = "".join(f'<a href="{home if h == "index.html" else pre + h}"{CUR if h == cur or (h == "works.html" and (cur.startswith("works/") or cur == "lab.html") and cur != "works/tezign.html") else ""}>{t}</a>' for h, t in NAV)
-    inner = f"""<div class="wrap"><header class="top"><a class="brand" href="{home}">Ling Fan<span class="zh">{C.NAME_ZH}</span></a><nav aria-label="Main">{nav}</nav></header>
+    inner = f"""<div class="wrap"><header class="top"><a class="brand" href="{home}">Ling Fan<span class="zh">{C.NAME_ZH}</span></a><button class="menu-btn" type="button" aria-expanded="false" aria-controls="main-nav" onclick="var h=this.parentNode,o=h.classList.toggle('open');this.setAttribute('aria-expanded',o);this.textContent=o?'Close':'Menu'">Menu</button><nav id="main-nav" aria-label="Main">{nav}</nav></header>
 <main>{body}</main><footer><span>Ling Fan · Design AI</span><span><a href="mailto:{C.CONTACT}" style="color:inherit">{C.CONTACT}</a>{"".join(f' · <a href="{u}" target="_blank" rel="noopener" style="color:inherit">{n}</a>' for n, u in C.PROFILES)}</span><span>© 2026 Ling Fan</span></footer></div>"""
     head = f"<title>{escape(title)}</title>{'' if artifact else seo_head(path, title) + ANALYTICS}{FONTS}<style>{CSS}</style>"
     if artifact and path == "index.html":
         return head + inner
-    return (f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">'
+    return (f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><script>document.documentElement.classList.add("js")</script>'
             f'{head}</head><body>{inner}</body></html>')
 
 
