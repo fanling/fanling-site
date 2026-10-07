@@ -160,7 +160,7 @@ def page(path, title, body, artifact=False):
     home = pre or "./"
     nav = "".join(f'<a href="{home if h == "index.html" else pre + h}"{CUR if h == cur or (h == "works.html" and (cur.startswith("works/") or cur == "lab.html") and cur != "works/tezign.html") else ""}>{t}</a>' for h, t in NAV)
     inner = f"""<div class="wrap"><header class="top"><a class="brand" href="{home}">Ling Fan<span class="zh">{C.NAME_ZH}</span></a><nav aria-label="Main">{nav}</nav></header>
-<main>{body}</main><footer><span>Ling Fan · Design AI</span><span>{C.CONTACT}{"".join(f' · <a href="{u}" target="_blank" rel="noopener" style="color:inherit">{n}</a>' for n, u in C.PROFILES)}{f' · <a href="{C.NEWSLETTER[0]}" target="_blank" rel="noopener" style="color:inherit">Newsletter</a>' if C.NEWSLETTER else ""}</span><span>© 2026 Ling Fan</span></footer></div>"""
+<main>{body}</main><footer><span>Ling Fan · Design AI</span><span><a href="mailto:{C.CONTACT}" style="color:inherit">{C.CONTACT}</a>{"".join(f' · <a href="{u}" target="_blank" rel="noopener" style="color:inherit">{n}</a>' for n, u in C.PROFILES)}</span><span>© 2026 Ling Fan</span></footer></div>"""
     head = f"<title>{escape(title)}</title>{'' if artifact else seo_head(path, title) + ANALYTICS}{FONTS}<style>{CSS}</style>"
     if artifact and path == "index.html":
         return head + inner
@@ -315,10 +315,9 @@ def build(out, artifact=False):
         return (f'<div class="book"><img src="media/{cover}" alt="Cover of {escape(t)}"><div><p class="eyebrow">{y} · {p}</p>'
                 f'<h3><i>{t}</i></h3><div class="grid2" style="margin-top:24px">{sp}</div></div></div>')
     BLOG_SECTION = (f'''<section><p class="eyebrow">Blog</p><p><a href="{dict(C.PROFILES)['Substack']}" target="_blank" rel="noopener"><i>{C.BLOG[0]}</i> ↗</a><br><span style="color:var(--muted)">{C.BLOG[1]}</span></p></section>''' if C.BLOG and 'Substack' in dict(C.PROFILES) else '')
-    NEWSLETTER_SECTION = (f'''<section><p class="eyebrow">Newsletter</p><p>{C.NEWSLETTER[1]}<br><a href="{C.NEWSLETTER[0].rstrip("/")}/subscribe" target="_blank" rel="noopener">Subscribe on Substack ↗</a></p></section>''' if C.NEWSLETTER else '')
     pages["writing.html"] = ("Writing · Ling Fan", f"""
 <p class="eyebrow">Writing</p><h1>{"Blog, books and publications" if C.BLOG else "Books and publications"}</h1>
-{BLOG_SECTION}{NEWSLETTER_SECTION}
+{BLOG_SECTION}
 <section><p class="eyebrow">Books</p>{''.join(book(*b) for b in C.WRITING['books'])}</section>
 <section><p class="eyebrow">Publications</p><p>Authored or co-authored more than 100 articles and papers in academic journals, professional magazines and conference proceedings.</p>{pubs}</section>""")
 
@@ -331,7 +330,7 @@ def build(out, artifact=False):
 <p class="eyebrow">About</p><h1>Ling Fan <span style="font-family:var(--cjk);font-size:.55em;color:var(--muted)">{C.NAME_ZH}</span></h1>
 <div class="split" style="margin-top:36px"><div><img class="portrait" src="media/portrait.jpg" alt="Ling Fan"></div><div>{ps([C.SHORT_BIO])}
 <p>His work has been covered by Bloomberg, Forbes and Harvard Business Review.</p>
-<p>Contact: <span style="user-select:all">{C.CONTACT}</span></p><p>{" · ".join(f'<a href="{u}" target="_blank" rel="noopener">{n} ↗</a>' for n, u in C.PROFILES)}</p></div></div>
+<p>Contact: <a href="mailto:{C.CONTACT}">{C.CONTACT}</a></p><p>{" · ".join(f'<a href="{u}" target="_blank" rel="noopener">{n} ↗</a>' for n, u in C.PROFILES)}</p></div></div>
 <section class="split"><h2>Education</h2><div class="tbl"><table>{edu}</table></div></section>
 <section class="split"><h2>Academic experience</h2><div class="tbl"><table>{appts}</table></div></section>
 <section class="split"><h2>Other service</h2><div class="tbl"><table>{svc}</table></div></section>
