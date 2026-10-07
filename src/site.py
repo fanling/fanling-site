@@ -148,6 +148,11 @@ def seo_head(path, title):
     return h
 
 
+# Vercel Web Analytics (cookieless). Reports appear once Analytics is enabled in the Vercel project.
+ANALYTICS = ('<script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script>'
+             '<script defer src="/_vercel/insights/script.js"></script>')
+
+
 def page(path, title, body, artifact=False):
     depth = path.count("/")
     pre = "../" * depth
@@ -155,8 +160,8 @@ def page(path, title, body, artifact=False):
     home = pre or "./"
     nav = "".join(f'<a href="{home if h == "index.html" else pre + h}"{CUR if h == cur or (h == "works.html" and (cur.startswith("works/") or cur == "lab.html") and cur != "works/tezign.html") else ""}>{t}</a>' for h, t in NAV)
     inner = f"""<div class="wrap"><header class="top"><a class="brand" href="{home}">Ling Fan<span class="zh">{C.NAME_ZH}</span></a><nav aria-label="Main">{nav}</nav></header>
-<main>{body}</main><footer><span>Ling Fan · Design AI</span><span>{C.CONTACT}{"".join(f' · <a href="{u}" target="_blank" rel="noopener" style="color:inherit">{n}</a>' for n, u in C.PROFILES)}</span><span>© 2026 Ling Fan</span></footer></div>"""
-    head = f"<title>{escape(title)}</title>{'' if artifact else seo_head(path, title)}{FONTS}<style>{CSS}</style>"
+<main>{body}</main><footer><span>Ling Fan · Design AI</span><span>{C.CONTACT}{"".join(f' · <a href="{u}" target="_blank" rel="noopener" style="color:inherit">{n}</a>' for n, u in C.PROFILES)}{f' · <a href="{C.NEWSLETTER[0]}" target="_blank" rel="noopener" style="color:inherit">Newsletter</a>' if C.NEWSLETTER else ""}</span><span>© 2026 Ling Fan</span></footer></div>"""
+    head = f"<title>{escape(title)}</title>{'' if artifact else seo_head(path, title) + ANALYTICS}{FONTS}<style>{CSS}</style>"
     if artifact and path == "index.html":
         return head + inner
     return (f'<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">'
@@ -310,9 +315,10 @@ def build(out, artifact=False):
         return (f'<div class="book"><img src="media/{cover}" alt="Cover of {escape(t)}"><div><p class="eyebrow">{y} · {p}</p>'
                 f'<h3><i>{t}</i></h3><div class="grid2" style="margin-top:24px">{sp}</div></div></div>')
     BLOG_SECTION = (f'''<section><p class="eyebrow">Blog</p><p><a href="{dict(C.PROFILES)['Substack']}" target="_blank" rel="noopener"><i>{C.BLOG[0]}</i> ↗</a><br><span style="color:var(--muted)">{C.BLOG[1]}</span></p></section>''' if C.BLOG and 'Substack' in dict(C.PROFILES) else '')
+    NEWSLETTER_SECTION = (f'''<section><p class="eyebrow">Newsletter</p><p>{C.NEWSLETTER[1]}<br><a href="{C.NEWSLETTER[0].rstrip("/")}/subscribe" target="_blank" rel="noopener">Subscribe on Substack ↗</a></p></section>''' if C.NEWSLETTER else '')
     pages["writing.html"] = ("Writing · Ling Fan", f"""
 <p class="eyebrow">Writing</p><h1>{"Blog, books and publications" if C.BLOG else "Books and publications"}</h1>
-{BLOG_SECTION}
+{BLOG_SECTION}{NEWSLETTER_SECTION}
 <section><p class="eyebrow">Books</p>{''.join(book(*b) for b in C.WRITING['books'])}</section>
 <section><p class="eyebrow">Publications</p><p>Authored or co-authored more than 100 articles and papers in academic journals, professional magazines and conference proceedings.</p>{pubs}</section>""")
 

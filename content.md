@@ -46,6 +46,9 @@ lfan@tongji.edu.cn
 - Substack: https://fanling.substack.com/
 -->
 
+## Newsletter (link | description)
+- https://fanling.substack.com/ | Occasional writing on design, AI and creativity, by email.
+
 <!-- Blog hidden until Ling has updated Substack (2026-10-04); remove these comment marks to restore:
 ## Blog (name | description)
 - Fatflatfloat | Ling's blog on Substack, on design, AI and education, in English and Chinese.

@@ -83,6 +83,7 @@ CONTACT = text(_f(_b, "Contact email"))
 PROFILES = facts(_f(_b, "Profiles"))
 HEADLINE = text(_f(_b, "Headline"))
 BLOG = (rows(_f(_b, "Blog"), 2) or [None])[0]   # None while the blog is hidden
+NEWSLETTER = (rows(_f(_b, "Newsletter"), 2) or [None])[0]   # (link, description); None hides it
 
 STATEMENT = paras(_f(_sec("Statement")[1], "Text"))
 
