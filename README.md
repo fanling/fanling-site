@@ -1,4 +1,4 @@
-# fanling.ai 与 GSD 作品集：源文件说明
+# fanling.ai的介绍：源文件说明
 
 - 所有文字在 `content.md`（英文，一份内容同时生成网站和 PDF，文件开头有修改说明）。`src/content.py` 只负责读取它，另外记着每件作品用哪张结构图；结构图在 `src/diagrams.py`。
 - Ling 在 Claude Doc（https://claude.ai/code/artifact/7adfea2c-50dc-4f6c-a5e6-5f88d7b33231）里改文字；把文档导出为 markdown 后用 `python3 src/sync_from_doc.py <导出文件>` 写回 `content.md`。
