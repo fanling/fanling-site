@@ -1,0 +1,1962 @@
+<!doctype html><html><head><base href="/agentic-transformation/"><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>当商业成为智能体 · 电子书</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,400&family=Inter:wght@400;500&family=Noto+Serif+SC:wght@300;400;600&family=Noto+Sans+SC:wght@400;500&display=swap">
+<style>
+/* Layout: 170×240 mm pages on a desk; text flows into pages at load; pages flip on the spine. Pages are always paper, the desk follows the theme. */
+:root{
+  --desk:#e4e3df; --desk-ink:#2b2b29; --desk-mute:#6d6c67; --ctl:#f4f3f0;
+  --paper:#ffffff; --ink:#0b0b0b; --ink-2:#4a4a48; --ink-3:#8b8a86; --rule:#d9d8d4; --tint:#efefec;
+  --signal:#00ff00; --add:#2f5bd3; --add-bg:#eaf0ff;
+  --f-zh:"Noto Serif SC","Songti SC","STSong",serif;
+  --f-zh-sans:"Noto Sans SC","PingFang SC",sans-serif;
+  --f-disp:"Instrument Serif","Noto Serif SC","Times New Roman",serif;
+  --f-en:"Source Serif 4","Noto Serif SC",Georgia,serif;
+  --f-ui:"Inter","Noto Sans SC",-apple-system,"Segoe UI",sans-serif;
+  --pw:170mm; --ph:240mm;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--desk:#1c1c1b;--desk-ink:#ecebe7;--desk-mute:#9a9994;--ctl:#2a2a28;color-scheme:dark}}
+:root[data-theme="dark"]{--desk:#1c1c1b;--desk-ink:#ecebe7;--desk-mute:#9a9994;--ctl:#2a2a28;color-scheme:dark}
+html,body{height:100%}
+body{background:var(--desk);color:var(--desk-ink);font-family:var(--f-ui);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0;overflow:hidden;display:flex;flex-direction:column}
+
+/* ---------- desk chrome ---------- */
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-block:12px 6px;font-size:12px;color:var(--desk-mute);letter-spacing:.04em}
+.top b{color:var(--desk-ink);font-weight:500}
+.ctl{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.ctl button{font:500 12px var(--f-ui);background:var(--ctl);color:var(--desk-ink);border:1px solid color-mix(in srgb,var(--desk-ink) 14%,transparent);border-radius:999px;padding:6px 12px;cursor:pointer}
+.ctl button[aria-pressed="true"]{background:var(--desk-ink);color:var(--desk)}
+.ctl .sep{width:1px;height:18px;background:color-mix(in srgb,var(--desk-ink) 18%,transparent);margin-inline:4px}
+.ctl button:focus-visible,.nav button:focus-visible,.nav input:focus-visible{outline:2px solid var(--desk-ink);outline-offset:2px}
+.stage{flex:1;min-height:0;position:relative;display:grid;place-items:center;perspective:2600px;touch-action:pan-y;user-select:none;-webkit-user-select:none}
+.nav{display:flex;align-items:center;justify-content:center;gap:14px;padding-block:6px 14px;font-size:12px;color:var(--desk-mute);font-variant-numeric:tabular-nums}
+.nav button{width:34px;height:34px;border-radius:50%;border:1px solid color-mix(in srgb,var(--desk-ink) 14%,transparent);background:var(--ctl);color:var(--desk-ink);cursor:pointer;font-size:15px}
+.nav button:disabled{opacity:.35;cursor:default}
+.nav input[type=range]{width:min(320px,40vw);accent-color:var(--desk-ink)}
+.nav output{min-width:9em;text-align:center}
+.loading{position:absolute;inset:0;display:grid;place-items:center;color:var(--desk-mute);font-size:12px;letter-spacing:.08em}
+
+/* ---------- book & flip ---------- */
+.book{position:absolute;left:50%;top:50%;width:calc(var(--pw)*2);height:var(--ph);transform-style:preserve-3d;transition:transform .7s cubic-bezier(.3,.7,.2,1)}
+.leaf{position:absolute;left:var(--pw);top:0;width:var(--pw);height:var(--ph);transform-origin:left center;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.35,.6,.2,1)}
+.leaf.drag{transition:none}
+.leaf:not(.top):not(.drag)>.page::after{display:none}
+.edge,.spine{position:absolute;pointer-events:none;transition:width .9s cubic-bezier(.35,.6,.2,1),height .9s cubic-bezier(.35,.6,.2,1),opacity .4s}
+.edge{background:repeating-linear-gradient(90deg,#f4f3ef 0 .35mm,#d9d8d2 .35mm .5mm)}
+.edge.v{background:repeating-linear-gradient(0deg,#f4f3ef 0 .35mm,#d9d8d2 .35mm .5mm)}
+.edge.r{left:calc(var(--pw)*2);top:0;height:var(--ph);transform-origin:left center;transform:rotateY(90deg)}
+.edge.l{left:0;top:0;height:var(--ph);transform-origin:left center;transform:rotateY(90deg)}
+.edge.tr{left:var(--pw);top:0;width:var(--pw);transform-origin:center top;transform:rotateX(-90deg)}
+.edge.br{left:var(--pw);bottom:0;width:var(--pw);transform-origin:center bottom;transform:rotateX(90deg)}
+.edge.tl{left:0;top:0;width:var(--pw);transform-origin:center top;transform:rotateX(-90deg)}
+.edge.bl{left:0;bottom:0;width:var(--pw);transform-origin:center bottom;transform:rotateX(90deg)}
+.spine{left:var(--pw);top:0;height:var(--ph);transform-origin:left center;transform:rotateY(90deg);background:var(--signal);overflow:hidden}
+.spine>i{position:absolute;inset:0;transform:scaleX(-1);display:flex;flex-direction:column;align-items:center;font-style:normal}
+.spine span{margin-top:12mm;writing-mode:vertical-rl;font:600 10pt/1 var(--f-zh);letter-spacing:.25em;color:#0b0b0b;white-space:nowrap}
+.spine span.en{font:400 11pt/1 'Instrument Serif',serif;letter-spacing:.02em}
+.spine em{margin-top:7mm;writing-mode:vertical-rl;font:500 7pt/1 var(--f-zh);font-style:normal;letter-spacing:.3em;color:#0b0b0b;white-space:nowrap}
+.spine b{margin-top:auto;margin-bottom:12mm;writing-mode:vertical-rl;font:500 5pt/1 var(--f-ui);letter-spacing:.2em;color:#0b0b0b}
+.shadow{position:absolute;left:50%;top:50%;width:10px;height:10px;pointer-events:none;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.28),rgba(0,0,0,0));transition:all .7s cubic-bezier(.3,.7,.2,1)}
+.hint{position:absolute;left:0;right:0;bottom:6px;text-align:center;font-size:11px;letter-spacing:.08em;color:var(--desk-mute);pointer-events:none;transition:opacity .4s}
+.stage.grab{cursor:grab}.stage.grabbing{cursor:grabbing}
+.leaf .page .shade{position:absolute;inset:0;pointer-events:none;z-index:6;opacity:0;transition:opacity .3s}
+.leaf .page.recto .shade{background:linear-gradient(90deg,rgba(0,0,0,.25),rgba(0,0,0,0) 60%)}
+.leaf .page.verso .shade{background:linear-gradient(270deg,rgba(0,0,0,.25),rgba(0,0,0,0) 60%)}
+.leaf.far{visibility:hidden}
+body.list .edge,body.list .spine,body.list .shadow,body.list .hint{display:none}
+@media print{.edge,.spine,.shadow,.hint{display:none!important}}
+.leaf>.page{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.leaf>.page.verso{transform:rotateY(180deg)}
+.page{box-shadow:0 1px 2px rgba(0,0,0,.08),0 12px 40px -12px rgba(0,0,0,.35)}
+.page.recto::after,.page.verso::after{content:"";position:absolute;top:0;bottom:0;width:14mm;pointer-events:none;z-index:5}
+.page.recto::after{left:0;background:linear-gradient(90deg,rgba(0,0,0,.10),rgba(0,0,0,0))}
+.page.verso::after{right:0;background:linear-gradient(270deg,rgba(0,0,0,.10),rgba(0,0,0,0))}
+@media (prefers-reduced-motion:reduce){.leaf,.book{transition:none}}
+/* rounded outer corners of the book block */
+:root{--rc:3mm}
+@media screen{
+.leaf>.page.recto,.leaf>.page.recto>.shade,.leaf>.page.recto::after{border-radius:0 var(--rc) var(--rc) 0}
+.leaf>.page.verso,.leaf>.page.verso>.shade{border-radius:var(--rc) 0 0 var(--rc)}
+.leaf>.page{overflow:hidden}
+.edge.r,.edge.l{top:var(--rc);height:calc(var(--ph) - 2*var(--rc))}
+.edge.tr,.edge.br{width:calc(var(--pw) - var(--rc))}
+.edge.tl,.edge.bl{left:var(--rc);width:calc(var(--pw) - var(--rc))}
+body.list .page{border-radius:var(--rc)}
+}
+
+/* ---------- the page (print geometry) ---------- */
+.page{position:relative;width:var(--pw);height:var(--ph);background:var(--paper);color:var(--ink);overflow:hidden;font-family:var(--f-zh);font-size:9.6pt;line-height:1.9;letter-spacing:.02em;font-kerning:normal;text-rendering:optimizeLegibility}
+html[data-lang="en"] .page{font-family:var(--f-en);font-size:10pt;line-height:1.55;letter-spacing:0}
+html[data-lang="zh"] .page .en, html[data-lang="en"] .page .zh{display:none!important}
+.body{position:absolute;top:24mm;bottom:24mm;overflow:hidden;display:flex;flex-direction:column}
+.recto .body{left:22mm;right:18mm}
+.verso .body{left:18mm;right:22mm}
+.rh{position:absolute;top:11mm;font:400 6.5pt/1 var(--f-ui);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-3)}
+html[data-lang="zh"] .rh{letter-spacing:.3em}
+.recto .rh{right:18mm}.verso .rh{left:18mm}
+.folio{position:absolute;bottom:12mm;font:400 7.5pt/1 var(--f-ui);color:var(--ink-2);font-variant-numeric:tabular-nums}
+.recto .folio{right:18mm}.verso .folio{left:18mm}
+.recto .folio::before,.verso .folio::after{content:"";display:inline-block;width:5mm;height:1.6mm;background:var(--signal);vertical-align:.2mm}
+.recto .folio::before{margin-right:2.4mm}.verso .folio::after{margin-left:2.4mm}
+
+/* ---------- flowing text ---------- */
+.body>*{margin:0}
+.body p{text-align:justify}
+html[data-lang="zh"] .body p{text-indent:2em}
+html[data-lang="en"] .body p{hyphens:auto;text-indent:1.4em}
+.body>p:not(:first-child){margin-top:.75em}
+.body>p.split+p.cont,.body>.hg+p,.body>figure:first-child+p,.body>figure:first-child+figure+p{margin-top:0}
+html[data-lang="en"] .body>p{margin-top:0!important}
+html[data-lang] .body p.first,html[data-lang] .body p.cont{text-indent:0}
+.body p.split{text-align-last:justify}
+.body .hg+p,.body .stmt+p,.body .levels+p,.body .nine+p{text-indent:0}
+.body>*+.hg{margin-top:9mm}
+.body>.hg:first-child{margin-top:0}
+.hg .kicker{font:500 6.5pt/1 var(--f-ui);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3);margin-bottom:3.5mm}
+.hg h2{margin:0 0 5mm;font:400 15pt/1.4 var(--f-zh);letter-spacing:.02em;text-wrap:balance}
+html[data-lang="en"] .hg h2{font:400 20pt/1.08 var(--f-disp);letter-spacing:-.005em}
+mark{background:none;color:inherit;text-decoration:underline var(--signal) .9mm;text-underline-offset:.5mm;text-decoration-skip-ink:none}
+sup.n{font:500 5.6pt/0 var(--f-ui);color:var(--ink-2);margin-left:.2mm}
+figure{margin:0}
+.body>figure,.body>.levels,.body>.nine,.body>.stmt{margin-block:5mm}
+.body>figure img{display:block;width:100%;height:auto;box-sizing:border-box}
+/* text sits at the top of the page, figures sink to the bottom */
+.body>figure{order:2;flex:none;margin:5mm 0 0}
+.body>figure:not(figure ~ figure){margin-top:auto;padding-top:6mm}
+.body>*:not(figure){flex:none}
+.body>figure.slide img{border:.25mm solid #e4e4e4}
+figcaption{margin-top:2.2mm;font:400 7pt/1.55 var(--f-ui);color:var(--ink-2)}
+html[data-lang="zh"] figcaption{font-family:var(--f-zh-sans)}
+figcaption b{font-weight:500;color:var(--ink);margin-right:1.5mm}
+figure.half{display:grid;grid-template-columns:62% 1fr;gap:4mm;align-items:end}
+figure.half figcaption{margin:0}
+.stmt{font:400 12.5pt/1.7 var(--f-zh);padding-left:4mm;border-left:.8mm solid var(--signal)}
+html[data-lang="en"] .stmt{font:italic 400 13pt/1.35 var(--f-en)}
+.body>.qt{margin-block:3.5mm}
+.qt{padding-left:4mm;border-left:.3mm solid var(--ink);color:var(--ink-2);text-indent:0!important}
+html[data-lang="en"] .qt{font-style:italic}
+
+.body h3{margin:6mm 0 1.6mm;font:500 9.4pt/1.6 var(--f-zh-sans);letter-spacing:.06em}
+.body>.hg+h3{margin-top:0}
+.body h3+p{text-indent:0!important}
+.qt .by{display:block;margin-top:1.6mm;font:400 6.8pt/1.4 var(--f-ui);letter-spacing:.12em;color:var(--ink-3);font-style:normal}
+.opener .num.cjk{font:600 120pt/.9 var(--f-zh);left:16mm;bottom:14mm;letter-spacing:0}
+
+/* ---------- diagrams, in the deck's language: black rules, grey tiles, one neon accent ---------- */
+.body h3{margin:6mm 0 1.6mm;font:500 9.4pt/1.6 var(--f-zh-sans);letter-spacing:.06em}
+.body>.hg+h3{margin-top:0}
+.body h3+p{text-indent:0!important}
+.qt .by{display:block;margin-top:1.6mm;font:400 6.8pt/1.4 var(--f-ui);letter-spacing:.12em;color:var(--ink-3);font-style:normal}
+.body>figure.dg{margin-block:5mm}
+
+.dg{font-family:var(--f-ui)}
+.dg .g{border-top:.35mm solid var(--ink)}
+.dg-cols .g{display:grid;grid-template-columns:repeat(var(--n),1fr);gap:1.4mm;padding-top:1.4mm}
+.dg-cols .g>div{background:var(--tint);padding:2.4mm 2.2mm 2.8mm;display:grid;align-content:start;gap:1mm}
+.dg-cols .g>div:last-child{background:var(--signal)}
+.dg-mid .g>div:last-child{background:var(--tint)}
+.dg-mid .g>div:nth-child(2){background:var(--signal)}
+.dg .k{font:500 5.8pt/1.3 var(--f-ui);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-2)}
+html[data-lang="zh"] .dg .k{font-family:var(--f-zh-sans);letter-spacing:.2em}
+.dg .t{font:500 9.2pt/1.3 var(--f-zh-sans)}
+.dg .d{font:400 6.8pt/1.55 var(--f-zh-sans);color:var(--ink-2)}
+.dg-big .t{font:400 22pt/1 var(--f-disp)}
+.dg-flow .g{display:flex;align-items:stretch;gap:1.4mm;padding-top:1.4mm}
+.dg-flow .g>div{flex:1;background:var(--tint);padding:2.4mm 1mm 2.8mm;display:grid;gap:1mm;text-align:center}
+.dg-flow .g>div:first-child{background:var(--signal)}
+.dg-flow .g>i{align-self:center;font:normal 300 11pt/1 var(--f-ui);color:var(--ink-3)}
+.dg-flow .loop{margin-top:1.6mm;text-align:center;font:400 6.6pt/1.4 var(--f-zh-sans);color:var(--ink-2)}
+.dg-flow .loop::before{content:"↺ "}
+.dg-bars{display:grid;gap:1.6mm;border-top:.35mm solid var(--ink);padding-top:1.6mm}
+.dg-bars .r{display:grid;grid-template-columns:16mm 1fr;gap:2mm;align-items:center}
+.dg-bars .l{font:400 6.6pt/1.2 var(--f-zh-sans);color:var(--ink-2)}
+.dg-bars .r:has(.l:empty){grid-template-columns:1fr}
+.dg-bars .r .l:empty{display:none}
+.dg-bars .b{display:flex;height:8mm;gap:.8mm}
+.dg-bars .b>span{display:flex;align-items:center;padding-inline:1.6mm;background:var(--tint);font:500 6.8pt/1 var(--f-zh-sans);white-space:nowrap;overflow:hidden}
+.dg-bars .b>span.hi{background:var(--signal)}
+.dg-table table{width:100%;border-collapse:collapse;border-top:.35mm solid var(--ink);font:400 7pt/1.5 var(--f-zh-sans)}
+.dg-table th{font:500 6.4pt/1.3 var(--f-zh-sans);letter-spacing:.12em;text-align:left;color:var(--ink-2);padding:1.8mm 2mm 1.6mm 0;border-bottom:.2mm solid var(--ink)}
+.dg-table td{padding:1.5mm 2mm 1.5mm 0;border-bottom:.15mm solid var(--rule);vertical-align:top}
+.dg-table td:first-child{color:var(--ink-2)}
+.dg-table tr:last-child td{background:linear-gradient(90deg,var(--signal),var(--signal)) 0 100%/100% .9mm no-repeat}
+.dg-stack{display:grid;gap:1mm;border-top:.35mm solid var(--ink);padding-top:1.4mm}
+.dg-stack>div{display:grid;grid-template-columns:28mm 1fr;align-items:center;padding:2.6mm 3mm;background:var(--tint)}
+.dg-stack .own{background:var(--signal)}
+.dg-stack .swap{background:none;outline:.25mm dashed var(--ink);outline-offset:-.25mm}
+/* "added by Claude" marks */
+.add{transition:background .2s}
+html.marks .add{background:var(--add-bg);box-shadow:inset 0 -.25mm 0 var(--add)}
+html.marks .add::before{content:"";display:inline-block;width:1.2mm;height:1.2mm;border-radius:50%;background:var(--add);margin-right:.8mm;vertical-align:.3mm}
+
+/* four levels figure */
+.levels{font-family:var(--f-ui)}
+.levels .row{display:grid;grid-template-columns:1fr 1fr 6mm 1fr 1fr;gap:1.4mm;align-items:stretch}
+.levels .lv{background:var(--tint);padding:2.2mm 2mm 2.4mm;display:grid;gap:.8mm}
+.levels .lv.hi{background:var(--signal)}
+.levels .lv .k{font:500 5.6pt/1 var(--f-ui);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
+html[data-lang="zh"] .levels .lv .k{letter-spacing:.2em}
+.levels .lv .t{font:400 8.6pt/1.3 var(--f-zh)}
+html[data-lang="en"] .levels .lv .t{font:400 10pt/1.15 var(--f-disp)}
+.levels .gap{display:grid;place-items:center;border-left:.25mm dashed var(--ink);border-right:.25mm dashed var(--ink)}
+.levels .gap span{writing-mode:vertical-rl;font:500 5.4pt/1 var(--f-ui);letter-spacing:.18em;color:var(--ink-2)}
+.levels .axis{display:grid;grid-template-columns:1fr 6mm 1fr;gap:1.4mm;margin-top:2mm}
+.levels .axis div{border-top:.3mm solid var(--ink);padding-top:1.4mm;font:400 6.4pt/1.45 var(--f-zh-sans);color:var(--ink-2)}
+html[data-lang="en"] .levels .axis div{font:400 6.6pt/1.4 var(--f-ui)}
+.levels .axis b{display:block;font-weight:500;color:var(--ink)}
+
+/* $1 + $9 figure */
+.nine{display:grid;grid-template-columns:auto auto 1fr;gap:6mm;align-items:end}
+.nine .one{display:grid;gap:1.6mm;justify-items:start}
+.nine .sq{width:8mm;height:8mm;background:var(--ink)}
+.nine .grid{display:grid;grid-template-columns:repeat(3,8mm);gap:1mm}
+.nine .grid i{display:block;width:8mm;height:8mm;background:var(--signal)}
+.nine .d{font:400 22pt/1 var(--f-disp)}
+.nine .l{font:500 6.2pt/1.3 var(--f-ui);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+.nine .plus{font:300 15pt/1 var(--f-ui);color:var(--ink-3);padding-bottom:10mm}
+.nine ul{margin:0;padding:0;list-style:none;font:400 7.2pt/1.7 var(--f-ui);color:var(--ink-2)}
+.nine .gw{display:grid;gap:1.6mm}
+.nine .gr{display:flex;gap:4mm;align-items:end}
+
+/* endnotes */
+.notes{margin-top:9mm;border-top:.3mm solid var(--ink);padding-top:3mm;font:400 6.6pt/1.6 var(--f-ui);color:var(--ink-2)}
+.notes .nh{font:500 6.4pt/1 var(--f-ui);letter-spacing:.2em;text-transform:uppercase;color:var(--ink);margin-bottom:2.4mm}
+html[data-lang="zh"] .notes .nh{letter-spacing:.3em}
+.notes ol{margin:0;padding-left:4mm}
+.notes li+li{margin-top:1mm}
+
+/* ---------- fixed pages ---------- */
+.cover{background:var(--signal)}
+.cover .au{position:absolute;left:18mm;top:18mm;font:500 7.5pt/1.5 var(--f-ui);letter-spacing:.18em;text-transform:uppercase}
+.cover .au span{display:block;font:400 9pt/1.5 var(--f-zh);letter-spacing:.3em;text-transform:none}
+.cover .t-zh{position:absolute;right:20mm;top:20mm;writing-mode:vertical-rl;font:600 40pt/1.05 var(--f-zh);letter-spacing:.12em}
+.cover .t-en{position:absolute;left:18mm;bottom:34mm;width:95mm;font:400 34pt/.98 var(--f-disp);letter-spacing:-.01em}
+.cover .ed{position:absolute;left:18mm;bottom:18mm;right:18mm;display:flex;justify-content:space-between;font:500 6.8pt/1 var(--f-ui);letter-spacing:.18em;text-transform:uppercase;border-top:.35mm solid var(--ink);padding-top:3mm}
+.epi{position:absolute;left:24mm;right:30mm;top:96mm}
+.epi q{quotes:none;display:block;font:400 15pt/1.75 var(--f-zh);letter-spacing:.04em}
+html[data-lang="en"] .epi q{font:400 20pt/1.2 var(--f-disp)}
+.epi cite{display:block;margin-top:6mm;font:normal 400 7pt/1 var(--f-ui);letter-spacing:.18em;color:var(--ink-3)}
+.tp .t1{position:absolute;left:22mm;right:18mm;top:58mm;font:600 26pt/1.3 var(--f-zh);letter-spacing:.06em}
+.tp .t2{position:absolute;left:22mm;right:18mm;top:82mm;font:400 21pt/1.02 var(--f-disp)}
+.tp .bar{position:absolute;left:22mm;top:124mm;width:12mm;height:1.6mm;background:var(--signal)}
+.tp .who{position:absolute;left:22mm;top:132mm;font:400 10pt/1.7 var(--f-zh)}
+html[data-lang="en"] .tp .who{font-family:var(--f-en)}
+.tp .who small{display:block;font:400 7.4pt/1.7 var(--f-ui);color:var(--ink-2);letter-spacing:.04em}
+.cpy .cr{position:absolute;left:18mm;right:22mm;bottom:18mm;font:400 6.4pt/1.7 var(--f-ui);color:var(--ink-3)}
+.toc h1{position:absolute;left:22mm;top:24mm;margin:0;font:500 6.8pt/1 var(--f-ui);letter-spacing:.3em;color:var(--ink-3)}
+.toc ol{position:absolute;left:22mm;right:18mm;top:40mm;margin:0;padding:0;list-style:none;border-top:.3mm solid var(--ink)}
+.toc li{display:grid;grid-template-columns:12mm 1fr auto;align-items:baseline;gap:2mm;padding:2.8mm 0;border-bottom:.2mm solid var(--rule);font:400 9.6pt/1.45 var(--f-zh)}
+html[data-lang="en"] .toc li{font:400 10.2pt/1.3 var(--f-en)}
+.toc li .no{font:400 13pt/1 var(--f-disp)}
+.toc li .pg{font:400 7pt/1 var(--f-ui);color:var(--ink-3);font-variant-numeric:tabular-nums}
+.toc li.todo{color:var(--ink-3)}
+.toc .legend{position:absolute;left:22mm;right:18mm;bottom:20mm;font:400 6.4pt/1.6 var(--f-ui);color:var(--ink-3)}
+.opener{background:var(--ink);color:var(--paper)}
+.opener .num{position:absolute;left:14mm;bottom:8mm;font:400 168pt/.8 var(--f-disp);color:var(--signal);letter-spacing:-.04em}
+.opener .part{position:absolute;left:18mm;top:20mm;font:500 6.8pt/1 var(--f-ui);letter-spacing:.24em;text-transform:uppercase;color:#bdbdb8}
+.opener .rule{position:absolute;left:18mm;right:22mm;top:28mm;height:.3mm;background:#3a3a38}
+.ct h1{position:absolute;left:22mm;right:18mm;top:38mm;margin:0;font:600 25pt/1.3 var(--f-zh);letter-spacing:.06em;text-wrap:balance}
+html[data-lang="en"] .ct h1{font:400 34pt/1 var(--f-disp);letter-spacing:-.01em}
+.ct .sub{position:absolute;left:22mm;right:18mm;top:74mm;font:400 12pt/1.5 var(--f-zh);color:var(--ink-2);letter-spacing:.1em}
+html[data-lang="en"] .ct .sub{font:italic 400 13pt/1.3 var(--f-en);letter-spacing:0}
+.ct ol{position:absolute;left:22mm;right:18mm;top:128mm;margin:0;padding:0;list-style:none;border-top:.3mm solid var(--ink)}
+.ct li{display:grid;grid-template-columns:12mm 1fr auto;align-items:baseline;padding:2.6mm 0;border-bottom:.2mm solid var(--rule);font:400 9.2pt/1.45 var(--f-zh)}
+html[data-lang="en"] .ct li{font:400 9.8pt/1.35 var(--f-en)}
+.ct li span:first-child,.ct li span:last-child{font:400 7pt/1 var(--f-ui);color:var(--ink-3);font-variant-numeric:tabular-nums}
+.solow .q{position:absolute;left:22mm;right:18mm;top:34mm}
+.solow .q q{quotes:none;display:block;font:400 18pt/1.6 var(--f-zh);letter-spacing:.03em}
+html[data-lang="en"] .solow .q q{font:400 25pt/1.08 var(--f-disp)}
+.solow .q q em{font-style:normal;text-decoration:underline var(--signal) 1.4mm;text-underline-offset:.3mm;text-decoration-skip-ink:none}
+html[data-lang="en"] .solow .q q em{font-style:italic}
+.solow .q cite{display:block;margin-top:5mm;font:normal 500 7pt/1 var(--f-ui);letter-spacing:.18em;text-transform:uppercase;color:var(--ink-2)}
+.solow img{position:absolute;left:44mm;bottom:0;width:100mm;height:auto;display:block}
+.wip .msg{position:absolute;left:22mm;right:18mm;top:96mm;font:400 11pt/1.8 var(--f-zh);color:var(--ink-2)}
+html[data-lang="en"] .wip .msg{font:italic 400 12pt/1.4 var(--f-en)}
+.wip .msg small{display:block;margin-top:4mm;font:400 7pt/1.6 var(--f-ui);color:var(--ink-3)}
+.back{background:var(--ink);color:var(--paper)}
+.back .bq{position:absolute;left:18mm;right:26mm;top:34mm;font:400 15pt/1.75 var(--f-zh);letter-spacing:.03em}
+html[data-lang="en"] .back .bq{font:400 21pt/1.12 var(--f-disp)}
+.back .bq u{text-decoration:none;box-shadow:inset 0 -1.2mm 0 var(--signal)}
+.back .ab{position:absolute;left:18mm;right:26mm;bottom:26mm;font:400 7.6pt/1.7 var(--f-zh);color:#c9c9c4;border-top:.3mm solid #444;padding-top:3mm}
+html[data-lang="en"] .back .ab{font:400 8pt/1.45 var(--f-en)}
+.back .mk{position:absolute;left:18mm;bottom:14mm;width:8mm;height:2mm;background:var(--signal)}
+/* case spread (sample from ch. 03) */
+.dark{background:#0b0b0c;color:#e9e9e6}
+.dark .rh{color:#7c7c78}.dark .folio{color:#a7a7a2}
+.dash>img{position:absolute;left:0;right:0;top:18mm;width:100%;height:auto;display:block}
+.dash img.detail{left:auto;right:14mm;top:112mm;width:54mm;border-radius:1.2mm;box-shadow:0 0 0 .3mm #2c2c2e,0 6mm 14mm -4mm rgba(0,0,0,.8)}
+.dash figcaption{position:absolute;left:18mm;width:78mm;bottom:24mm;color:#b9b9b4}
+.dash figcaption b{color:#fff}
+.case .kicker{font:500 6.5pt/1 var(--f-ui);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3);margin-bottom:4mm}
+.case h2{margin:0 0 5mm;font:400 15pt/1.4 var(--f-zh)}
+html[data-lang="en"] .case h2{font:400 20pt/1.08 var(--f-disp)}
+.case .lede{font-size:11pt;line-height:1.75;margin-bottom:4mm}
+html[data-lang="en"] .case .lede{font-size:11.5pt;line-height:1.4;font-style:italic}
+.wm{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:.3mm solid var(--ink);margin:3mm 0 4mm}
+.wm div{padding:2mm 2mm 0 0}
+.wm .lab{font:500 6pt/1.2 var(--f-ui);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:1.2mm}
+.wm .v{font:400 7.6pt/1.5 var(--f-zh)}
+html[data-lang="en"] .wm .v{font:400 8pt/1.35 var(--f-en)}
+.practice{display:grid;grid-template-columns:16mm 1fr;gap:3mm;padding:2.2mm 0;border-top:.2mm solid var(--rule);font-size:8.4pt;line-height:1.75}
+html[data-lang="en"] .practice{font-size:8.6pt;line-height:1.42}
+.practice .lab{font:500 6.2pt/1.6 var(--f-ui);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+.practice b{font-weight:600}
+.nums{position:absolute;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(5,1fr);border-top:.3mm solid var(--ink)}
+.nums div{padding:2.4mm 1.4mm 0 0}
+.nums .n{font:400 19pt/1 var(--f-disp);font-variant-numeric:tabular-nums}
+.nums .n.tbc{color:var(--ink-3)}
+.nums .k{margin-top:1.6mm;font:400 5.8pt/1.35 var(--f-ui);letter-spacing:.06em;color:var(--ink-2)}
+.nums div:first-child .n{background:var(--signal);display:inline-block;padding:0 1mm}
+
+/* measuring box (off screen) */
+#measure{position:absolute;left:-9999px;top:0;visibility:hidden}
+
+/* ---------- narrow screens: read as a scroll of pages ---------- */
+body.list{overflow:auto;display:block}
+body.list .stage{display:block;perspective:none;padding-block:8px 24px}
+body.list .book{position:static;width:auto;height:auto;transform:none!important;transition:none;display:flex;flex-direction:column;align-items:center;gap:14px}
+body.list .leaf{display:contents;visibility:visible!important}
+body.list .leaf>.page{position:relative;inset:auto;transform:none;backface-visibility:visible;zoom:var(--z,1)}
+body.list .page::after{display:none}
+body.list .nav{display:none}
+
+/* ---------- print: one sheet per page, 170 × 240 mm ---------- */
+@page{size:170mm 240mm;margin:0}
+@media print{
+  html,body{height:auto;background:#fff;padding:0;overflow:visible;display:block}
+  .top,.nav,.loading{display:none!important}
+  .stage{display:block;perspective:none}
+  .book{position:static;width:auto;height:auto;transform:none!important}
+  .leaf{display:contents;visibility:visible!important}
+  .leaf>.page{position:relative;transform:none;backface-visibility:visible;box-shadow:none;break-after:page;zoom:1}
+  .page::after{display:none}
+  .page{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  html.marks .add{background:none;box-shadow:none}html.marks .add::before{display:none}
+}
+</style>
+
+<header class="top">
+  <div><b>当商业成为智能体</b> · <span id="ver">全书初稿</span> · 170 × 240 mm</div>
+  <div class="ctl">
+    <button type="button" id="bMarks" aria-pressed="true" title="标出 Claude 补写或改写的句子">标出补写</button>
+    <span class="sep" aria-hidden="true"></span>
+    <button type="button" id="bZh" aria-pressed="true">中文</button>
+    <button type="button" id="bEn" aria-pressed="false">EN</button>
+  </div>
+</header>
+
+<main class="stage" id="stage">
+  <div class="loading" id="loading">排版中…</div>
+  <div class="shadow" id="shadow"></div>
+  <div class="book" id="book"></div>
+  <div class="hint" id="hint"></div>
+</main>
+
+<nav class="nav" aria-label="翻页">
+  <button type="button" id="prev" aria-label="上一页">←</button>
+  <input type="range" id="slider" min="0" max="1" value="0" aria-label="跳到页">
+  <output id="where"></output>
+  <button type="button" id="next" aria-label="下一页">→</button>
+</nav>
+
+<div id="measure" aria-hidden="true"></div>
+
+<!-- =================== FIXED PAGES =================== -->
+<template id="t-cover">
+  <section class="page cover" aria-label="封面">
+    <div class="au">Ling Fan<span>范凌</span></div>
+    <div class="t-zh">当商业成为智能体</div>
+    <div class="t-en">Agentic<br><i>Transformation</i><br>for Business</div>
+    <div class="ed"><span>2.0</span><span>Tezign · 2026</span></div>
+  </section>
+</template>
+<template id="t-epi">
+  <section class="page" aria-label="题词">
+    <div class="epi">
+      <q class="zh">AI 是内卷的技术，<br>商业是创造需求的艺术。</q>
+      <q class="en">AI is the technology of involution. Business is the art of creating demand.</q>
+      <cite>— <span class="zh">范凌</span><span class="en">Ling Fan</span></cite>
+    </div>
+  </section>
+</template>
+<template id="t-title">
+  <section class="page tp" aria-label="扉页">
+    <div class="t1">当商业成为智能体</div>
+    <div class="t2">Agentic Transformation<br>for Business</div>
+    <div class="bar"></div>
+    <div class="who"><span class="zh">范凌<small>同济大学教授、博士生导师 · 特赞科技创始人</small></span><span class="en">Ling Fan<small>Professor, Tongji University · Founder, Tezign Inc.</small></span></div>
+  </section>
+</template>
+<template id="t-copy">
+  <section class="page cpy" aria-label="版权页">
+    <div class="cr"><span class="zh">范凌 © 特赞科技 2015–2026 版权所有<br>本书根据作者 2026 年的演讲、讲稿与演示文稿整理。</span><span class="en">Ling Fan © Tezign 2015–2026. All rights reserved.<br>Adapted from the author’s 2026 talks, transcripts and slides.</span></div>
+  </section>
+</template>
+<template id="t-toc">
+  <section class="page toc" aria-label="目录">
+    <h1><span class="zh">目录</span><span class="en">CONTENTS</span></h1>
+    <ol id="toc-list"></ol>
+    <div class="legend"><span class="zh">蓝点标出的句子是编辑补写或改写的，待作者确认。可在顶部“标出补写”切换。</span><span class="en">Only chapter 1 is in English so far; the other chapters follow once the Chinese text is final.</span></div>
+  </section>
+</template>
+<template id="t-drucker">
+  <section class="page solow drucker" aria-label="德鲁克">
+    <div class="q">
+      <q class="zh"><em>企业的目的</em>只有一个有效的定义：<br>创造顾客。</q>
+      <q class="en">There is only one valid definition of <em>business purpose</em>: to create a customer.</q>
+      <cite><span class="zh">彼得·德鲁克，《管理的实践》，1954</span><span class="en">Peter Drucker, The Practice of Management, 1954</span></cite>
+    </div>
+    <img src="img/drucker.jpg" width="814" height="558" alt="彼得·德鲁克">
+  </section>
+</template>
+<template id="t-solow">
+  <section class="page solow" aria-label="索洛悖论">
+    <div class="q">
+      <q class="zh"><em>索洛悖论</em>：<br>计算机时代随处可见，<br>唯独不见于生产率统计。</q>
+      <q class="en"><em>Solow Paradox:</em> You can see the computer age everywhere but in the productivity statistics.</q>
+      <cite><span class="zh">罗伯特·索洛，1987</span><span class="en">Robert Solow, 1987</span></cite>
+    </div>
+    <img src="img/solow.jpg" width="1020" height="800" alt="罗伯特·索洛">
+  </section>
+</template>
+<template id="t-wip">
+  <section class="page wip" aria-label="English to follow">
+    <div class="msg"><span class="en">The English text of this chapter follows once the Chinese text is final.<small>Switch to 中文 to read the full draft.</small></span><span class="zh">本章英文稿待中文定稿后翻译。</span></div>
+  </section>
+</template>
+<template id="t-case">
+  <section class="page case" aria-label="案例：物业管理智能体">
+    <div class="body">
+      <div class="kicker"><span class="zh">案例</span><span class="en">Case study</span></div>
+      <h2><span class="zh">物业管理智能体：<br>一家国有大型银行的办公楼</span><span class="en">Property Management Agent: A State-Owned Bank</span></h2>
+      <p class="lede zh">外滩一栋办公楼。GEA 智能体就在住户和物业管理的聊天群里，第一年成本即降低 10%。</p>
+      <p class="lede en">An office building on the Bund. The GEA agent sits in the chat group between tenants and the property team. Costs fell 10% in year one.</p>
+      <div class="wm">
+        <div><div class="lab"><span class="zh">外部 · 客户世界模型</span><span class="en">External · Customer world model</span></div><div class="v"><span class="zh">住户在群里的报修、抱怨和评价</span><span class="en">Tenants’ requests, complaints and ratings in the chat</span></div></div>
+        <div><div class="lab"><span class="zh">内部 · 公司世界模型</span><span class="en">Internal · Company world model</span></div><div class="v"><span class="zh">谁在岗、工作量、排期、楼宇环境</span><span class="en">Who is on post, workload, schedules, building conditions</span></div></div>
+        <div><div class="lab"><span class="zh">模式 B · AI 用人</span><span class="en">Mode B · AI uses human</span></div><div class="v"><span class="zh">信号 → 规划 → 执行 → 评估。智能体盯和推，人执行。</span><span class="en">Signal → plan → create → evaluate. The agent watches and pushes; people do the work.</span></div></div>
+      </div>
+      <div class="practice"><div class="lab"><span class="zh">工程</span><span class="en">Engineering</span></div><div><b class="zh">群里的每日简报。</b><b class="en">A daily briefing in the group chat.</b> <span class="zh">每天总结：多少报修，完成率、及时率如何，谁做得多、谁做得好。并按计划检查所有工作的完成度，及时提醒。</span><span class="en">Every day it reports how many repairs came in, the completion and on-time rates, and who did the most and the best. It checks all planned work against schedule and sends reminders.</span></div></div>
+      <div class="practice"><div class="lab"><span class="zh">安保</span><span class="en">Security</span></div><div><b class="zh">定时调取监控。</b><b class="en">Watching the cameras on schedule.</b> <span class="zh">判断人是否在岗、在做什么，是否有异常，是否有空车位。有情况立刻通知同事处理。</span><span class="en">Is each person at their post, what are they doing, is anything unusual, are there free parking spaces. When something is off, it alerts a colleague at once.</span></div></div>
+      <div class="practice"><div class="lab"><span class="zh">人员</span><span class="en">People</span></div><div><b class="zh">传感器员工工牌。</b><b class="en">Sensor-rich staff badges.</b> <span class="zh">人脸识别、GPS、室内定位、陀螺仪、气压计、温度计、空气质量等传感器，记录每个人一天的工作和休息时间、去过的区域、区域环境是否改善。</span><span class="en">Face recognition, GPS, indoor positioning, gyroscope, barometer, thermometer and air-quality sensors record each person’s work and rest time, the areas visited, and whether those areas improved.</span></div></div>
+      <div class="nums">
+        <div><div class="n">−10%</div><div class="k"><span class="zh">成本（第一年）</span><span class="en">Cost, first year</span></div></div>
+        <div><div class="n">+15%</div><div class="k"><span class="zh">满意度评分</span><span class="en">Satisfaction score</span></div></div>
+        <div><div class="n">−20%</div><div class="k"><span class="zh">报修响应时间</span><span class="en">Repair response time</span></div></div>
+        <div><div class="n">92%</div><div class="k"><span class="zh">24 小时 / 当日完成率</span><span class="en">Done within 24 h / same day</span></div></div>
+        <div><div class="n tbc">−?%</div><div class="k"><span class="zh">投诉量（待补）</span><span class="en">Complaints (TBC)</span></div></div>
+      </div>
+    </div>
+  </section>
+</template>
+<template id="t-back">
+  <section class="page back" aria-label="封底">
+    <div class="bq"><span class="zh">机会不只是把企业自动化，而是把让企业与众不同的<u>品味、判断与亲密感</u>规模化。</span><span class="en">The opportunity is not just to automate the business. It is to scale the <u>taste, judgment and intimacy</u> that make the business distinctive.</span></div>
+    <div class="ab"><span class="zh">范凌，同济大学教授、博士生导师，特赞科技创始人。曾在加州大学伯克利分校、哈佛大学教学与研究。特赞是企业智能体领域的全球领先者，服务 180 多家全球企业。</span><span class="en">Ling Fan is a professor at Tongji University and founder of Tezign. He has taught and researched at UC Berkeley and Harvard University. Tezign is a global leader in enterprise agentic AI, serving more than 180 global enterprises.</span></div>
+    <div class="mk"></div>
+  </section>
+</template>
+
+<template id="f-pro-zh">
+  <div class="hg" data-sec="sp.1"><div class="kicker">序 · 1</div><h2>AI 是内卷的技术，商业是创造需求的艺术</h2></div>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s11.jpg" width="1478" height="832" alt="AI 是内卷的技术">
+    <figcaption><b>图 0.1</b>AI 是内卷的技术，商业是创造需求的艺术。</figcaption>
+  </figure>
+  <p><span class="add">所有技术的本能，都是在供给侧内卷，而且越卷越凶。</span>AI 就是内卷中的内卷。但商业最核心的还是创造需求。我觉得两者之间有一种互补性：今天没有一家伟大的公司是只靠卷供给变得伟大的，都是因为获得了一群最爱它的消费者或者用户。所以商业可能是<span class="add">把 AI 从内卷里拯救出来</span>的一个很重要的方式，让这个世界依然充满想象力和美好。</p>
+
+  <div class="hg" data-sec="sp.2"><div class="kicker">序 · 2</div><h2>说话、思考、行动：三代 AI</h2></div>
+  <p><span class="add">过去三年出现的东西，我们都叫它 AI</span>，甚至把三代 AI 混在一起讲。但事实上，这是完全不同的三代 AI。</p>
+  <p>三年前，我们对 AI 的兴奋来自它会说话、会画画、会生成音乐，我们称之为生成式 AI。那时候的 AI 有一个特点，像韦小宝<span class="add">，什么话都接得上，但不一定靠谱</span>：你问它什么问题，它都能给你一个答案。</p>
+  <p>两年前，AI <span class="add">开始学会思考</span>。你现在问它一个问题，它中间都会有一个思考的过程，我们称之为思维链（chain of thought）。<span class="add">回答不再是脱口而出，而是想过之后再说。</span></p>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s12.jpg" width="1478" height="832" alt="三代 AI 时间线：生成式 AI、推理、智能体">
+    <figcaption><b>图 0.2</b>三代 AI：会说话、会思考、会行动。</figcaption>
+  </figure>
+  <p>一年前，出现了以 Claude Code 为代表的新一代 AI。它开始干两件事情：第一是写代码，第二是操作电脑。大家想想白领的工作，基本上就是操作电脑，或者用某种<span class="add">“代码”解决问题，不管是计算机的代码，还是管理的规则</span>。换句话说，过去一年 AI 开始干活了。而且 AI 干活正在从做助手（AI assists）慢慢变成主导（AI leads）。最近<span class="add">在</span>数学、蛋白质合成、化学<span class="add">等领域</span>，都开始出现所谓的<span class="add">自动化科研（auto research）</span>，AI 自动做出很多科研成果。AI 也开始自动产生很多经营结果，从控制电脑慢慢走向自主决策。</p>
+  <p>所以今天我们要讲的 AI，不应该只是第一种，也不应该只是第二种，而应该进入第三种：一个可以行动的 AI。我经常在公司里开玩笑，说未来坐着的工作都会被取代，<span class="add">而且这一天可能来得比我们想的快。</span></p>
+
+  <div class="hg" data-sec="sp.3"><div class="kicker">序 · 3</div><h2>底线是自动化，上限是差异化</h2></div>
+  <p>每一个企业用 AI 的角度不一样，<span class="add">但底线都是自动化</span>，也就是提高效率。<span class="add">上限</span>，应该是让每一个企业的差异被放大。</p>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s13.jpg" width="1478" height="832" alt="机会不只是把企业自动化">
+    <figcaption><b>图 0.3</b>机会不只是把企业自动化，而是把让企业与众不同的品味、判断与亲密感规模化。</figcaption>
+  </figure>
+  <p>大语言模型也好，AI 也好，它的本能是概率。<span class="add">你问它一个问题，它给你的是大概率的答案</span>，比如 1 加 1 等于几，大概率的答案是 2。但很多商业决策，尤其是很有特色的商业，走的不是大概率，走的是差异化，是小概率。所以如果我们要在自己的行业里做 AI，不应该让它倾向大概率，而应该倾向个性化：怎样让我们每一个人、让我们这个企业的特点被放大。</p>
+  <p><span class="add">接下来的八章，就从这里展开。</span></p>
+</template>
+
+<template id="f-ch2-zh">
+  <div class="hg" data-sec="s2.1"><div class="kicker">2.1</div><h2>找一些不会变的东西</h2></div>
+  <p><span class="add">我一直不愿意把 AI 只当成一个技术问题，还有一个原因：</span>一旦讲技术，我们每天就是跟着技术的潮流走。我每次讲 AI，都觉得一定要找一些<span class="add">不变</span>的东西，找到一些锚点。商业里是有些东西不会因为时间而改变的。</p>
+  <p>所以我想说，你的智能体、你的 AI 转型，应该有一个商业的底座。我把它称为两个基础的模型。一个是可以不停地理解外部、感知用户的模型：你能不能比原来更高效地理解你的用户？另一个是关于内部的：你内部的协调、内部的流程、内部的知识和积累，那些显性的和隐性的东西，能不能被更好地提取出来？</p>
+  <p>再引一句 70 年前的话。德鲁克说，企业的目的只有一个有效的定义：创造顾客。<sup class="n">1</sup>如果我们能创造一个新的顾客，找到顾客没有被满足的某种需求，并且做出让他惊喜的产品、服务和营销故事，我们就会立于不败之地。顾客的需求也是变化的，所以永远要回到顾客的问题上。</p>
+  <div class="fullpage" data-tpl="t-drucker"></div>
+  <p>我说的顾客是广义的：有 to B 的，有 to C 的，有个人的，有商用的。在 AI 时代，我们其实有机会用 AI 重新塑造理解顾客的方式。</p>
+
+  <div class="hg" data-sec="s2.2"><div class="kicker">2.2</div><h2>大语言模型为主观世界建模</h2></div>
+  <p>我们最近一直在做一件事：用大语言模型来模拟用户是怎么做决策的，可以是 to B 的，也可以是 to C 的。为什么大语言模型可以模拟用户的决策？大家想想，我们平时是怎么互相交流的？用语言。我们是怎么想一个复杂问题的？在脑子里自己跟自己说话。而大语言模型的本能，就是文字接龙，不停地推演下一个字、下一个 token 应该是什么。<span class="add">所以解决了语言的问题，似乎就能进一步去模拟想法、决策，乃至行为。</span></p>
+  <p>举个例子。如果我们想模拟哈利·波特这个人，可以把《哈利·波特》全集放进大语言模型，做一个哈利·波特模拟器。在大语言模型之前，如果你要问哈利·波特早餐喜欢喝咖啡还是果汁，用的方法叫检索（retrieval），就是搜索的逻辑。现在不是了，现在叫推演（deduction）：如果哈利·波特是这样一个人，过去是这样的，那下一步他会怎么样？</p>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s24.jpg" width="1478" height="832" alt="大语言模型为主观世界建模">
+    <figcaption><b>图 2.1</b>物理学为客观世界建模，大语言模型为主观世界建模。</figcaption>
+  </figure>
+  <p>大家可以猜一猜，哈利·波特喜欢喝果汁还是咖啡？模拟的结果是：他可能喜欢果汁，而且是南瓜汁。<span class="add">书里从没直接回答他爱喝什么，模型是从他在霍格沃茨的生活里推出来的。</span></p>
+  <div class="stmt">物理学为客观世界建模，大语言模型为主观世界建模。</div>
+  <p>这就是给主观世界建模：不是查到答案，而是推演一个人会怎么选。<span class="add">从一个用户过去零散的信息出发，我们可以用 AI 建立他的数字孪生，也就是这个人在数字世界里的模拟副本：大语言模型能模拟这个人怎么说、怎么想，我们也就能借此理解和判断这个用户。</span></p>
+
+  <div class="hg" data-sec="s2.3"><div class="kicker">2.3</div><h2>用 AI 更好地理解人</h2></div>
+  <p>今天网上的<span class="add">声音，大多在讲</span> AI 又取代了这个、又取代了那个。但在 AI 的前沿研究里，用 AI 去模拟、去更好地理解人，其实是一个很重要的方向。我举三个我很喜欢的研究。</p>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s26.jpg" width="1478" height="832" alt="主观世界建模的研究方向">
+    <figcaption><b>图 2.2</b>主观世界建模的三个研究方向：认知建模、人格建模、行为建模。</figcaption>
+  </figure>
+  <p>第一个是斯坦福小镇，三四年前的项目。研究者建了一个虚拟环境，里面有 25 个自主的智能体，扮演各种各样的角色，在小镇里互动，听上去像《模拟人生》。<sup class="n">2</sup>这个团队之后做了一个更严肃的工作：用同样的方法模拟 1,000 个随机的美国人。<sup class="n">3</sup>你可以问他们的消费想法、政治选择，问现在的年轻人为什么不想生孩子。<span class="add">一个人的数字孪生回答同样的问题，准确度能达到这个人两周后再回答一次自己的水平的 85% 左右。这个数字高不高？要知道，同一个人隔两周再答同样的问题，本来也不会完全一致。</span>人是善变的。<span class="add">所以数字孪生对这个人的刻画，已经相当准确。</span></p>
+  <p>第二个叫人格向量（persona vectors），是 Anthropic 的团队在做的研究。<sup class="n">4</sup>模型训练的最后一步叫对齐，就是让模型和人的价值观对齐，让它无私、善良、脾气非常好。所以最后这一步，其实是让模型不像人，像圣人。人格向量研究的是：你跟模型对话时，哪些词、哪些句子会触发它，让它重新回到人的状态？比如聊着聊着它怎么突然生气了，是哪几句话造成的。也就是什么样的句子，会让一个模型突然像个正常人，有点自私、小气，甚至阴暗。</p>
+  <p>第三个和经济学有关。经济学研究行为有一个方法叫经济游戏，比如囚徒困境，这些都有完整的数据集。AI 看上去能模拟一个人，<span class="add">但它的回答会向概率最大的那个答案集中。</span><span class="add">打个比方，</span>每个人口袋里有 200 块钱，我进来讲一个很悲惨的故事，请你们支持我一下，不同的人会给我不同的钱。模型如果做 100 次，十有八九会给出差不多的数，平均下来大约给 80 块钱。但人不是这样的，人是随机的。所以行为模拟的方法，是倒过来用 AI 去还原人的随机性。</p>
+
+  <div class="hg" data-sec="s2.4"><div class="kicker">2.4</div><h2>主观世界模型</h2></div>
+  <p><span class="add">在这些研究的基础上，我们做了工程化</span>，训练了一个模型，叫主观世界模型（Subjective World Model），目的就是模拟各种各样的用户，to B 的、to C 的。它的数据来自四个层面。第一层叫表达：比如大家在小红书上、在微信上是怎么表达的。第二层叫叙事：通过访谈问他，为什么这么表达。第三层叫认知，就是前面讲的经济游戏这类方法。第四层是行为：有没有买，有没有点击，有没有做你想要他做的事。</p>
+  <p>为什么要四个层面的数据？因为人是矛盾的、复杂的。比如我太太可能会说她是一个理性的消费者，但一到奢侈品店可能就不理性了，一到孩子教育也不理性了。人说的和做的常常不一样，所以才需要这四个维度。</p>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s27.jpg" width="1478" height="832" alt="主观世界模型的四层数据">
+    <figcaption><b>图 2.3</b>主观世界模型的四层数据：表达、叙事、认知、行为。人说的和做的常常不一样，所以要四层一起看。</figcaption>
+  </figure>
+  <p>这个模型用 100 万真实用户的数据训练，上面的应用叫 atypica。上线一年，<span class="add">用户也已经超过 100 万</span>，覆盖 50 个国家和地区<span class="add">（数据来自特赞，截至 2026 年）</span>。你输入一个关于用户的问题，它会把问题拆成研究问题，找到合适的 AI 人格（AI persona），组成一个小组，自动生成洞察。你也可以把 AI 人格和真人受访者混在一起：真人定基线，AI 提供规模。</p>
+
+  <div class="hg" data-sec="s2.5"><div class="kicker">2.5</div><h2>案例：一辆车的前测</h2></div>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s29.jpg" width="1478" height="832" alt="主观世界模型让用户理解始终在线">
+    <figcaption><b>图 2.4</b>主观世界模型让用户理解始终在线：任何人、任何想法、任何地点，即时测试。</figcaption>
+  </figure>
+  <p>如果今天我们可以用 AI 来做虚拟的消费者，更好地了解消费者的需求，邀请消费者来共创、评测，会发生什么变化？我举一个可能比大多数行业都卷的行业：新能源车。</p>
+  <p>以前，一辆车是 5 到 10 年的研发周期，每一步都按部就班。现在是 5 到 10 个月。所以对车企来说，已经没有机会做所谓的后测，也就是做了一件事再验证一下，看看能不能做得更好。所有的事情都要前测，要在之前做大量的模拟。</p>
+  <p>我们合作的一家新能源车企推出了一个新品牌，由两位很年轻的总裁来重新想这个过程。他们第一件事是找到想服务的用户：一二三线城市、有两个以上孩子的年轻家庭。车企号称是最花钱做用户调研、建 CRM 和 CDP<span class="add">（客户关系管理系统和客户数据平台）</span>的，但讽刺的是，他们的用户数据都是开车的那个人。大家想想，如果是 SUV 或者 MPV，开车的那个人往往不是做决策的人，做决策的一般是太太和孩子。你有再多开车人的数据，<span class="add">也代表不了真正做决定的人。</span></p>
+  <p>所以他们用 AI 去模拟三口之家、四口之家，甚至两三代人的买车选择。从战略规划开始，他们就没有把用户简单抽象成一大堆标签：人群、年龄、职业，而是一个个真实的家庭。这就是 AI 人格。</p>
+  <p>在产品定义阶段，他们用这些 AI 人格讨论：到底应该怎么做差异？一家两代人、三代人讨论买车的时候，各自是什么角色？什么样的车，能让他们愿意付 25 万到 30 万？进入研发以后，当然还是按传统车企的流程走，但可以不停地用这群 AI 人格去验证：座椅做成这样，这群人会有什么感受？到了营销环节：我花这么多钱做一个营销活动，传递的信息是不是正确的？别点击数很多、点赞数很多，信息却是错的。他们一直讲的就是，进 4S 店之前，用户就应该知道这辆车是 30 万的，不是 15 万的。</p>
+  <p>再往后到用户运营。销售一直不知道该用什么话术，车的参数就是一本说明书，销售要自己去编，见什么人说什么话。现在倒过来，用 AI 人格重新编撰整个话术体系，而且这些虚拟消费者可以跟销售对练，挑战他，帮他建立销售能力。还有很多企业都在做的矩阵号<span class="add">，也就是企业运营的一批社交媒体账号</span>，看上去像用户自己发的内容，其实是公司整体在做，我们叫中央厨房。这一系列 AI 角色，正好就是这些内容的主角。</p>
+  <p><span class="add">用这种方式，大约 5 个月到 1 年，就能建起一套全新的数字化消费者测试环境。</span>以前我们说有用户数据，是知道电话号码、联系方式、消费行为，但这些都是结果，没有办法预判。</p>
+  <p>我们看到，可能 95% 和用户有关的决策，小到今天社交媒体上发什么内容，大到你怎么定义你的消费者、做什么样的产品，都是主观决定的。所以除了原来做得很好的大项目，小项目也可以不停地测试。<span class="add">让理解用户从一个又一个项目，变成企业持续的能力。</span></p>
+
+  <div class="hg" data-sec="s2.6"><div class="kicker">2.6</div><h2>从层级到智能</h2></div>
+  <p>光是用不一样的方式理解用户，是不够的。我们也要用同样的 AI 的方式去理解自己。</p>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s31.jpg" width="1478" height="832" alt="从层级到智能">
+    <figcaption><b>图 2.5</b>从层级到智能。来源：Jack Dorsey & Roelof Botha，2026。</figcaption>
+  </figure>
+  <p>今年年初，有一篇文章至少在我的企业家圈子里很火：<span class="add">Twitter 联合创始人 Jack Dorsey 和红杉资本的 Roelof Botha 合写的</span>《从层级到智能》（From Hierarchy to Intelligence）。<sup class="n">5</sup>他说，原来每个企业的组织形态，都是基于人来做中间协调的：总部的意见通过中层管理者传到前线，前线的商业感知通过中层管理者传回总部。现在越来越多的企业希望扁平，但扁平是需要工具和技术来支持的。</p>
+  <p>他说，一家公司需要两样东西：一个关于自身运营的世界模型，以及足够丰富、能让这个模型发挥作用的客户信号。自身运营的建模，就是企业里方方面面都要能被 AI 所理解。</p>
+  <p>大家看到，现在很多企业的直线管理幅度在变大。网上有一个很有名的数字：黄仁勋有 60 多个直接下属，后来他们公司的人跟我说，好像已经 100 多个了。他每天占一个大会议室，所有直接下属都在里面开会。人的管理边界会变得比以前大很多，主要原因是 AI 可以提供上下文，而不需要通过人去上传下达。如果靠人来上传下达，边界就是邓巴数<span class="add">（一个人能维持稳定关系的人数上限）</span>，一个人管十来个人，这就是极限。<span class="add">但如果由 AI 来理解上下文，每个人都通过智能体获取公司信息：原来扮演这个角色的是你的领导或同事，现在是智能体。</span>这时候我们的协作就是网状的，而不是层级式的。</p>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s38.jpg" width="1478" height="832" alt="企业智能体与两个世界模型">
+    <figcaption><b>图 2.6</b>企业智能体建立在两个世界模型之上：外部的客户世界模型，内部的公司世界模型。</figcaption>
+  </figure>
+  <p>当然，原来就是数字化的企业更容易做到；线上线下都有的企业，需要<span class="add">一段</span>时间去转化。不能一概而论。</p>
+
+  <div class="hg" data-sec="s2.7"><div class="kicker">2.7</div><h2>默会知识</h2></div>
+  <p>公司内部的上下文，到底由什么组成？<span class="add">最近有一位哲学家又被频繁提起，因为他提出过一个概念</span>，叫 tacit knowledge，中文翻译叫默会知识。<span class="add">AI 能处理大量显性知识以后，大家开始重新关注那些说不出来的知识。</span>迈克尔·波兰尼说：我们知道的，比能说出的多。<sup class="n">6</sup>知识有两种。一种是显性的，可以写下来，比如<span class="add">标准作业流程（SOP）</span>。另一种是默会的：一种判断，一种选择，一种积累。</p>
+  <p>数字化的时代，我们基本上把所有显性的知识都变成了数据。AI 的时代，我们要逐步想办法，把默会的知识和数字化的内容衔接在一起。显性的知识，就像你对一个用户的客观描述：什么年龄，什么职业，来过店里多少次，买了多少东西。默会知识是：我是一个很好的销售，我突然意识到，这是一个潜在的、可以做某种销售的客户。或者我看到一块地，觉得它有潜力成为一个什么样的场所。这些感觉就是默会知识。<span class="add">AI 时代，我们真的有机会把两者连接起来，让 AI 试着理解默会知识。</span></p>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s33.jpg" width="1478" height="832" alt="显性知识与默会知识">
+    <figcaption><b>图 2.7</b>两种内部知识。“我们知道的，比能说出的多。”</figcaption>
+  </figure>
+  <p>企业里本来就有两种数据形态。一种是结构化数据，用 Excel 表格就能解决，有明确的因果关系。另一种是图文、视频、声音，叫非结构化数据，原来只能被记录，很难被理解，现在我们可以试着去理解它。我觉得前者更像时间的敌人，因为一旦数字化了，人人都知道了。后者更像时间的朋友，越积累越有差异。这就回到前面讲的：AI 不应该只和自动化有关，也应该让我们差异化的东西被持续地积累下去。</p>
+  <figure class="slide">
+    <img src="img/deck/zh/s35.jpg" width="1478" height="832" alt="模式 Schema">
+    <figcaption><b>图 2.8</b>模式（Schema）：把工作里的上下文结构化，让 AI 能用。</figcaption>
+  </figure>
+  <p>有些企业很在意“我有自己的数据，别人没有”。我讲一个例子。我们服务过一家全球快餐品牌，所有的下单都在 APP 或小程序上，理论上它拥有最完整的用户行为。但我们用它已有的用户数据，买了什么汉堡、什么时候买的、在哪里买的，去预测他对下一个商品的喜好，准确度其实不如 MBTI，不如知道你是 I 人还是 E 人<span class="add">（MBTI 是一种流行的性格分类，I 人偏内向，E 人偏外向）</span>。用户的电话号码这些当然很珍贵，但我的意思是，在做一个简单的行为预测时，企业里所谓的专有数据，在经营上不一定比知道他的 MBTI 更准。</p>
+
+  <div class="hg" data-sec="s2.8"><div class="kicker">2.8</div><h2>最有价值的上下文，还没有被写下来</h2></div>
+  <figure class="slide">
+    <img src="img/deck/zh/s34.jpg" width="1478" height="832" alt="上下文价值从公开到默会递增">
+    <figcaption><b>图 2.9</b>越往下越有价值。最有价值的上下文，还没有被写下来。</figcaption>
+  </figure>
+  <p>所以再往下走，我们应该专门为 AI 的能力去建立一些上下文。举个例子：以前开会，即使录了音，人也没空去听，录音只是记录，不当数据处理。现在我们默认每个会都录音，因为 AI 可以读。录音这种形态，就从原来不太值钱，变成了很重要的知识输入。</p>
+  <p><span class="add">更重要的，是把那些还没有被写下来的东西写下来。</span>比如一家地产企业做场所营造（placemaking）的能力，做开发的那些感觉，能不能慢慢变成企业可以调用的上下文。</p>
+
+  <p>但永远是这样：我们知道的越多，知道自己不知道的越多。只是我们现在有了一些工具，可以知道得更多，这并不代表人就不重要了，还有很多东西是我们未知的。这个过程里最主要的变化在于：知识的积累不再是给人读的，而是给智能体读的。所以它再复杂也不要紧。</p>
+  <p>讲一个有意思的例子。<span class="add">我们最近给一家全球生活方式品牌做了一件事</span>，我把它称为“美好生活之梦的本体”。<span class="add">这个品牌的价值观，就是带给大家对美好生活的梦想；“本体”指的是把这些理解整理成智能体能读懂的结构。</span></p>
+  <p>他们过去很深度地采访了 3,000 多个典型的消费者，有 60 后、70 后、80 后、90 后、00 后。我们要做的，是把这些用户变成公司集体的知识，变成企业的上下文：他们对美好生活的理解，他们是谁，他们的观点，以及这些和<span class="add">品牌</span>的理念怎样衔接。我们把这些变成智能体可以读的基础。<span class="add">于是智能体读到的不再是抽象的流程，它开始理解</span> 3,000 个人对<span class="add">这个品牌</span>价值观的不同理解。</p>
+  <p>下一次，我们就可以邀请这些智能体一起来探讨：下一个营销活动怎么做？下一家店应该怎么做？下一个<span class="add">单品</span>应该怎么选？下一季的用户运营活动应该怎么做？这就是我说的：最有价值的知识，或者说给智能体读的上下文，是那些还没有被写出来的。它们原来没有被写出来，现在可以成为 AI 读的基础。</p>
+
+  <div class="hg" data-sec="s2.9"><div class="kicker">2.9</div><h2>AI 的两个基础</h2></div>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s37.jpg" width="1478" height="832" alt="AI 的两个基础">
+    <figcaption><b>图 2.10</b>目的之下，是 AI 的两个基础：外部的客户世界模型，内部的公司世界模型。</figcaption>
+  </figure>
+  <p>第一章讲的是目的：转型是目的，智能体是手段。这一章讲的是 AI 的基础，也就是商业的基础，它需要两个维度：一个在外部，一个在内部。不停地理解你的顾客、你的用户，也不停地理解你的公司。</p>
+  <div class="stmt">智能体化转型需要两个世界模型：外部的客户世界模型，内部的公司世界模型。</div>
+  <p><span class="add">下一章讲在这两个模型之上，AI 应用的两种模式。</span></p>
+
+  <section class="notes">
+    <div class="nh">注释</div>
+    <ol>
+      <li>Peter F. Drucker, <i>The Practice of Management</i>, 1954.</li>
+      <li>Joon Sung Park et al., “Generative Agents: Interactive Simulacra of Human Behavior”, UIST 2023.</li>
+      <li>Joon Sung Park et al., “Generative Agent Simulations of 1,000 People”, 2024.</li>
+      <li>Runjin Chen et al., “Persona Vectors: Monitoring and Controlling Character Traits in Language Models”, Anthropic, 2025.</li>
+      <li>Jack Dorsey &amp; Roelof Botha, “From Hierarchy to Intelligence”, 2026.</li>
+      <li>Michael Polanyi, <i>The Tacit Dimension</i>（《默会维度》）, 1966.</li>
+    </ol>
+  </section>
+</template>
+
+<template id="f-ch3-zh">
+  <div class="hg" data-sec="s3.1"><div class="kicker">3.1</div><h2>人用 AI：聪明 20 秒</h2></div>
+  <p>有了外部和内部这两个模型，在两者之间就可以做很多 AI 的项目了，我们称之为用例：前台的、中台的、后台的<span class="add">（面向客户的、支撑业务的、内部运营的）</span>，各种各样的用例。这些用例可以分为两种模式。我们都比较熟悉第一种，但我觉得第二种比第一种还重要。</p>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s40.jpg" width="1478" height="832" alt="模式 A 人用 AI">
+    <figcaption><b>图 3.1</b>模式 A：人用 AI。AI 作为 copilot，以生成为中心。</figcaption>
+  </figure>
+  <p>第一种模式，<span class="add">说得直白一点</span>，叫人用 AI。我们每个人在手机上、电脑上都装了很多 AI 工具，由人来驱动这些 AI 帮我干活。每次我跟 AI 对话，它聪明 20 秒钟，让我觉得帮我干了很多事情。答案是人去引导的，结论是相对开放的。</p>
+  <p>这类工具大家都很熟悉，而且都是所谓的标准工具，买来开箱就能用，比如各种 copilot、各种办公助手。<span class="add">它们很通用，人人都能上手。</span></p>
+
+  <div class="hg" data-sec="s3.2"><div class="kicker">3.2</div><h2>AI 用人：7×24 小时主动的智能体</h2></div>
+  <p>第二种模式，我把它称为 AI 用人。这个词不够好，但为了让观点更直白，我就说：一边是人用 AI，一边是 AI 用人。</p>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s41.jpg" width="1478" height="832" alt="模式 B AI 用人">
+    <figcaption><b>图 3.2</b>模式 B：AI 用人。AI 作为主动智能体，以工作流为中心。</figcaption>
+  </figure>
+  <p>AI 用人，是指 AI 7×24 小时在你的后台不停地运作。它有时候会问你要权限（permission），有时候会问你要判断（judgment），但它是 7×24 小时都聪明的，不是你问它一个问题，它聪明 20 秒钟。我们把它称为主动的智能体（proactive agent）。</p>
+
+  <p>这是一个连贯的、不停地在那干活的智能体。它自动感知外部的信号，自动做规划，自动干活，自动做评估，有时候会问你一些问题。</p>
+
+  <div class="hg" data-sec="s3.3"><div class="kicker">3.3</div><h2>案例：一年 1,000 到 2,000 个新品</h2></div>
+  <p>举一个大家可能更熟悉的场景。大家猜猜，国内一家头部连锁咖啡品牌一年要做多少个新品？10 个？100 个？它大概每周要做 2 到 5 个新品。当然，<span class="add">其中 80% 到 90% 不会真正上市。</span>现在消费行业的增量来源，就是针对已知的客户做更多的新品，因为再也不存在一个所谓的爆款了。所以对他们来说，就要不停地做新品。</p>
+  <figure class="slide">
+    <img src="img/deck/zh/s44.jpg" width="1478" height="832" alt="主动智能体闭环">
+    <figcaption><b>图 3.3</b>主动智能体的循环：信号、规划、创作、评估，7×24 小时在后台跑。</figcaption>
+  </figure>
+  <p>我们为一家全球食品企业做了一个 7×24 小时不停做新品研发的智能体。它首先在后台不停地找市场上的信号：竞品在做什么？有什么新的 IP 出现？这群用户有什么新的兴趣？应该做什么样的联名？另一边，它用前面讲的用户模型，不停地做用户之声（Voice of Customer），不停地从用户那里获得信号。</p>
+  <p>它会发一封邮件给研发团队。研发团队如果 24 小时之内不回，它就自动进入下一步：<span class="add">先把包装设计出来，把口味调出来。</span>如果<span class="add">还是没有回复，它就接着把这一波营销活动也做好</span>：线下<span class="add">卖场里的堆头陈列</span>怎么做，线上怎么做。然后用前面说的消费者模拟，测试这些想法好不好。这整个过程，一年大概可以做 1,000 到 2,000 个新品。</p>
+  <p>我问这个团队的负责人：AI 做出来的产品好不好？他说大概 80 分。<span class="add">我说，80 分还不够好啊。他说不是这样的</span>：原来 0 到 80 分都是人做的，现在人可以从 80 分开始往下做。所以 100 分不再是终点了，120 分、150 分才是终点。</p>
+  <div class="qt">“AI 把 0 到 80 分做完，我们从 80 分开始。标准不再是 100 分，而是超越 100 分。”</div>
+  <p>这其实很有意思。原来我们有大量事务性的工作：你要做一个新品，一开始就开几十人的会，每个人七嘴八舌，花很多时间从 0 做到 80，之后 80 到 100 就来不及了。现在 AI 在后台不停地跑，让 0 到 80 分变得更容易，人可以做 80 到 100 分、80 到 120 分的事情。</p>
+  <p>同样的事情在很多行业都一样，在我自己的科研行业也一样。以前写论文，可能百分之七八十的时间<span class="add">都花在改格式、核对引用上</span>。现在这些工作都不用想了，100% 的时间都可以用来做科研。</p>
+
+  <div class="hg" data-sec="s3.4"><div class="kicker">3.4</div><h2>把人和人之间串起来</h2></div>
+  <p>这个过程让我们看到一种新的人机协作的范式：可以有大量主动的、7×24 小时在后台跑的，甚至跨部门、跨职能的智能体。它不是你今天的助手。它要问的是：这 5 个人、这 5 个角色之间，是不是有很多事情可以让 AI 串起来？如果只是每个人加一点效率，人和人之间的协作依然效率比较低。能不能把它串起来？</p>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s43.jpg" width="1478" height="832" alt="AI 做 0 到 80 分，人从 80 分开始">
+    <figcaption><b>图 3.4</b>AI 把工作做到 80 分，人从 80 分开始。100 分不再是终点。</figcaption>
+  </figure>
+  <p>所以我们做的就是这样一个智能体：<span class="add">AI 自动抓信号、做规划、做创作（也就是干活）、做评价</span>。一边是消费者的上下文，一边是公司的上下文，不停地做新品创新。</p>
+  <p>但这件事不是一蹴而就的。最早我们也是做了两个 copilot，一个找洞察，一个做包装。慢慢地我们把它们串起来，变成一个工作流。一旦到了工作流，就代表跨部门了：前面是帮某一个职能，这时候开始重新设计工作的流程。再之后，把整个闭环兜起来，再设计人和智能体该怎样协作。这个过程大概花了一年多的时间。</p>
+
+  <div class="hg" data-sec="s3.5"><div class="kicker">3.5</div><h2>从营销到招商，再到楼宇</h2></div>
+  <p>类似的方法，我们在很多客户场景里都做过。<span class="add">比如一家全球消费健康企业。又比如一家全球食品饮料集团</span>今年最大的一件事，叫 E2E，也就是端到端（end to end）的整个营销和增长：营销的每一个阶段，都要用 AI 重塑一遍。每一步里，智能体做什么，代理公司做什么，人做什么，团队做什么，系统做什么，下面又对应着什么样的上下文和智能。</p>
+  <p>我们也做一些别的有意思的事情，<span class="add">比如一家城市开发集团。它负责的片区和周边竞争很激烈</span>，要不停地找到最适合自己的业态。他们现在要做科技消费类业态，所以要不停地发掘：什么样的产业、什么样的品牌<span class="add">正处在上升趋势</span>？我们帮他们做的，是不停地搜集这些潜在的品牌和商家，用 AI 自动分析它们和<span class="add">整个片区</span>业态之间的衔接应该怎么做，同时做整个产业的监控。其实就是让智能体扮演招商人员的角色，不止一个，而是多个，去不停地发掘信号，寻找结合点，自动做方案，人来做判断。</p>
+  <p>我们最近还在做一个和房产行业更相关的场景。楼宇的数字化、智能化已经做得很好，但<span class="add">最终呈现为一个看板，但看板上的事还得靠人去协调</span>。我们现在让智能体去看这个看板：比如保洁人员在每栋楼停留多久，保安人员停留多久，有没有认真干活；去找最优秀的保洁、最优秀的保安和平均数之间的区别，看能做什么样的优化，并且优化工单系统。</p>
+  <p>我们在为一家国有大型银行的物业做这件事。我们的收费就是看省多少钱，所以有一个数字我是清楚的：今年整个物业的成本降了 10%。原因就是有 AI 7×24 小时实时地看这个<span class="add">看板</span>。否则人来看，人是需要花时间去协调的。原来没有办法知道一个保洁的产能是不是足够、是不是用足了，现在可以用这种方法来做。</p>
+
+  <div class="hg" data-sec="s3.6"><div class="kicker">3.6</div><h2>两种模式，各有其位</h2></div>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s51.jpg" width="1478" height="832" alt="AI 应用的两种模式">
+    <figcaption><b>图 3.5</b>在两个世界模型之上，AI 应用的两种模式：智能体为人服务，人为智能体服务。</figcaption>
+  </figure>
+  <p>所以我们多了一个维度：我们其实可以设计两种 AI 介入工作的方法。一种是为人服务的智能体，每个人都应该用。另一种是人为智能体服务：智能体在后台跑，大大缩短原来跨部门<span class="add">协作的链条</span>。</p>
+  <p>目标不明确的时候，人用 AI。优化目标、工作目标很明确的时候，应该建立长程的、连贯的、跨部门的智能体，让它不停地跑。</p>
+  <div class="stmt">目标不明确时，人用 AI；目标明确时，让智能体长程、连贯、跨部门地跑起来。</div>
+</template>
+
+<template id="f-ch4-zh">
+  <div class="hg" data-sec="s4.1"><div class="kicker">4.1</div><h2>智力属于模型，还是属于你？</h2></div>
+  <p>一讲到 AI，就有两种讲法：一种是技术的讲法，另一种是《纸牌屋》的讲法<span class="add">，讲的是权力和博弈</span>。这一章的话题有点像后者。最近有一个词很火，叫 sovereign AI，主权 AI。原因是，<span class="add">当越来越多的智力建立在模型之上</span>，这个智力到底是属于模型的，还是属于你的？</p>
+  <p>这个问题在美国被讨论得很多，因为美国有最好的闭源模型。于是有一批人反对闭源模型，强调应该用开放权重的模型。<span class="add">闭源模型只能调用，开放权重的模型可以下载到自己的服务器上运行和改造，主动权在自己手里。</span></p>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s60.jpg" width="1478" height="832" alt="主权 AI 与认知主权">
+    <figcaption><b>图 4.1</b>企业是否在积累属于自己的智能？主权 AI 关乎企业的认知主权。</figcaption>
+  </figure>
+  <p><span class="add">我觉得</span>，当我们今天开始推 AI 的时候，一定需要自己拥有认知的主权，也就是 cognitive sovereignty。你自己应该有能力说：这是我自己建的上下文，我建的智能体，我今天想放在 A 模型上、B 模型上、C 模型上，都是可迁移的。</p>
+  <div class="stmt">主权 AI，说的是一家企业的认知主权。</div>
+
+  <div class="hg" data-sec="s4.2"><div class="kicker">4.2</div><h2>比数据安全更重要</h2></div>
+  <p>这个问题可能比所谓的数据安全还要重要。原来我们讲数据安全，讲的是数据是不是自己的。现在我们要讲的是：数据产生的智能，经验产生的智能，默会知识产生的智能，到底是不是你的？</p>
+  <p>下面是模型，上面建了各种智能体。为了让一个智能体好用，在模型之上要做大量企业自有的智能体系。这些比较技术，我只简单列一下。模型的后训练（post-training）：能不能把模型训练成适合你这家企业的？上下文（context）：模型调用的上下文，是不是你的？约束框架（harness），也就是模型的边界，什么能干、什么不能干，是不是你定的？持续学习（continual learning）：前面讲的那个闭环，持续学习的结果是不是你的？</p>
+  <p>模型我们不会自己去做，但至少上面的这些层次，应该是<span class="add">企业可以带走的</span>。</p>
+
+  <div class="hg" data-sec="s4.3"><div class="kicker">4.3</div><h2>模型中立</h2></div>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s63.jpg" width="1478" height="832" alt="模型中立">
+    <figcaption><b>图 4.2</b>模型中立：下面的模型可以随时切换，上面的智能留在企业。</figcaption>
+  </figure>
+  <p><span class="add">今天底层用千问可以，用 MiniMax 可以，用智谱也可以</span>，或者灵活地在三个、四个、五个模型之间切换。这非常重要。所以最近企业一直在讲一个词，叫 model agnostic，模型中立。以前在云的时代讲云中立，你可以切换任何一朵云。现在在模型的时代，要强调模型中立。</p>
+  <p>这个问题比数据存在哪里更重要。就像前面讲的，你即使有用户数据，可能都没有 MBTI 准，因为 AI 的能力变强了。全世界数据最丰富的地方，就在模型里。<span class="add">你驾驭模型、把模型变成自己智能的能力，以及学到的东西是否真正属于你，这些反而比数据更重要。</span></p>
+
+  <div class="hg" data-sec="s4.4"><div class="kicker">4.4</div><h2>我帮你建，我们一起建，我教你建</h2></div>
+
+  <figure class="slide">
+    <img src="img/deck/crop/s65-zh.jpg" width="1478" height="691" alt="从设计上走向完全自主的三个阶段">
+    <figcaption><b>图 4.3</b>从设计之初就交还所有权：我帮你建，我们一起建，你自己运行。</figcaption>
+  </figure>
+  <p>怎样把 AI 的能力迁移到企业这一侧？我举一家全球农业食品集团的例子。我们做的是这样三步：第一步，我帮你建；第二步，我们一起建；第三步，我教你建。整个系统和上面的能力，就这样慢慢地切换到企业这一侧。这件事很重要，它要通过一系列工作来实现，也需要一定的时间。</p>
+  <p>去年的时候，每一家公司都觉得<span class="add">装个智能体搭建平台、装个 vibe coding（用自然语言让 AI 写程序）的工具</span>，就可以做 AI 了。<span class="add">今年发现问题很多。有一家企业，去年给大约 1,000 名研发人员每人配了一个写代码的 AI，今年发现效果很混乱，我们又进去帮他们重新梳理。</span>所以这个过程还是有门槛的，但最终一定要从外部的能力变成自己的能力。</p>
+
+  <div class="hg" data-sec="s4.5"><div class="kicker">4.5</div><h2>从设计之初就完全拥有</h2></div>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s66.jpg" width="1478" height="832" alt="拥有你的智能">
+    <figcaption><b>图 4.4</b>在所有层次之上，再加一层：拥有你的智能。</figcaption>
+  </figure>
+  <p>所以在所有的层次之上，还要再加一层，叫 own your own intelligence，拥有你自己的智能。模型要中立，并且从设计之初就完全拥有（full ownership by design）。也就是说，从第一天起，AI 转型项目的设计就要能够把 AI 的控制权交还给企业：企业随时可以切换模型，不会被模型裹挟，随时可以完整地迁移自己的模型和 AI 能力。</p>
+  <div class="stmt"><span class="add">租来的是能力，拥有的才是智能。</span></div>
+</template>
+
+<template id="f-ch5-zh">
+  <div class="hg" data-sec="s5.1"><div class="kicker">5.1</div><h2>1 : 2 : 7</h2></div>
+  <p>每年我会在朋友圈里找企业家们做一个不算非常严肃的投票：AI 转型到底卡在哪里？</p>
+  <p>2023 年，大家觉得最大的卡点在 AI 的基建，其实就是数据。2024 年，大家觉得最大的卡点在模型的能力。2025 年，几样都差不多。2026 年，答案是 1 : 2 : 7<span class="add">：模型占 1，基础设施（包括数据）占 2，人和组织占 7，70% 的人觉得卡点在人和组织</span>。技术的卡点已经不大了：大家看自己的技术、自己的这套基础设施，都还可以，数字化也做得不错。卡点在于人和组织。</p>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s67.jpg" width="1478" height="832" alt="2023 到 2026 年转型瓶颈分布">
+    <figcaption><b>图 5.1</b>1 : 2 : 7。2023 年卡在数据和基建，2024 年卡在模型，2026 年 70% 的人认为卡在人和组织。</figcaption>
+  </figure>
+  <p>我觉得，人和组织既是卡点，也是差异化的机会。<span class="add">这和第一章讲的互补投入是同一个道理：技术之外的那部分，才是大头。</span></p>
+
+  <div class="hg" data-sec="s5.2"><div class="kicker">5.2</div><h2>造一座桥，而不是教人游泳</h2></div>
+  <p>企业做 AI 转型有很多种方法。我想用建筑师巴克敏斯特·富勒（Buckminster Fuller）的一个观点。<span class="add">他说，我们往往没法正面解决一个问题，而应该找到一个新的解法</span>，这个解法如此之好，以至于旧的问题自然而然地都按新的方法来做了。<span class="add">打个比方</span>：要过一条河，我不应该教人游泳，<span class="add">因为游泳总有淹死的风险</span>；我应该造一座桥，让游泳这件事显得如此过时。</p>
+  <div class="qt">“你永远无法通过对抗现实来改变现实；要改变现实，就去发明一个新模式，让旧模式过时。”<span class="by">巴克敏斯特·富勒</span></div>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s68.jpg" width="1478" height="832" alt="发明新模式">
+    <figcaption><b>图 5.2</b>发明新模式：与其对抗旧模式，不如造一个新模式，让旧模式过时。</figcaption>
+  </figure>
+  <p>我觉得企业里的转型也应该是这样。所以我们最近做了很多实验室（lab）。我们并没有真的进到企业里，要求所有人都改成新的方法。比如最近我们和一家美妆企业合作，做一个 30 个人的实验室，用 AI 原生的方式理解消费者，就像前面那家车企那样，去做新品研发、做营销，看看能不能用 6 个月做出一个新的产品。这群人就用 AI 原生的方法工作，做出一个示范，让其他人可以学会。</p>
+  <p>比如一年要开发 10 个新品，先选 1 个，从头到尾用 AI 原生的方式来做；做好了，另外 9 个都可以学习这个模式。而不是整体上一层一层地搞营销 AI 化、销售 AI 化。用少数人跑通一个小闭环，绝大多数人都会愿意转变。大家只是因为没看到，所以想的都是问题；一旦看到了，想的就都是可能。</p>
+  <p>我们最近做的几个项目都是这样：一定要先做出来，让整个公司看到变化，而不是硬推整个公司彻底地变化，那是非常难的。</p>
+
+  <div class="hg" data-sec="s5.3"><div class="kicker">5.3</div><h2>回到文艺复兴人</h2></div>
+  <p>第二点，培训很重要。AI 常被说成又一次工业革命，但我觉得对人才来说，它是反工业革命的。<span class="add">工业革命的逻辑是分工：</span>千行百业，每个人都有自己的分工、自己的角色，大学是这样，公司更是这样。</p>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s69.jpg" width="1478" height="832" alt="回归文艺复兴人">
+    <figcaption><b>图 5.3</b>回到文艺复兴人：把每个人的底线往上拔，对 outcome 负责，而不只是对 output 负责。</figcaption>
+  </figure>
+  <p>但现在，AI 能够让我们每个人的底线往上拔，每个人能干的事情更多，所以每个人能更好地对结果（outcome）负责，而不只是对产出（output）负责。产出只对自己的职能负责，结果对公司的核心目标负责。人人对结果负责，组织就会发生变化。</p>
+  <p>所以企业里人才的发现、培训和重组变得很重要，而不再只是让原来一亩三分地的角色，通过 AI 提高一点效率。组织很重要，人才的发掘和培养也很重要。</p>
+
+  <div class="hg" data-sec="s5.4"><div class="kicker">5.4</div><h2>给不搞技术的人的黑客松</h2></div>
+  <p>最近我看到很多企业在做一件事，叫 non-tech hackathon。黑客松原来是极客做的事情，现在很多企业在发起一种给不搞技术的人的黑客松：企业里非常愿意尝试 AI 的这群人，结合自己的需求，用一点点 AI 的方式去解决它，公司给一些激励。</p>
+  <p>去年 MIT 出了一份很<span class="add">引人注目</span>的报告，说 95% 的生成式 AI 项目，投资回报都不及预期。<sup class="n">1</sup>今年不会是这个数字了。但它<span class="add">还有一个发现更有意思：很多员工早就在用自己的 AI 工具，研究者称之为影子 AI（shadow AI）。</span>这群人悄悄地用 AI 来解决问题，从而让公司看到了具体怎么用：财务的问题、法务的问题、设计的问题，怎么用 AI 真的能解决掉，而不是纯粹自上而下。</p>
+
+  <div class="hg" data-sec="s5.5"><div class="kicker">5.5</div><h2>0 到 80 分交给智能体</h2></div>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s70.jpg" width="1478" height="832" alt="智能体化的企业组织">
+    <figcaption><b>图 5.4</b>智能体化的企业组织：智能体把工作推进到 80 分，人把它从 80 分做到 120 分。</figcaption>
+  </figure>
+  <p>所以我们会看到组织的一些改变。我非常推崇的一点是：0 到 80 分的工作，尽量交给智能体；80 分以上的工作，尽量交给人。</p>
+
+  <figure class="slide">
+    <img src="img/deck/crop/s71-zh.jpg" width="1478" height="832" alt="AI 进入公司的三种方式">
+    <figcaption><b>图 5.5</b>AI 进入公司的三种方式。三种都会部分地发生。</figcaption>
+  </figure>
+  <p>AI 进入组织的方式有三种：在人之下、在人身边、在人之间。在人之下，是每个人都保留自己的位置，下面长出一层 AI 劳动力，每个人往上走一步，比如<span class="add">一家食品饮料集团</span>的智能体为每个团队批量生成渠道素材。在人身边，是 AI 承担整块职能，和人类团队并列，向同一位管理者负责，比如<span class="add">一家城市开发集团</span>的市场情报智能体，就是团队里的一员。在人之间，是 AI 处在管理层和团队之间，盯着工作流转，往前推，比如物业管理的智能体每天出简报、提醒、检查团队。三种都会部分地发生。</p>
+  <p>到这里，看 AI 的这张全景图就越来越完整了：最上面是目的，然后是两种使用 AI 的模式、两个 AI 的基础，再是拥有自己智能的技术选择，最后是人和流程。</p>
+
+  <section class="notes">
+    <div class="nh">注释</div>
+    <ol>
+      <li>MIT NANDA, <i>The GenAI Divide: State of AI in Business 2025</i>, 2025.</li>
+    </ol>
+  </section>
+</template>
+
+<template id="f-ch6-zh">
+  <div class="hg" data-sec="s6.1"><div class="kicker">6.1</div><h2>我们不是顾问，我们是创建者</h2></div>
+  <p>我们一直的观点是：智能体只是手段，转型才是目的，或者说，转型才是产品。</p>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s74.jpg" width="1478" height="832" alt="传统战略咨询与创建者主导的转型对比">
+    <figcaption><b>图 6.1</b>我们不是顾问，我们是创建者。</figcaption>
+  </figure>
+  <p>我们自己其实不是做咨询的，我们是做技术的。但我觉得在 AI 转型的过程中，我们这些创建者（builder）需要去做咨询项目。原因是，现在没有一个 AI 项目是纯技术的项目，它在很大程度上关乎一家企业的变化。换句话说，一家企业的 AI 变化，不能只靠一份演示文稿或者一个理论框架。</p>
+
+  <div class="hg" data-sec="s6.2"><div class="kicker">6.2</div><h2>AI 是活的，不跑不知道</h2></div>
+  <p>第一，一定要有真的跑在生产环境里的智能体。AI 不像原来的软件系统，上线以后就不变了。这些 AI 像是活的一样：你要用，要反馈，告诉它怎么变得更好，甚至要专门为它设计数据、设计流程。所以它是活的，不跑不知道。</p>
+  <p>第二，就是前面讲的从设计之初就交还所有权（ownership transfer by design）。最重要的是企业自己有这个能力，所以要一起搭。</p>
+  <p>第三，一定要有好的评估体系。没有评估，就不知道什么叫 AI 转型，也不知道 AI 应该做什么。</p>
+  <p><span class="add">第四，</span>要一个场景一个场景地做。就像富勒讲的那样，一点点做，做成了，再扩张。</p>
+  <p><span class="add">第五，</span>每做一次，都是一次上下文的积累。上下文越好，AI 的性能越好。</p>
+  <div class="stmt"><span class="add">模型变了，我们不怕；我们真正能掌握的，是上下文。</span></div>
+  <p>最后，当然是慢慢变成企业自己的能力。</p>
+
+  <div class="hg" data-sec="s6.3"><div class="kicker">6.3</div><h2>做产品，做研究，做社区</h2></div>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s75.jpg" width="1478" height="832" alt="与 AI 创建者一起工作">
+    <figcaption><b>图 6.2</b>与 AI 创建者一起工作：做产品，做研究，做社区。</figcaption>
+  </figure>
+  <p>我们自己其实干三件事。第一，我们自己做 AI 原生的产品，前面讲到的用户模拟的系统、产品创新的系统，都是我们自己做的。第二，我们做 AI 相关的前沿研究：在同济偏技术研发，在中欧<span class="add">偏商业模式</span>，最近在复旦做一个偏管理科学<span class="add">和</span>人才培养的实验室。第三，我们做各种各样的社区，<span class="add">创建者和创作者的社区</span>。</p>
+  <p><span class="add">之所以讲这三件事，是因为创建者主导的转型，需要做的人自己一直在前沿。</span></p>
+
+  <div class="hg" data-sec="s6.4"><div class="kicker">6.4</div><h2>几条基础的原则</h2></div>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s77.jpg" width="1478" height="832" alt="安全靠设计，主权归你">
+    <figcaption><b>图 6.3</b>安全靠设计，主权归你：安全与合规，模型中立和云中立，拥有自己的智能。</figcaption>
+  </figure>
+  <p>AI 转型有一些基础的原则：安全和合规，模型中立和云中立，最后是拥有自己的智能。</p>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s78.jpg" width="1478" height="832" alt="我们如何工作">
+    <figcaption><b>图 6.4</b>我们如何工作：技术一条线，组织与人一条线，汇合成智能体化转型。</figcaption>
+  </figure>
+  <p>整个工作过程大概是这样：先做 AI 诊断，然后形成 AI 的策略和 AI 的技术栈。但我还是要反复强调互补投入，记得第一章讲的 1 比 9 吗？在技术之下，还要有组织和人这两样东西：领导层的共识，团队的培训。企业自己团队的投入也很重要，最后才会有 AI 转型的结果。</p>
+</template>
+
+<template id="f-ch7-zh">
+  <div class="hg" data-sec="s7.1"><div class="kicker">7.1</div><h2>先有量化的目标</h2></div>
+  <p>有一样东西其实很重要。在和很多企业的讨论里，我们讲场景讲得很多，讲问题讲得很多，讲机遇讲得很多，但讲目标讲得不够多。我一直在问：能不能有一个量化的目标？没有量化的目标，我们其实很难知道方向在哪里。</p>
+  <p><span class="add">AI 的预算不是买系统，而是买能力。目标是改变工作方式（不一定第一天就改变），是沉淀知识，是让能力产生复利。</span></p>
+  <div class="stmt">AI 预算买的不是技术，是能力。系统会折旧，能力会复利。</div>
+  <figure class="slide">
+    <img src="img/deck/zh/s80.jpg" width="1478" height="832" alt="AI 预算买的是能力">
+    <figcaption><b>图 7.1</b>AI 预算买的不是技术，是能力。系统会折旧，能力会复利。</figcaption>
+  </figure>
+
+  <div class="hg" data-sec="s7.2"><div class="kicker">7.2</div><h2>企业在 AI 上花多少钱？</h2></div>
+  <p>先给大家一些基本的数字。一项覆盖 1,330 家企业的调查显示，企业在 AI 上的平均投入大约占收入的 3.3%，其实不少。<sup class="n">1</sup>换一个角度看：AI 占 IT 预算的 15% 以上，占数字化预算的 36%，占营销预算的 15.3%。<sup class="n">2</sup>也就是说，AI 的钱分布在各种各样的业务线、各种各样的预算里。</p>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s82.jpg" width="1478" height="832" alt="AI 支出与价值的分布">
+    <figcaption><b>图 7.2</b>80% 的 AI 支出不在 IT 预算里；价值也主要产生在业务线。</figcaption>
+  </figure>
+  <p>这 3.3% 里，0.5 个百分点在 IT 之内，2.8 个百分点在 IT 之外，花在业务线和人力、财务这些职能部门里，直接产生业务的结果。价值也是这样分布的：68% 体现在业务的结果上，21% 在职能部门，11% 在 IT 的基础设施。<sup class="n">1</sup></p>
+  <p><span class="add">AI 要从试点变成固定的预算科目，就要从 IT 预算逐步延伸到业务预算。</span>所以现在讲 AI 转型，往往是<span class="add">一把手工程</span>，是整个领导层的工程，而不只是 IT 负责人的工程。现在有一个说法：如果一家企业把 AI 只当作 IT，那它对 AI 的认知第一步就错了。所以我们看到越来越多的 CFO 开始管 AI 转型，或者参与到 AI 转型里来，因为他们把 AI 当作一种投资，而不只是一种成本。</p>
+
+  <div class="hg" data-sec="s7.3"><div class="kicker">7.3</div><h2>最缺钱的，恰恰是那个 7</h2></div>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s83.jpg" width="1478" height="832" alt="最缺钱的恰恰是那个 7">
+    <figcaption><b>图 7.3</b>最缺钱的，恰恰是那个 7。</figcaption>
+  </figure>
+  <p>最缺钱的，恰恰是 1 : 2 : 7 里的那个 7。看几个宏观的统计：削减培训预算的企业里，47% 同时在加大 AI 投入，一边在减少对人的培养，一边在增加对 AI 的投资。只有 27% 的高管有完整的 AI 人才战略。不到十分之一的企业在围绕 AI 重新设计岗位。<sup class="n">3</sup></p>
+  <p>去年这个比例更少，但今年已经开始多起来了。我们已经看到一些企业开始专门为 AI 设计岗位，不是什么首席 AI 官，更多的是用 AI 做增长的岗位、用 AI 做实施部署的岗位，等等。这些新的岗位会出现。</p>
+  <p>领先企业和落后企业之间，做 AI 战略性人力规划的比例是 55% 对 17%；开拓型和跟随型企业之间，AI 预算里用于员工技能提升的比例是 60% 对 24%。<sup class="n">4</sup>所以很多投入应该放在互补投入上，也就是 7 这个维度上。</p>
+
+  <div class="hg" data-sec="s7.4"><div class="kicker">7.4</div><h2>一个总盘子，四个口袋</h2></div>
+  <p>这里大概有四个口袋。第一个是技术的底座，前面已经讲过了。第二个是各种场景的智能体。智能体一定是从场景出发的，<span class="add">它不是在某套 IT 系统上再长出来的一个系统，而是解决具体商业问题的 AI</span>，所以一定要有明确的业务线。第三个是人和能力的提升。最后是治理与变革。这些都很需要企业的管理者们参与进来。</p>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s84.jpg" width="1478" height="832" alt="一个总盘子四个口袋">
+    <figcaption><b>图 7.4</b>一个总盘子，四个口袋：技术底座、场景智能体、人和能力、治理与变革。</figcaption>
+  </figure>
+  <p>钱花在哪里？<span class="add">AI 投入是个很宽泛的概念，大致可以拆成几块。</span>做咨询、做开发，这些是人天<span class="add">，也就是按投入的人和天数计费</span>。有很多基座型的产品是订阅，不用自己建，因为这些产品发展很快，比如上下文系统、约束框架系统，企业自建的成本极高，维护起来技术变化又极快。第三部分在人和变革上。第四部分，当大家开始用 AI，尤其是有了主动的智能体之后，token 的消耗就会上来，这时候就会有这个成本。最后是咨询和治理：永远要想清楚做一个什么样的项目。</p>
+  <p><span class="add">一句话：谁受益，谁出钱；谁将拥有能力，谁投资能力。IT 出那个 1 和 2，业务线和人力一起出那个 7。</span></p>
+
+  <div class="hg" data-sec="s7.5"><div class="kicker">7.5</div><h2>一年太短，三年太长，两年正好</h2></div>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s87.jpg" width="1478" height="832" alt="一年太短三年太长两年正好">
+    <figcaption><b>图 7.5</b>一年太短，三年太长，两年正好。</figcaption>
+  </figure>
+  <p>ROI 怎么衡量？这是我自己的感觉，也是和很多企业家朋友、企业高管聊下来的：一年太短，三年太长，两年正好。一年就要<span class="add">求回本</span>，建设周期可能太短了。三年呢，可能等不及，因为 AI 变化很快。所以两年正好。</p>
+  <p>我们和客户合作时，会以季度为单位来规划：每个季度一个场景，连续做两年。从数据看，好的企业可能 11 个月就见到成效，落后的企业 17 个月也见到成效了。<sup class="n">1</sup>所以只要做，在一个时间范围里就会有成效。</p>
+  <p>而且用例会越来越多，用例也是会迭代的。就像前面介绍的产品创新的智能体一样：今天做的是一个简单的用例，明天三个简单的用例就可以串成一个复杂的用例。这些东西都会逐步积累，只要做。</p>
+
+  <div class="hg" data-sec="s7.6"><div class="kicker">7.6</div><h2>增效、增收、增肥</h2></div>
+  <p>每家企业其实都会有这个讨论：AI 转型对我们的价值到底是什么？我<span class="add">说得直白一点</span>，因为我自己的公司也要增长。什么叫增长？增长就是三样东西：要么增效，要么增收，要么<span class="add">“增肥”</span>。<span class="add">用英文说</span>：efficiency，growth，capability。</p>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s90.jpg" width="1478" height="832" alt="三种回报三把尺子">
+    <figcaption><b>图 7.6</b>三种回报，三把尺子：增效、增收、增肥。</figcaption>
+  </figure>
+  <p>增效是什么？就是省，或者提高效率：省时间，缩短周期。增收是什么？能不能找到新的业务增长的机会。增肥是什么？我们有没有机会为未来做投资：为未来的人才、未来的产品、未来先进的管理方式做投资。</p>
+  <p>我们一定要有一个明确的目标值，才会有 AI 往哪里走的选择。没有基线，没有 ROI，其实就很难做转型。所以有三个非常高层的问题值得讨论：钱从哪里出？速度要多快？回报是什么？</p>
+  <div class="stmt">没有基线，就没有 ROI：试点之前，先测量。</div>
+
+  <div class="hg" data-sec="s7.7"><div class="kicker">7.7</div><h2>案例：四个 3</h2></div>
+  <p>为了让这个问题更直观，我举一家全球制药企业的例子。它的目标<span class="add">听起来很有中国特色</span>，但其实是全球总部提的：四个 3。<span class="add">第一个 3 是时间：</span>三年内，一线业务人员的生产力提高 3 倍；中台用三分之一的人完成同样的中台工作；关键决策层高质量决策的速度提升 3 倍。最后这个 3 非常难衡量，但前面两个 3 非常容易看到。</p>
+  <p>为此，三年内他们有五条线：营销、销售、医学（其实就是对医生的营销）、研发和内部管理。这五条线都要覆盖三个基本内容：业务流程的重新编排，底层技术架构和数据架构的调整，组织智能体的设计与搭建。</p>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s92.jpg" width="1478" height="832" alt="四个 3 的目标">
+    <figcaption><b>图 7.7</b>一家全球制药企业的三年目标：四个 3。</figcaption>
+  </figure>
+  <p>然后，他们决定什么买、什么建。买什么？买模型，毫无疑问，没有人会自己训模型；买企业级的智能体架构，买上下文系统。自己建什么？智能体自己建，上下文的内容自己建。系统是买的，但上面的智能体和上下文是自己建的，这些就是可以带走的智能。</p>
+  <p>我常被问到：写出这样的目标，哪个环节的讨论最难、争议最多？据我了解，有两个讨论最花时间。</p>
+  <p>第一个是：<span class="add">到底写 3 倍，还是 2 倍、4 倍？</span>这是一个很大的讨论。他们之所以选 3，就像一年太短、三年太长、两年正好一样：写 5 太激进，写 1 没有挑战，所以写 3。最后其实是一个很感性的选择。但 3 传递的信号是：不是今天涨一点点，也不是今天要变成完全不同的另一家公司，而是我们要竭尽全力把眼前做好。</p>
+  <p>第二个是怎么落地：到底是买还是建？买的意思是，要不要买一套成熟的解决方案；建的意思是，哪些东西自己建。最后他们选择的是和 AI 公司一起建，按照这几条主线来建。</p>
+  <p><span class="add">从“要不要做”，到“做的目标是什么样子”，这一步越具象，转型就越容易开始。</span></p>
+
+  <section class="notes">
+    <div class="nh">注释</div>
+    <ol>
+      <li>BCG, <i>The Formula for Agentic AI Value</i>, 2026 年 9 月；BCG Applied AI Index, 2026 年 9 月。</li>
+      <li>McKinsey, <i>The State of AI</i>, 2026 年 8 月；Deloitte Tech Value Survey, 2025 年 10 月；Gartner CMO Spend Survey, 2026 年 5 月。</li>
+      <li>Careerminds 对 600 位 HR 负责人的调查，2026；Gartner，2026；Accenture, <i>Pulse of Change</i>, 2026。</li>
+      <li>BCG, 2026；BCG AI Radar, 2026 年 1 月。</li>
+    </ol>
+  </section>
+</template>
+
+<template id="f-ch8-zh">
+  <div class="hg" data-sec="s8.1"><div class="kicker">8.1</div><h2>从诊断开始</h2></div>
+  <p><span class="add">前面七章讲的是为什么和是什么。最后一章讲从哪里开始：从 AI 诊断开始。</span></p>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s95.jpg" width="1478" height="832" alt="AI 诊断的三步：宏观、微观、诊断">
+    <figcaption><b>图 8.1</b>AI 诊断：先看清，再转型。</figcaption>
+  </figure>
+  <p>我们做诊断，第一是从外部读宏观的市场，第二是在内部做很多访谈，访谈核心的角色，再用我们的框架做分析，找到转型应该从哪里开始。诊断之后，是定义全公司的能力目标和优先场景，也就是 AI 的策略；再搭建企业自有的平台和智能体，也就是 AI 的技术栈，模型中立，云中立。</p>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s94.jpg" width="1478" height="832" alt="我们如何工作：技术与组织两条线">
+    <figcaption><b>图 8.2</b>诊断之后的两条线：技术这条线，组织和人这条线，汇合成智能体化转型。</figcaption>
+  </figure>
+  <p>但我还是要反复强调互补投入。技术这条线之外，还有组织和人这条线：先和领导层达成共识，因为一个组织能走多远，取决于它的领导者能走多远；再培训团队，发现并激活 AI 先锋。两条线汇合在一起，才是智能体化转型。</p>
+
+  <div class="hg" data-sec="s8.2"><div class="kicker">8.2</div><h2>六个问题，四个阶段</h2></div>
+  <p><span class="add">诊断时，我们会围绕六个问题去访谈和梳理：AI 在企业里是什么角色？价值怎么算？产出的质量怎么衡量？数据安全怎么处理？组织和人会怎么变？谁来推进？每个问题，企业大致处在四个阶段中的一个。</span></p>
+
+  <h3>AI 是什么角色</h3>
+  <p>从一个偶尔使用的工具，到流程里的同事，再到改变组织与业务的方式。领先的企业，是 AI 跑在业务流程里，改变工作怎么分配。<span class="add">麦肯锡 2025 年的调查显示，AI 高绩效企业从根本上重构工作流程的比例，几乎是其他企业的三倍。</span>当然不同行业各有差异：如果你在一个很卷的消费品市场，就要往更远的阶段多想一些。</p>
+
+  <h3>价值怎么算</h3>
+  <p>这是我自己非常在意的。认知上，大家都可以通过刷短视频来补充；但价值怎么算，和每家企业紧密相关。第一个阶段叫先跟上再说：大家都在讨论上 AI，但对 AI 未来收益的评估并没有清晰的模型，所以先做一两个场景。第二个阶段是省时间、体感好：AI 把一段时间缩短了，大家体感就好了。第三个阶段是场景有基线和指标，有一定的基准。第四个阶段，是公司级的目标拉齐和节奏。</p>
+  <p><span class="add">从第三阶段走到第四阶段，往往需要管理者来推动</span>：要有一个清晰的方向感。不管是四个 3 还是别的什么，不能只是定性，一定要有相应的量化。领先的企业是先定基线和目标，再选场景，用公司级的目标统一大家对节奏的认识。</p>
+
+  <h3>产出的质量怎么衡量</h3>
+  <p><span class="add">第一个阶段</span>是用准了才用，不准就不用，这很正常。<span class="add">第二个阶段</span>是靠个人把关：会用 AI 的人，用得就是比别人好。我有一次和一家咨询公司的高级合伙人聊，他就觉得自己用 AI 比下面的年轻人用得好得多，虽然是同一个工具。个人的能力决定了 AI 的性能。<span class="add">第三个阶段</span>高级一点，靠上下文与标准：企业能不能把 AI 运行的环境做好？这个环境就真的是环境，就像我们的小区环境一样，只是现在小区里的人都是智能体。<span class="add">第四个阶段</span>是持续评估的反馈闭环。</p>
+  <p>现在的人工智能有两种思路。<span class="add">一种是人把工作流程写死，告诉智能体第一步</span>、第二步、第三步、第四步做什么。另一种是把边界划好，让 AI 自由发挥。越来越多的做法偏向第二种，因为 AI 越来越聪明，就像小孩一样：如果这个小孩没什么天赋，你要告诉他一二三；如果这个小孩有天赋，你只告诉他什么不要做，剩下让他自由发挥。所以上下文和标准变得很重要，迭代和持续评估的机制变得很重要。</p>
+  <p>领先企业的质量，取决于公司给 AI 的上下文和标准。这是公司要建设的能力，而不是靠每个人的自觉。如果每个人用自己的智能体，那些好的对话、好的经验，是沉淀不到公司的，也就不会成为公司的能力。</p>
+
+  <h3>数据安全怎么处理</h3>
+  <p><span class="add">第一个阶段</span>是禁止输入，干脆不用：既然不知道安不安全，就不要用了。<span class="add">第二个阶段</span>是个人自行用外部工具：公司没有相应的工具，大家就自己拿外部的 AI 来处理公司的信息。大家可以默认自己的下属都是用 AI 写东西的，现在我也默认我的学生都是用 AI 写论文的，他要是写错一个字，我反而会觉得很珍惜。怕的是你不知道他用了多少外面的工具，信息其实已经带出去了。第三个阶段是建一个可控的环境，很多企业的 IT 团队在这件事上花了很多精力。第四个阶段更智能一些。我们最近服务一家安全等级很高的科技企业，它的痛苦在于，因为安全等级太高，所以什么都不能用，等于自己把自己的武器降级了。我们在帮它做按风险分级放权的体系：比如做用户洞察，数据本来就是从外面进来的，为什么不能出去？但如果是核心产品的用户测试，产品概念是不能出去的。所以有些可以在外面，有些在里面，做一个更好的分级：有些方便优先，有些安全优先。</p>
+  <p>领先的企业提供可控的企业环境，让大家敢用、放心用，而不是在外面悄悄用。</p>
+
+  <h3>组织和人会怎么变</h3>
+  <p>有人是担心的：我是不是会被优化？每家企业的文化各不相同，有些企业要制造不安全感，有些企业要制造安全感。我自己的公司选择创造安全感，所以做了很多培训。很多人说年轻人更 AI 原生，我觉得不对：我是大学老师，我的学生，你不教他，他也不会自己变成 AI 原生。所以每个人都有一个改变的机会。我父亲七十多岁，他的 token 用得比我还多。只要有意愿，就有机会变得更 AI 原生。</p>
+  <p>这个问题的四个阶段，是从担心被优化，到培训个人技能，到岗位和流程随之调整，再到与人才机制、职业路径挂钩，把 AI 和一个人的职业发展、和组织联系起来。一家企业如果有清晰的 AI 愿景，也能吸引行业里最优秀的人才加入。</p>
+
+  <h3>谁来推进</h3>
+  <p>最消极的方式是被裹挟、被迫做，等上面定。第二个阶段是各个部门提需求、做试点，这是自下而上的。第三个阶段是形成能力、成体系。第四个阶段是上下联动，逐步带动。</p>
+  <p><span class="add">这本书里我多次讲到，管理者需要有很强的愿景</span>，这都是自上而下的。但 AI 也有一个很重要的维度是自下而上的。所以我一直觉得最好的方式叫上下联动：既不是一个大规划，也不是下面悄悄地做，两者可以有机地结合在一起。很多场景事实上都是大家试出来的，但要指向公司希望发展的方向。</p>
+
+  <div class="hg" data-sec="s8.3"><div class="kicker">8.3</div><h2>三种问题，三种解法</h2></div>
+  <p>所谓自上而下，意思是要跨部门。只有跨部门的事情，才需要自上而下，也只有老板们能解决。</p>
+  <p>自下而上，是你单点有一个非常痛的问题，能不能自己想办法用 AI 解决，用什么工具都可以。比如报销的问题，在我们公司就是财务的同事自己解决的。我们每个月都有黑客松，给激励，给徽章，年底折算成绩效。又比如我们去年大概写了 500 份产品研发文档，但业务的同事永远觉得研发给的“弹药”不够。原来要有专人把产品研发文档翻译成营销材料，现在 AI 来做这件事，而且是业务的同事自己开发的。这种情况我们非常鼓励。</p>
+  <p>还有一类 AI 是真的增肥型的，没有短期的 ROI 衡量，比如知识的积累。这种开放性的问题要持续探索，我会建议用 AI Lab 的形式：不用很多投入，但要持续去试，因为每天都可能有新的技术可能性、新的思路。</p>
+  <div class="stmt"><span class="add">跨部门的事，自上而下；单点的痛，自下而上；面向未来的事，交给 AI Lab。</span></div>
+
+  <div class="hg" data-sec="s8.4"><div class="kicker">8.4</div><h2>先发散，再收敛</h2></div>
+  <p>即使是很成熟的公司，也都有一个过程，叫先发散再收敛。它不会第一天就收敛，第一天收敛很可能收敛错了。如果讨论规划图讨论得太久，而自己试错或者试对的过程滞后，这张图就会变成纸上谈兵。</p>
+  <p>所以两件事都重要。有一些快速见效的事，大家想想都应该做，即使想不清楚也值得做，就先做着，两边同时跑。这也是为什么我们每次都说，AI 转型既是技术，又是组织；一旦到了组织，到了流程，就是管理层的事情。</p>
+  <div class="stmt">没想清楚之前，不做大投入是对的；但不做投入是错的。</div>
+  <p>从哪里开始？我的建议是先做加法，再看什么地方做减法。<span class="add">从企业最有特色、最在意的地方入手，比如对用户的理解，让 AI 先去放大它；现有的团队会觉得是被支持，而不是被替代。等能力长出来了，再去看哪些流程可以减。</span></p>
+  <p><span class="add">这就回到了序言里的那句话：底线是自动化，上限是差异化。</span></p>
+</template>
+
+
+
+<!-- =================== CHAPTER 01 · 中文 =================== -->
+<template id="f-ch1-zh">
+  <div class="hg" data-sec="s1.1"><div class="kicker">1.1</div><h2>AI 原生是递进式的</h2></div>
+  <p>商学院里现在最热的两个话题，一个是出海，一个是 AI 原生企业。大家都在讲 AI-native，我也不能免俗，就从走向 AI 原生企业讲起。</p>
+  <p>但我不想只讲口号，也不想只讲经验，因为其实大家都还没有经验。去年我在《哈佛商业评论》上写过一篇关于 AI 原生组织的文章，有人来问我：AI 原生组织到底怎么做？我说，因为我们的客户都还是人，所以我们自己的组织也不够 AI 原生。只要你还在跟人打交道，你的业务形态还在服务人，似乎就都不够 AI 原生。所以 AI 原生是递进式的。</p>
+  <p>如果简单地分，企业的智能化大概可以分为四个阶段。</p>
+  <p>第一个阶段叫 AI 探索（AI Exploration）。比如今天我用豆包试一下，明天用千问试一下，后天又用 Claude Code 写点东西。每一件事情都是自发的。</p>
+  <p>第二个阶段叫 AI 赋能（AI Empowered）。现在很多企业走到了这一步，公司集体来做。外企一个很大的特点是给每个人装一个 Copilot，民企一个很大的特点是给每个人装一个<span class="add">国产的办公 AI 助手</span>。</p>
+  <p>第三个阶段叫 AI 原生（AI Native）。意思是：你的公司、你的角色、你的岗位、你的工作流程，有没有基于 AI 重新设计？很多企业还没有做到。准确地说，不是没有做到，是还没有开始做。他们还没有想过，有了 AI 的参与以后，组织应该怎样变化。</p>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s18.jpg" width="1478" height="832" alt="企业智能体化转型的四个阶段">
+    <figcaption><b>图 1.1</b>企业智能体化转型的四个阶段。第二级和第三级之间有一道鸿沟。</figcaption>
+  </figure>
+  <p>第四个阶段叫 AI 觉醒（AI Awakened）。<span class="add">这是一种全新的状态，这里先不展开。</span></p>
+  <p>前两个阶段，是把业务和现状当作一个常量，不能变；工具是一个变量，帮我们把原来的事情做得更好。后两个阶段，开始基于 AI 重新设计我们有什么业务、有什么流程。这两者之间有一道很大的缝隙，不会自然而然就过渡过去，中间要付出努力。这个努力有多大？是一个诺贝尔经济学奖级别的努力。</p>
+
+  <div class="hg" data-sec="s1.2"><div class="kicker">1.2</div><h2>一个诺贝尔经济学奖级别的难题</h2></div>
+  <p>每一代技术变化，都会出现类似的挑战。每个人都用了 AI，为什么公司整体还没有变成 AI 原生？每个人都用了电脑，为什么公司还没有变成数字化？每个工厂都用了电动机，为什么效率没有提升？</p>
+  <p>1987 年，诺贝尔经济学奖得主罗伯特·索洛提出了一个悖论，后来被称为“索洛悖论”：计算机时代随处可见，唯独不见于生产率统计。<sup class="n">1</sup>计算机随处都能看到，企业的财报上却没有体现。</p>
+  <div class="fullpage" data-tpl="t-solow"></div>
+  <p>今天的 AI 也是这样。OpenRouter<span class="add">（一个汇集各家大模型的调用平台）</span>上，智能体消耗的 token<span class="add">（模型处理文字的基本单位，可以理解为 AI 的用量）</span>，已经远远超过人。2026 年 2 月 6 日，智能体的 token 第一次超过人，现在每天 7.3 万亿，涨了 14 倍。<sup class="n">2</sup><mark>AI 用得越来越多，可生产率在哪里？</mark></p>
+
+  <div class="hg" data-sec="s1.3"><div class="kicker">1.3</div><h2>发电机与计算机</h2></div>
+  <p>1990 年，斯坦福大学的经济学家 Paul David 写了一篇论文，叫《发电机与计算机》。<sup class="n">3</sup>他讲的是计算机时代的问题，就像我们今天讲 AI。而要看清计算机时代，他回头去看上一代：电气革命。</p>
+  <p>电气革命时代有同样的问题。电动机出现的时候，所有的工厂转眼之间都装上了，从蒸汽机换成了电动机。<span class="add">但要再过 30 年，工厂才按电动机的逻辑重新设计。</span></p>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s17.jpg" width="1478" height="832" alt="1890 年代与 1920 年代的工厂对比插画">
+    <figcaption><b>图 1.2</b>1890 年代，同一座工厂换上新电机；1920 年代，工厂围绕电力重新设计。</figcaption>
+  </figure>
+  <p>区别在哪里？一个蒸汽机工厂的核心，是中间那台蒸汽机。蒸汽是整个工厂的能源，所有的机器都围绕蒸汽的管道来排布。换成电动机，只是把蒸汽机换成了电动机，整个工厂的格局并没有发生变化。直到 30 年以后，老一代的工厂都被淘汰了，要设计新工厂的时候，大家才开始按照电的逻辑重新设计工厂。</p>
+  <p>电的逻辑是什么？<span class="add">就像一台电脑，插上电就能随处挪动。</span>如果接的是蒸汽，就只能接在中间那条管道上。有了电，每一台工具都可以随处插电，电线可以随便排布。我们再也不用按照能量去安排平面，而可以按照工作流去安排。所以在<span class="add">20 世纪初</span>，出现了很多现代管理学的起源：泰勒主义、福特主义、流水线。现代管理的起源，事实上是因为电动机让我们可以按照工作流程重新排布平面。</p>
+  <p>今天也是一样。我们用数字化的方式，在电脑上加上了智能。下一步，是怎样以智能为中心，重构生产关系。这个过程在电动机的时代花了 30 年，在电脑的时代至少花了 10 年，在 AI 的时代也不会马上自然变过去。<mark>效率不会自然而然提高，组织也不会自然而然改变，这中间有一场转型要做。</mark></p>
+
+  <div class="hg" data-sec="s1.4"><div class="kicker">1.4</div><h2>跨越鸿沟，需要互补投入</h2></div>
+  <p>要走到第三个阶段，<span class="add">光靠技术投入是不够的。</span>斯坦福大学的经济学家 Erik Brynjolfsson 讲过一个很重要的概念，叫互补投入（complementary investment）：我们今天在 AI 技术上投入一分，可能就要有九分投入在和它相匹配的组织变化、系统重构、流程重塑和激励上。这是 1 比 9 的关系。</p>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s19.jpg" width="1478" height="832" alt="1 美元技术加 9 美元互补投入">
+    <figcaption><b>图 1.3</b>1 美元技术，9 美元互补投入：软件与数据、技能与培训、流程重塑、组织与激励。</figcaption>
+  </figure>
+  <p>Brynjolfsson 把这件事算成了一个数字。他和 Hitt、Yang 研究了一千多家大企业：每多投入 1 美元计算机，企业市值多出 10 美元以上；其他有形资产，投 1 美元大约只多 1 美元。<sup class="n">4</sup>后来他和 Saunders 追问：多出来的那 9 美元是什么？答案是软件、培训、流程重塑这些看不见的互补投入。<sup class="n">5</sup></p>
+  <p><span class="add">我们不能指望在每个人的手机和电脑上花钱买了 token，整个组织就会自然而然地变化。</span>生产关系的改变需要互补投入。往往我们只看到显性的技术投入，看不到隐性的各种成本。没有两边同时投入，就不会有所谓的转型出现，只会是每个人多了一个 AI 助手。</p>
+  <p>为什么一讲到 AI，我就强烈地想避免把它只当成一个技术问题？因为做生意从来都不只是技术问题。有最先进的武器，不代表就能打胜仗。我最近特别着迷于长征的历史，你会看到，不是有了飞机大炮就能打胜仗。很多东西是要和技术互补的。1 比 9 是美国的比例，我觉得中国企业做不到 1 比 9，但至少也得有 1 比 1、1 比 2、1 比 3。</p>
+  <p class="qt">Brynjolfsson 在《生产率 J 曲线》里说得更直接：“像 AI 这样的通用技术，既带来、也必然要求大量的互补投资。”这些投资前期看不见，生产率会先往下走一段，再翻上来。<sup class="n">6</sup></p>
+
+  <div class="hg" data-sec="s1.5"><div class="kicker">1.5</div><h2>智能体是手段，转型是目的</h2></div>
+
+  <figure class="slide">
+    <img src="img/deck/zh/s20.jpg" width="1478" height="832" alt="目的：智能体是手段，转型是目的">
+    <figcaption><b>图 1.4</b>一切从目的开始：智能体是手段，转型才是目的。</figcaption>
+  </figure>
+  <p>所以第一章我希望得到的结论是：我们今天用 AI 的目的（purpose），不只是让大家多一个智能体、多一个 AI 工具。这些只是手段。目的是转型：从 AI 探索走到 AI 赋能，让每个行业、每个部门、每个角色都能被 AI 赋能；然后试着去探索能不能变成 AI 原生。<span class="add">有些流程、有些角色、有些问题的解法，也许可以先走到 AI 原生。</span></p>
+  <div class="stmt">智能体是手段，转型才是目的。</div>
+  <p><span class="add">转型要从哪里开始？下一章讲 AI 转型的商业底座：一个不停理解外部用户的模型，和一个不停理解企业内部的模型。</span></p>
+
+  <section class="notes">
+    <div class="nh">注释</div>
+    <ol>
+      <li>Robert M. Solow, “We’d Better Watch Out”, <i>New York Times Book Review</i>, 12 July 1987.</li>
+      <li>OpenRouter, openrouter.ai/rankings；图表来自 a16z。</li>
+      <li>Paul A. David, “The Dynamo and the Computer: An Historical Perspective on the Modern Productivity Paradox”, <i>American Economic Review</i> 80(2), 1990.</li>
+      <li>Erik Brynjolfsson, Lorin Hitt &amp; Shinkyu Yang, “Intangible Assets: Computers and Organizational Capital”, <i>Brookings Papers on Economic Activity</i>, 2002.</li>
+      <li>Adam Saunders &amp; Erik Brynjolfsson, “Valuing Information Technology Related Intangible Assets”, <i>MIS Quarterly</i>, 2016.</li>
+      <li>Erik Brynjolfsson, Daniel Rock &amp; Chad Syverson, “The Productivity J-Curve”, <i>American Economic Journal: Macroeconomics</i>, 2021.</li>
+    </ol>
+  </section>
+</template>
+
+
+<!-- =================== CHAPTER 01 · ENGLISH =================== -->
+<template id="f-pro-en">
+  <div class="hg" data-sec="sp.1"><div class="kicker">0.1</div><h2>AI is the technology of involution; business is the art of creating demand</h2></div>
+  <figure class="slide">
+    <img src="img/deck/en/s11.jpg" width="1478" height="832" alt="AI is the technology of involution">
+    <figcaption><b>Fig. 0.1</b>AI is the technology of involution. Business is the art of creating demand.</figcaption>
+  </figure>
+  <p><span class="add">Every technology’s instinct is to compete on the supply side, and the competition only gets fiercer.</span> The Chinese have a word for this, <i>neijuan</i>, involution: ever more effort for ever less gain. AI is involution squared. But the heart of business is still creating demand. I think the two complement each other. No great company today became great by squeezing supply alone. Each became great because it won a group of customers or users who love it. So business may be <span class="add">what rescues AI from involution</span>, and keeps the world full of imagination and good things.</p>
+
+  <div class="hg" data-sec="sp.2"><div class="kicker">0.2</div><h2>Speak, think, act: three generations of AI</h2></div>
+  <p><span class="add">Everything that appeared over the past three years we simply call AI</span>, and we often lump three generations together. In fact these are three entirely different generations of AI.</p>
+  <p>Three years ago we were excited because AI could talk, draw and make music. We called it generative AI. The AI of that time was like Wei Xiaobao, the glib hero of Jin Yong’s novel<span class="add">, who always has a comeback but is not always reliable</span>: whatever you asked, it had an answer.</p>
+  <p>Two years ago AI <span class="add">learned to think</span>. Ask it a question now and it reasons before it answers. We call this chain of thought. <span class="add">The answer no longer comes off the top of its head; it thinks first, then speaks.</span></p>
+  <figure class="slide">
+    <img src="img/deck/en/s12.jpg" width="1478" height="832" alt="Three generations of AI">
+    <figcaption><b>Fig. 0.2</b>Three generations of AI: it speaks, it thinks, it acts.</figcaption>
+  </figure>
+  <p>A year ago a new generation arrived, led by Claude Code. It does two things: it writes code and it operates a computer. Think about white-collar work. It is mostly operating a computer, or using some kind of <span class="add">“code” to solve a problem, whether computer code or the rules of management</span>. In other words, over the past year AI started doing the work. And AI at work is moving from assisting (AI assists) to leading (AI leads). <span class="add">In fields such as</span> mathematics, protein design and chemistry, we now see <span class="add">automated research (auto research)</span>, with AI producing research results on its own. AI is also starting to produce business results on its own, moving from operating a computer towards making decisions.</p>
+  <p>So the AI this book is about should not be only the first kind, nor only the second. It should be the third: an AI that acts. I often joke at my company that every job done sitting down will be replaced, <span class="add">and that the day may come sooner than we think.</span></p>
+
+  <div class="hg" data-sec="sp.3"><div class="kicker">0.3</div><h2>Automation is the floor, differentiation the ceiling</h2></div>
+  <p>Every company comes to AI from a different angle, <span class="add">but the floor is always automation</span>: higher efficiency. <span class="add">The ceiling</span> should be to amplify what makes each company different.</p>
+  <figure class="slide">
+    <img src="img/deck/en/s13.jpg" width="1478" height="832" alt="The opportunity is not just to automate the business">
+    <figcaption><b>Fig. 0.3</b>The opportunity is not just to automate the business. It is to scale the taste, judgment and intimacy that make the business distinctive.</figcaption>
+  </figure>
+  <p>Call it a large language model or call it AI, its instinct is probability. <span class="add">Ask it a question and it gives you the most probable answer.</span> What is one plus one? Most probably two. But many business decisions, especially in distinctive businesses, do not follow the most probable path. They follow differentiation, the improbable path. So if we bring AI into our own industry, we should not let it drift towards the probable. We should push it towards the individual: how to amplify what is special about each of us, and about our company.</p>
+  <p><span class="add">The eight chapters that follow start from here.</span></p>
+</template>
+
+<template id="f-ch1-en">
+  <div class="hg" data-sec="s1.1"><div class="kicker">1.1</div><h2>AI-native comes in stages</h2></div>
+  <p>The two hottest topics in business schools today are going global and the AI-native company. Everyone talks about being AI-native, and I am no exception, so this book starts there.</p>
+  <p>But I don’t want to offer slogans, and I can’t offer much experience, because nobody really has it yet. Last year I wrote an article on the AI-native organization for <i>Harvard Business Review</i>, and people asked me how to build one. My answer was that our customers are still people, so our own organization is not fully AI-native either. As long as you deal with people and your business serves people, you are probably not fully AI-native. AI-native comes in stages.</p>
+  <p>Put simply, a company’s journey with AI has four stages.</p>
+  <p>The first is <i>AI exploration</i>. Today I try Doubao, tomorrow Qwen, the day after I write something with Claude Code. Every step is spontaneous.</p>
+  <p>The second is <i>AI-empowered</i>. Many companies are here now, and they do it as a company. Multinationals give everyone a Copilot; Chinese private companies give everyone a <span class="add">home-grown AI office assistant</span>.</p>
+  <p>The third is <i>AI-native</i>. Have your company, your roles, your jobs and your workflows been redesigned around AI? Most companies have not done this. More precisely, they have not started. They have not yet asked how the organization should change once AI takes part in the work.</p>
+  <figure class="slide">
+    <img src="img/deck/en/s18.jpg" width="1478" height="832" alt="Four levels of agentic transformation">
+    <figcaption><b>Fig. 1.1</b>Four levels of agentic transformation. A chasm separates levels two and three.</figcaption>
+  </figure>
+  <p>The fourth is <i>AI-awakened</i>. <span class="add">That is something entirely new, and I will not go into it here.</span></p>
+  <p>The first two stages treat the business as it is as a constant that cannot change, and the tool as a variable that helps us do the old things better. The last two start to redesign, around AI, what the business is and how its processes run. Between them lies a wide gap. Companies do not drift across it; it takes effort. How much effort? Effort on the scale of a Nobel Prize in economics.</p>
+
+  <div class="hg" data-sec="s1.2"><div class="kicker">1.2</div><h2>A Nobel-sized problem</h2></div>
+  <p>Every generation of technology brings the same challenge. Everyone uses AI, so why hasn’t the company become AI-native? Everyone used computers, so why didn’t the company become digital? Every factory installed electric motors, so why didn’t productivity rise?</p>
+  <p>In 1987 the Nobel laureate Robert Solow put it in one sentence, later called the Solow Paradox: you can see the computer age everywhere but in the productivity statistics.<sup class="n">1</sup> Computers were everywhere except in the financial results.</p>
+  <div class="fullpage" data-tpl="t-solow"></div>
+  <p>AI looks the same today. On OpenRouter<span class="add"> (a platform that routes requests to many different AI models)</span>, agents now consume far more tokens<span class="add"> (the basic unit of text a model processes; think of it as a measure of AI usage)</span> than people do. On 6 February 2026, agentic tokens overtook human ones for the first time. Today they run at 7.3 trillion a day, a fourteen-fold rise.<sup class="n">2</sup> <mark>AI is used more and more. So where is the productivity?</mark></p>
+
+  <div class="hg" data-sec="s1.3"><div class="kicker">1.3</div><h2>The dynamo and the computer</h2></div>
+  <p>In 1990 the Stanford economist Paul David published a paper called “The Dynamo and the Computer”.<sup class="n">3</sup> He was writing about the computer age the way we write about AI today. To understand it, he looked back one generation, to electrification.</p>
+  <p>Electrification had the same problem. When the electric motor arrived, factories installed it almost overnight, replacing the steam engine. <span class="add">But another thirty years passed before factories were redesigned on the logic of the electric motor.</span></p>
+  <figure class="slide">
+    <img src="img/deck/en/s17.jpg" width="1478" height="832" alt="A factory in the 1890s and the 1920s">
+    <figcaption><b>Fig. 1.2</b>1890s: the same factory with a new motor. 1920s: the factory redesigned around electricity.</figcaption>
+  </figure>
+  <p>What was the difference? In a steam-powered factory the engine sat at the centre. Steam was the energy of the whole plant, and every machine was arranged along the shafts and belts it drove. Swapping the steam engine for an electric motor changed the engine, not the layout. Only thirty years later, when the old factories had been retired and new ones were being built, did people start designing factories on the logic of electricity.</p>
+  <p>What is the logic of electricity? <span class="add">Like a laptop: plug it in and you can move it anywhere.</span> Every machine can plug in wherever it stands, and cables can run anywhere. We no longer had to lay out the floor around the source of energy; we could lay it out around the flow of work. That is why <span class="add">the early twentieth century</span> saw the origins of modern management: Taylorism, Fordism, the assembly line. Modern management began because the electric motor let us arrange the floor by workflow.</p>
+  <p>It is the same today. We have added intelligence to the computer, digitally. The next step is to rebuild the relations of production around intelligence. With the electric motor this took thirty years; with the computer at least ten. With AI it will not happen by itself either. <mark>Productivity will not simply rise and the organization will not simply change. There is a transformation to be made.</mark></p>
+
+  <div class="hg" data-sec="s1.4"><div class="kicker">1.4</div><h2>Crossing the chasm takes complementary investment</h2></div>
+  <p><span class="add">Spending on technology alone will not get you to the third stage.</span> The Stanford economist Erik Brynjolfsson has an important idea for this: complementary investment. For every unit we put into AI technology, we may need nine units in what makes it work: organizational change, rebuilt systems, redesigned processes, new incentives. One to nine.</p>
+  <figure class="slide">
+    <img src="img/deck/en/s19.jpg" width="1478" height="832" alt="$1 of technology plus $9 of complementary investment">
+    <figcaption><b>Fig. 1.3</b>$1 of technology, $9 of complementary investment: software and data, skills and training, process redesign, organization and incentives.</figcaption>
+  </figure>
+  <p>Brynjolfsson put a number on it. With Hitt and Yang he studied more than a thousand large firms: each extra dollar of computers came with more than ten dollars of market value, while a dollar of other tangible assets added about a dollar.<sup class="n">4</sup> Later he and Saunders asked what the extra nine dollars were. The answer: software, training and process redesign, complementary investments nobody sees.<sup class="n">5</sup></p>
+  <p><span class="add">We cannot expect the whole organization to change just because we have paid for tokens on everyone’s phone and laptop.</span> Changing the relations of production takes complementary investment. We tend to see the visible spending on technology and miss the hidden costs around it. Without investment on both sides there is no transformation, only an AI assistant for everyone.</p>
+  <p>Why do I resist treating AI as a technology question? Because business has never been only about technology. The most advanced weapons do not guarantee victory. I have been reading a lot about the Long March lately, and it shows that planes and artillery alone do not win wars. Much has to complement the technology. One to nine is the American ratio. I don’t think Chinese companies can reach it, but they need at least one to one, one to two, one to three.</p>
+  <p class="qt">In “The Productivity J-Curve” Brynjolfsson says it plainly: “General purpose technologies such as AI enable and require significant complementary investments.” Those investments are invisible at first, so productivity dips before it climbs.<sup class="n">6</sup></p>
+
+  <div class="hg" data-sec="s1.5"><div class="kicker">1.5</div><h2>Agents are the means, transformation is the purpose</h2></div>
+  <figure class="slide">
+    <img src="img/deck/en/s20.jpg" width="1478" height="832" alt="Purpose: agents are the means, transformation is the purpose">
+    <figcaption><b>Fig. 1.4</b>Everything starts from purpose: agents are the means, transformation is the purpose.</figcaption>
+  </figure>
+  <p>So the conclusion of this first chapter is about purpose. The purpose of using AI is not to give everyone one more agent or one more AI tool. Those are means. The purpose is transformation: moving from AI exploration to AI-empowered, so that every industry, department and role is empowered by AI, and then exploring whether parts of the company can become AI-native. <span class="add">Some processes, some roles and some ways of solving problems may get there first.</span></p>
+  <div class="stmt">Agents are the means; transformation is the purpose.</div>
+  <p><span class="add">Where should the transformation start? The next chapter covers the business foundation for AI: one model that keeps learning about customers outside the company, and one that keeps learning about the company itself.</span></p>
+
+  <section class="notes">
+    <div class="nh">Notes</div>
+    <ol>
+      <li>Robert M. Solow, “We’d Better Watch Out”, <i>New York Times Book Review</i>, 12 July 1987.</li>
+      <li>OpenRouter, openrouter.ai/rankings; chart by a16z.</li>
+      <li>Paul A. David, “The Dynamo and the Computer: An Historical Perspective on the Modern Productivity Paradox”, <i>American Economic Review</i> 80(2), 1990.</li>
+      <li>Erik Brynjolfsson, Lorin Hitt &amp; Shinkyu Yang, “Intangible Assets: Computers and Organizational Capital”, <i>Brookings Papers on Economic Activity</i>, 2002.</li>
+      <li>Adam Saunders &amp; Erik Brynjolfsson, “Valuing Information Technology Related Intangible Assets”, <i>MIS Quarterly</i>, 2016.</li>
+      <li>Erik Brynjolfsson, Daniel Rock &amp; Chad Syverson, “The Productivity J-Curve”, <i>American Economic Journal: Macroeconomics</i>, 2021.</li>
+    </ol>
+  </section>
+</template>
+
+<template id="f-ch2-en">
+  <div class="hg" data-sec="s2.1"><div class="kicker">2.1</div><h2>Find what does not change</h2></div>
+  <p><span class="add">There is another reason I resist treating AI as a technology question:</span> once we talk technology, we spend every day chasing its trends. Whenever I talk about AI, I feel I have to find things that <span class="add">do not change</span>, some anchors. In business, some things do not change with time.</p>
+  <p>So my point is that your agents and your AI transformation need a business foundation. I call it two foundational models. One keeps understanding the outside world and sensing your users: can you understand your users more efficiently than before? The other is about the inside: your coordination, your processes, your knowledge and what you have accumulated, explicit and tacit. Can all that be drawn out better?</p>
+  <p>Let me quote something from seventy years ago. Peter Drucker said there is only one valid definition of business purpose: to create a customer.<sup class="n">1</sup> If we can create a new customer, find a need that has not been met, and build products, services and marketing stories that delight them, we cannot lose. Customers’ needs change too, so we always have to come back to the customer.</p>
+  <div class="fullpage" data-tpl="t-drucker"></div>
+  <p>I mean customers in the broad sense: business and consumer, individual and corporate. In the age of AI we have a chance to reshape how we understand customers.</p>
+
+  <div class="hg" data-sec="s2.2"><div class="kicker">2.2</div><h2>LLMs model the subjective world</h2></div>
+  <p>We have been working on one thing lately: using large language models to simulate how users make decisions, whether business buyers or consumers. Why can a language model simulate a user’s decisions? Think about how we communicate: through language. How do we think through a hard problem? By talking to ourselves in our heads. And the instinct of a large language model is to continue text, predicting over and over what the next character, the next token, should be. <span class="add">So once language is solved, we can go further and simulate thoughts, decisions and even behaviour.</span></p>
+  <p>Here is an example. To simulate Harry Potter, we can feed all the Harry Potter books into a language model and build a Harry Potter simulator. Before language models, if you asked whether Harry prefers coffee or juice at breakfast, the method was retrieval, the logic of search. Not any more. Now it is deduction: if Harry is this kind of person, with this past, what will he do next?</p>
+  <figure class="slide">
+    <img src="img/deck/en/s24.jpg" width="1478" height="832" alt="LLMs model the subjective world">
+    <figcaption><b>Fig. 2.1</b>Physics models the objective world; LLMs model the subjective world.</figcaption>
+  </figure>
+  <p>Have a guess: does Harry prefer juice or coffee? The simulation says juice, and pumpkin juice at that. <span class="add">The books never say directly what he likes to drink; the model inferred it from his life at Hogwarts.</span></p>
+  <div class="stmt">Physics models the objective world; LLMs model the subjective world.</div>
+  <p>That is modelling the subjective world: not looking up an answer but deducing what a person would choose. <span class="add">Starting from a user’s scattered past information, we can use AI to build a digital twin, a simulated copy of that person in the digital world. Because the model can simulate how this person talks and thinks, we can use it to understand the user and judge what they will do.</span></p>
+
+  <div class="hg" data-sec="s2.3"><div class="kicker">2.3</div><h2>Using AI to understand people better</h2></div>
+  <p><span class="add">Most of what we hear online today is about</span> AI replacing this job or that. But at the frontier of AI research, using AI to simulate and better understand people is an important direction. Here are three studies I like.</p>
+  <figure class="slide">
+    <img src="img/deck/en/s26.jpg" width="1478" height="832" alt="Research directions in modelling the subjective world">
+    <figcaption><b>Fig. 2.2</b>Three research directions in modelling the subjective world: cognition, personality, behaviour.</figcaption>
+  </figure>
+  <p>The first is the Stanford “Smallville” project from three or four years ago. Researchers built a virtual town with 25 autonomous agents playing all kinds of roles and interacting with each other. It sounds like <i>The Sims</i>.<sup class="n">2</sup> The same team then did something more serious: they used the method to simulate 1,000 randomly chosen Americans.<sup class="n">3</sup> You can ask them about spending, politics, why young people don’t want children. <span class="add">A person’s digital twin answers the same questions about 85 per cent as accurately as the person matches their own answers two weeks later. Is that high? Remember that the same person, asked the same questions two weeks apart, does not answer exactly the same way either.</span> People are fickle. <span class="add">So the digital twin already captures the person quite accurately.</span></p>
+  <p>The second is persona vectors, research by a team at Anthropic.<sup class="n">4</sup> The last step of training a model is alignment: aligning it with human values so that it is selfless, kind and very even-tempered. So that last step actually makes the model less like a person and more like a saint. Persona vectors ask: in a conversation, which words and sentences trigger the model and bring it back to a human state? Why did it suddenly get angry halfway through a chat, and which sentences caused it? In other words, what kind of sentence makes a model suddenly act like a normal person: a little selfish, petty, even dark.</p>
+  <p>The third comes from economics. Economists study behaviour with economic games such as the prisoner’s dilemma, and these come with complete datasets. AI appears able to simulate a person, <span class="add">but its answers cluster around the single most probable one.</span> <span class="add">Say</span> everyone has 200 yuan in their pocket, and I come in, tell a very sad story and ask for support. Different people give me different amounts. Run a model a hundred times and nine times out of ten it gives about the same figure, around 80 yuan on average. People are not like that; people are random. So behavioural simulation works the other way round: it uses AI to recover human randomness.</p>
+
+  <div class="hg" data-sec="s2.4"><div class="kicker">2.4</div><h2>The Subjective World Model</h2></div>
+  <p><span class="add">Building on this research, we did the engineering</span> and trained a model we call the Subjective World Model. Its purpose is to simulate all kinds of users, business and consumer. Its data comes from four layers. The first is expression: how people express themselves on Xiaohongshu, on WeChat. The second is narrative: interviews that ask why they express themselves that way. The third is cognition, the economic-game methods I just described. The fourth is behaviour: did they buy, did they click, did they do what you wanted them to do?</p>
+  <p>Why four layers? Because people are contradictory and complicated. My wife might say she is a rational consumer, but in a luxury store she may not be, and when it comes to the children’s education she is not either. What people say and what they do often differ, which is why we need all four.</p>
+  <figure class="slide">
+    <img src="img/deck/en/s27.jpg" width="1478" height="832" alt="We trained the Subjective World Model">
+    <figcaption><b>Fig. 2.3</b>Four layers of data in the Subjective World Model: expression, story, cognition, behaviour. People say one thing and do another, so all four are read together.</figcaption>
+  </figure>
+  <p>The model is trained on data from a million real users, and the application built on it is called atypica. In its first year <span class="add">it too has passed a million users</span>, across 50 countries and regions<span class="add"> (Tezign data, as of 2026)</span>. You type in a question about your users, and it breaks the question into research questions, finds suitable AI personas, forms them into a panel and generates insights automatically. You can also mix AI personas with real interviewees: real people set the baseline, AI provides the scale.</p>
+
+  <div class="hg" data-sec="s2.5"><div class="kicker">2.5</div><h2>Case: pre-testing a car</h2></div>
+  <figure class="slide">
+    <img src="img/deck/en/s29.jpg" width="1478" height="832" alt="Subjective World Model makes user understanding always-on">
+    <figcaption><b>Fig. 2.4</b>The Subjective World Model makes user understanding always on: anyone, any idea, anywhere, tested instantly.</figcaption>
+  </figure>
+  <p>What changes if AI can play virtual consumers, help us understand their needs better, and invite them to co-create and evaluate? Let me take an industry that may be more cut-throat than most: electric vehicles.</p>
+  <p>A car used to take five to ten years to develop, one step after another. Now it takes five to ten months. So carmakers no longer have time for post-testing, doing something first and then checking whether it could be better. Everything has to be pre-tested, with heavy simulation up front.</p>
+  <p>An EV maker we work with launched a new brand, run by two very young presidents who wanted to rethink the process. Their first step was to define the users they wanted to serve: young families with two or more children in first-, second- and third-tier cities. <span class="add">Carmakers claim to spend more than anyone on user research and on building CRM and CDP systems (customer relationship management and customer data platforms).</span> The irony is that all their user data is about the person driving. Think about it: with an SUV or an MPV, the driver is often not the decision-maker. The decision is usually made by the spouse and the children. <span class="add">However much data you have on drivers, it cannot stand in for the person who really decides.</span></p>
+  <p>So they used AI to simulate how families of three, families of four, even two or three generations together, choose a car. From strategic planning onward, they did not reduce users to a pile of labels such as segment, age and occupation. They worked with real families, one by one. Those are AI personas.</p>
+  <p>In product definition they had these AI personas debate: how should we differentiate? When two or three generations of a family discuss a car, who plays which role? What car would make them willing to pay 250,000 to 300,000 yuan? Development still followed a traditional carmaker’s process, but they could keep testing with the personas: if the seat is built like this, how will these people feel? Then marketing: if I spend this much on a campaign, is the message right? Don’t end up with lots of clicks and likes but the wrong message. What they kept saying was that before users walk into the dealership, they should already know this car costs 300,000, not 150,000.</p>
+  <p>Then user operations. Salespeople never knew what to say. The car’s specifications read like a manual, and salespeople had to make up their own pitch, saying different things to different people. Now it works the other way round: the AI personas are used to rewrite the whole sales script, and these virtual consumers can spar with salespeople, challenge them and help them build their skills. Many companies also run networks of brand-managed social accounts<span class="add">, a set of social media accounts run by the company</span>. The content looks as if users posted it, but the company produces it centrally; we call this the central kitchen. This cast of AI characters are exactly the protagonists of that content.</p>
+  <p><span class="add">This way, in about five months to a year, you can build an entirely new digital environment for testing with consumers.</span> When we used to say we had user data, we meant phone numbers, contact details and purchase history. Those are all outcomes; they cannot predict anything.</p>
+  <p>As we see it, perhaps 95 per cent of user-related decisions, from what to post on social media today to how you define your customer and what product you make, are subjective calls. So beyond the big projects you already do well, small projects can be tested continually too. <span class="add">Understanding users stops being one project after another and becomes a lasting capability of the company.</span></p>
+
+  <div class="hg" data-sec="s2.6"><div class="kicker">2.6</div><h2>From hierarchy to intelligence</h2></div>
+  <p>Understanding users in a new way is not enough. We also need to use AI in the same way to understand ourselves.</p>
+  <figure class="slide">
+    <img src="img/deck/en/s31.jpg" width="1478" height="832" alt="From Hierarchy to Intelligence">
+    <figcaption><b>Fig. 2.5</b>From hierarchy to intelligence. Source: Jack Dorsey &amp; Roelof Botha, 2026.</figcaption>
+  </figure>
+  <p>Early this year an essay went viral, at least among the entrepreneurs I know: “From Hierarchy to Intelligence”, <span class="add">co-written by Twitter co-founder Jack Dorsey and Roelof Botha of Sequoia Capital</span>.<sup class="n">5</sup> The authors argue that every company’s organization has been built around people as the coordinators in the middle. Headquarters’ views travel through middle managers to the front line, and the front line’s sense of the market travels back the same way. More and more companies want to be flat, but flatness needs tools and technology to support it.</p>
+  <p>A company, they write, needs two things: a world model of its own operations, and customer signals rich enough to make that model useful. Modelling your own operations means that every part of the company has to be understandable by AI.</p>
+  <p>Many companies’ spans of control are growing. There is a famous number online: Jensen Huang has more than sixty direct reports, and people at his company later told me it may now be over a hundred. He takes over a big meeting room every day, with all his direct reports in it. People can now manage far more than before, mainly because AI can supply the context instead of people passing it up and down. If people do the passing, the limit is Dunbar’s number<span class="add"> (the number of stable relationships one person can maintain)</span>: one person manages ten or so. That is the ceiling. <span class="add">But if AI understands the context, everyone gets company information through an agent. That role used to be played by your manager or colleagues; now it is an agent.</span> Then collaboration becomes a network rather than a hierarchy.</p>
+  <figure class="slide">
+    <img src="img/deck/en/s38.jpg" width="1478" height="832" alt="Enterprise agent">
+    <figcaption><b>Fig. 2.6</b>Enterprise agents rest on two world models: the customer world model outside and the company world model inside.</figcaption>
+  </figure>
+  <p>Of course, companies that were already digital find this easier. Companies with both online and offline operations need <span class="add">some</span> time to make the shift. It depends.</p>
+
+  <div class="hg" data-sec="s2.7"><div class="kicker">2.7</div><h2>Tacit knowledge</h2></div>
+  <p>What makes up a company’s internal context? <span class="add">A philosopher is being quoted a lot again lately, because of a concept he introduced:</span> tacit knowledge. <span class="add">Once AI can handle huge amounts of explicit knowledge, people start paying attention again to the knowledge that cannot be put into words.</span> Michael Polanyi said: we know more than we can tell.<sup class="n">6</sup> There are two kinds of knowledge. One is explicit and can be written down, such as <span class="add">a standard operating procedure (SOP)</span>. The other is tacit: a judgment, a choice, an accumulation.</p>
+  <p>In the digital age we turned nearly all explicit knowledge into data. In the age of AI we need to find ways, step by step, to connect tacit knowledge with digital content. Explicit knowledge is like an objective description of a customer: age, occupation, how many visits, how much they bought. Tacit knowledge is: I am a very good salesperson, and I suddenly realize this is a potential customer for a certain kind of sale. Or I look at a plot of land and sense what kind of place it could become. Those feelings are tacit knowledge. <span class="add">In the age of AI we really have a chance to connect the two, and let AI try to understand tacit knowledge.</span></p>
+  <figure class="slide">
+    <img src="img/deck/en/s33.jpg" width="1478" height="832" alt="Two kinds of internal knowledge">
+    <figcaption><b>Fig. 2.7</b>Two kinds of internal knowledge. “We can know more than we can tell.”</figcaption>
+  </figure>
+  <p>Companies have always had two kinds of data. One is structured data, the kind a spreadsheet handles, with clear cause and effect. The other is images, text, video and sound, unstructured data. It used to be recorded but hardly understood; now we can try to understand it. To me the first is more like time’s enemy: once it is digitized, everyone knows it. The second is more like time’s friend: the more you accumulate, the more different you become. That brings us back to the prologue: AI should not be only about automation. It should also let what makes us different keep accumulating.</p>
+  <figure class="slide">
+    <img src="img/deck/en/s35.jpg" width="1478" height="832" alt="Schema">
+    <figcaption><b>Fig. 2.8</b>Schema: structuring the context of work so that AI can use it.</figcaption>
+  </figure>
+  <p>Some companies care a lot about “we have our own data and nobody else does”. Here is an example. We worked with a global fast-food brand whose every order goes through its app or mini-program. In theory it has the most complete record of user behaviour. But when we used its existing data, which burger, when and where, to predict a customer’s taste for the next item, the prediction was actually worse than knowing their MBTI, whether they are an introvert or an extrovert<span class="add"> (MBTI is a popular personality typology; I-types lean introverted, E-types extroverted)</span>. Customers’ phone numbers are of course valuable. My point is that for a simple behavioural prediction, a company’s so-called proprietary data is not necessarily more accurate in business terms than knowing someone’s MBTI.</p>
+
+  <div class="hg" data-sec="s2.8"><div class="kicker">2.8</div><h2>The most valuable context is yet to be written</h2></div>
+  <figure class="slide">
+    <img src="img/deck/en/s34.jpg" width="1478" height="832" alt="The most valuable context is yet to be written">
+    <figcaption><b>Fig. 2.9</b>The further down, the more valuable. The most valuable context has not been written down yet.</figcaption>
+  </figure>
+  <p>So the next step is to build context specifically for what AI can do. An example: we used to record meetings, but nobody had time to listen, so recordings were just records, not data. Now we record every meeting by default, because AI can read them. Recordings have gone from nearly worthless to an important input of knowledge.</p>
+  <p><span class="add">More important still is to write down what has not been written down yet.</span> For example, a property developer’s skill in placemaking, the feel its people have for development: can it gradually become context the company can call on?</p>
+  <p>But it is always true that the more we know, the more we know we don’t know. We now have tools that let us know more, but that does not make people less important; much remains unknown. The main change in this process is that accumulated knowledge is no longer written for people to read but for agents to read. So it can be as complex as it needs to be.</p>
+  <p>Here is an interesting example. <span class="add">We recently did a project for a global lifestyle brand</span> that I call “the ontology of the dream of a better life”. <span class="add">The brand’s value is to give people a dream of a better life; “ontology” means organizing what we learn into a structure that agents can read.</span></p>
+  <p>Over the years the brand had interviewed more than 3,000 typical consumers in depth, born in the 1960s, 70s, 80s, 90s and 2000s. Our job was to turn these customers into the company’s collective knowledge, its context: what a better life means to them, who they are, what they think, and how all this connects with the <span class="add">brand</span>’s ideas. We turned this into a foundation agents can read. <span class="add">So the agents no longer read an abstract process. They begin to understand how 3,000 people each understand the brand’s values.</span></p>
+  <p>Next time, we can invite these agents to the discussion: how should we run the next campaign? How should the next store look? Which <span class="add">product</span> should we pick next? What should next season’s customer programme be? That is what I mean: the most valuable knowledge, the context agents read, is what has not been written down. It was never written before; now it can become the foundation AI reads.</p>
+
+  <div class="hg" data-sec="s2.9"><div class="kicker">2.9</div><h2>Two foundations of AI</h2></div>
+  <figure class="slide">
+    <img src="img/deck/en/s37.jpg" width="1478" height="832" alt="Two foundations of AI">
+    <figcaption><b>Fig. 2.10</b>Beneath purpose sit AI’s two foundations: the customer world model outside and the company world model inside.</figcaption>
+  </figure>
+  <p>Chapter 1 was about purpose: transformation is the purpose, agents are the means. This chapter is about the foundation of AI, which is also the foundation of business. It has two dimensions, one outside and one inside: keep understanding your customers and users, and keep understanding your company.</p>
+  <div class="stmt">An agentic transformation needs two world models: the customer world model outside, the company world model inside.</div>
+  <p><span class="add">The next chapter covers the two modes of AI adoption that sit on top of these two models.</span></p>
+
+  <section class="notes">
+    <div class="nh">Notes</div>
+    <ol>
+      <li>Peter F. Drucker, <i>The Practice of Management</i>, 1954.</li>
+      <li>Joon Sung Park et al., “Generative Agents: Interactive Simulacra of Human Behavior”, UIST 2023.</li>
+      <li>Joon Sung Park et al., “Generative Agent Simulations of 1,000 People”, 2024.</li>
+      <li>Runjin Chen et al., “Persona Vectors: Monitoring and Controlling Character Traits in Language Models”, Anthropic, 2025.</li>
+      <li>Jack Dorsey &amp; Roelof Botha, “From Hierarchy to Intelligence”, 2026.</li>
+      <li>Michael Polanyi, <i>The Tacit Dimension</i>, 1966.</li>
+    </ol>
+  </section>
+</template>
+
+<template id="f-ch3-en">
+  <div class="hg" data-sec="s3.1"><div class="kicker">3.1</div><h2>Humans use AI: smart for twenty seconds</h2></div>
+  <p>With these two models, one outside and one inside, we can run many AI projects between them. We call them use cases: front office<span class="add"> (facing customers)</span>, middle office<span class="add"> (supporting the business)</span>, back office<span class="add"> (running internal operations)</span>, all kinds. These use cases fall into two modes. We all know the first well, but I think the second matters even more.</p>
+  <figure class="slide">
+    <img src="img/deck/en/s40.jpg" width="1478" height="832" alt="Mode A: humans use AI">
+    <figcaption><b>Fig. 3.1</b>Mode A: humans use AI. AI as a copilot, centred on generating output.</figcaption>
+  </figure>
+  <p>The first mode, <span class="add">to put it plainly</span>, is humans using AI. Each of us has plenty of AI tools on our phones and computers, and we drive them to work for us. Every time I talk to an AI, it is smart for twenty seconds and makes me feel it has done a lot for me. People steer the answers, and the conclusions are fairly open.</p>
+  <p>Everyone knows these tools, and they are so-called standard tools: buy them and use them out of the box, like the various copilots and office assistants. <span class="add">They are general-purpose, and anyone can pick them up.</span></p>
+
+  <div class="hg" data-sec="s3.2"><div class="kicker">3.2</div><h2>AI uses humans: proactive agents, 24/7</h2></div>
+  <p>The second mode I call AI using humans. The term is not ideal, but to make the point plainly: on one side humans use AI, on the other AI uses humans.</p>
+  <figure class="slide">
+    <img src="img/deck/en/s41.jpg" width="1478" height="832" alt="Mode B: AI uses humans">
+    <figcaption><b>Fig. 3.2</b>Mode B: AI uses humans. AI as a proactive agent, centred on the workflow.</figcaption>
+  </figure>
+  <p>AI using humans means AI runs in your background around the clock. Sometimes it asks you for permission, sometimes for judgment, but it is smart 24/7, not smart for twenty seconds after you ask it something. We call it a proactive agent.</p>
+  <p>It is a continuous agent that keeps working. It senses signals from outside, plans, does the work and evaluates the result on its own, and now and then it asks you a question.</p>
+
+  <div class="hg" data-sec="s3.3"><div class="kicker">3.3</div><h2>Case: 1,000 to 2,000 new products a year</h2></div>
+  <p>Take a scene you may know better. How many new products does a leading Chinese coffee chain launch in a year? Ten? A hundred? It develops about two to five a week. Of course, <span class="add">80 to 90 per cent of them never reach the market.</span> Growth in consumer businesses now comes from making more new products for known customers, because the single blockbuster no longer exists. So they have to keep making new products.</p>
+  <figure class="slide">
+    <img src="img/deck/en/s44.jpg" width="1478" height="832" alt="Proactive agent: long-horizon runtime">
+    <figcaption><b>Fig. 3.3</b>The proactive agent’s loop: signal, plan, create, evaluate, running 24/7 in the background.</figcaption>
+  </figure>
+  <p>For a global food company we built an agent that develops new products around the clock. In the background it keeps looking for market signals: what are competitors doing? What new IP is emerging? What are these users newly interested in? What co-branding should we do? On the other side, it uses the user model described earlier to keep gathering the voice of the customer.</p>
+  <p>It sends an email to the R&amp;D team. If the team does not reply within 24 hours, it moves to the next step on its own: <span class="add">it designs the packaging and works out the flavour.</span> If <span class="add">there is still no reply, it goes on to prepare the marketing campaign as well</span>: the <span class="add">in-store displays</span> offline and the plan online. Then it uses the consumer simulation to test whether the ideas are any good. Run this way, the whole process can produce about 1,000 to 2,000 new products a year.</p>
+  <p>I asked the head of the team whether the AI’s products were any good. About 80 out of 100, he said. <span class="add">I said 80 isn’t good enough. He said that’s not the point:</span> people used to do everything from 0 to 80 themselves; now they can start at 80. So 100 is no longer the finish line; 120 or 150 is.</p>
+  <figure class="slide">
+    <img src="img/deck/en/s43.jpg" width="1478" height="832" alt="AI does the work from 0 to 80">
+    <figcaption><b>Fig. 3.4</b>AI takes the work to 80; people start at 80. The bar is no longer 100.</figcaption>
+  </figure>
+  <p>This is really interesting. We used to have a lot of transactional work. To make a new product you would start with a meeting of dozens of people all talking at once, spend ages getting from 0 to 80, and never have time for 80 to 100. Now AI runs constantly in the background and makes 0 to 80 easier, so people can work on 80 to 100, or 80 to 120.</p>
+  <p>The same is true in many industries, including my own field of research. Writing a paper used to mean that perhaps 70 or 80 per cent of the time <span class="add">went on formatting and checking references</span>. Now nobody needs to think about that, and all the time can go into research.</p>
+
+  <div class="hg" data-sec="s3.4"><div class="kicker">3.4</div><h2>Connecting people with people</h2></div>
+  <p>This shows us a new paradigm of human–machine collaboration: many proactive agents running in the background 24/7, even across departments and functions. It is not your assistant of today. The question it asks is: among these five people, these five roles, how much could AI connect? If each person only gets a little more efficient, collaboration between people stays inefficient. Can we connect it?</p>
+  <p>So this is the agent we built: <span class="add">AI automatically picks up signals, plans, creates (that is, does the work) and evaluates</span>. On one side is the consumer context, on the other the company context, and it keeps innovating new products.</p>
+  <p>But this did not happen overnight. At first we built two copilots, one for insight and one for packaging. Gradually we connected them into a workflow. Once you have a workflow, you are crossing departments: before, you were helping one function; now you are redesigning how work flows. After that, you close the whole loop and design how people and agents work together. The process took more than a year.</p>
+
+  <div class="hg" data-sec="s3.5"><div class="kicker">3.5</div><h2>From marketing to leasing to buildings</h2></div>
+  <p>We have used similar methods with many clients. <span class="add">One is a global consumer health company. Another is a global food and beverage group</span>, whose biggest initiative this year is E2E, end-to-end marketing and growth: every stage of marketing reshaped with AI. At each step: what the agents do, what the agency does, what people do, what the team does, what the systems do, and what context and intelligence lie underneath.</p>
+  <p>We also do other interesting things. <span class="add">One client is a city development group. The district it runs competes fiercely with its neighbours</span>, so it has to keep finding the mix of businesses that suits it best. It now wants tech and consumer businesses, so it has to keep scouting: which industries and which brands are <span class="add">on the rise</span>? We help it keep gathering these potential brands and tenants, use AI to analyse automatically how they would fit with <span class="add">the district’s</span> mix, and monitor the industry as a whole. In effect, agents play the role of leasing staff, not one but several, scouting signals, finding fits and drafting proposals, while people make the calls.</p>
+  <p>We are also working on a scene closer to property. Buildings are already well digitized and smart, <span class="add">but it all ends up on a dashboard, and someone still has to coordinate what it shows</span>. Now we have an agent watch that dashboard: how long cleaners stay in each building, how long security guards stay, whether they are really working; what separates the best cleaners and guards from the average, what could be optimized, and how to improve the work-order system.</p>
+  <p>We are doing this for the property operations of a large state-owned bank. We are paid on savings, so there is one number I know for sure: this year the total property cost fell by 10 per cent. The reason is that AI watches the <span class="add">dashboard</span> in real time, around the clock. If people watch it, coordination takes time. We used to have no way of knowing whether a cleaner’s capacity was enough or fully used; now we can.</p>
+
+  <div class="hg" data-sec="s3.6"><div class="kicker">3.6</div><h2>Two modes, each in its place</h2></div>
+  <figure class="slide">
+    <img src="img/deck/en/s51.jpg" width="1478" height="832" alt="Two modes of AI adoption">
+    <figcaption><b>Fig. 3.5</b>On top of the two world models, two modes of AI adoption: agents for humans, humans for agents.</figcaption>
+  </figure>
+  <p>So we gain another dimension: there are two ways to bring AI into work. One is agents that serve people, which everyone should use. The other is people serving agents: agents run in the background and greatly shorten <span class="add">the chains of cross-department work</span>.</p>
+  <p>When the goal is unclear, humans use AI. When the optimization goal and the work goal are clear, build long-running, continuous, cross-department agents and let them run.</p>
+  <div class="stmt">When the goal is unclear, humans use AI; when it is clear, let agents run long, continuous and across departments.</div>
+</template>
+
+<template id="f-ch4-en">
+  <div class="hg" data-sec="s4.1"><div class="kicker">4.1</div><h2>Does the intelligence belong to the model, or to you?</h2></div>
+  <p>There are two ways to talk about AI: the technical way and the <i>House of Cards</i> way<span class="add">, which is about power and manoeuvring</span>. This chapter is a bit like the latter. A term has been hot lately: sovereign AI. The reason is that <span class="add">as more and more intelligence is built on top of models</span>, does that intelligence belong to the model or to you?</p>
+  <p>This is debated a lot in America, which has the best closed models. So a group of people oppose closed models and argue for open-weight ones. <span class="add">A closed model can only be called; an open-weight model can be downloaded, run and adapted on your own servers, so control stays with you.</span></p>
+  <figure class="slide">
+    <img src="img/deck/en/s60.jpg" width="1478" height="832" alt="Sovereign AI is about cognitive sovereignty">
+    <figcaption><b>Fig. 4.1</b>Is the enterprise accumulating intelligence of its own? Sovereign AI is about an enterprise’s cognitive sovereignty.</figcaption>
+  </figure>
+  <p><span class="add">I think</span> that as we push AI today, we need to own our cognitive sovereignty. You should be able to say: this is the context I built, these are the agents I built, and whether I put them on model A, B or C, they can move.</p>
+  <div class="stmt">Sovereign AI is about a company’s cognitive sovereignty.</div>
+
+  <div class="hg" data-sec="s4.2"><div class="kicker">4.2</div><h2>More important than data security</h2></div>
+  <p>This may matter even more than data security. Data security asked whether the data was yours. Now the question is: the intelligence that comes from your data, from your experience, from your tacit knowledge, is it yours?</p>
+  <p>The model sits at the bottom, with all kinds of agents built on top. To make an agent useful, a company has to build a lot of its own intelligence on top of the model. This gets technical, so I will only list it. Post-training: can the model be trained to suit your company? Context: is the context the model draws on yours? The harness, the model’s boundaries, what it may and may not do: did you set it? Continual learning: the loop I described earlier, are its results yours?</p>
+  <p>We will not build the models ourselves, but at least the layers above them should be <span class="add">something the company can take with it</span>.</p>
+
+  <div class="hg" data-sec="s4.3"><div class="kicker">4.3</div><h2>Model agnostic</h2></div>
+  <figure class="slide">
+    <img src="img/deck/en/s63.jpg" width="1478" height="832" alt="Own your intelligence: model agnostic">
+    <figcaption><b>Fig. 4.2</b>Model agnostic: the model underneath can be swapped at any time; the intelligence above stays with the company.</figcaption>
+  </figure>
+  <p><span class="add">Today the model underneath can be Qwen, MiniMax or Zhipu</span>, or you can switch flexibly among three, four or five models. That matters a great deal. So companies now keep using a term: model agnostic. In the cloud era we talked about being cloud agnostic, able to switch to any cloud. In the model era we need to be model agnostic.</p>
+  <p>This matters more than where the data is stored. As I said earlier, even with your own user data you may predict less accurately than MBTI, because AI has become so capable. The richest store of data in the world is inside the models. <span class="add">Your ability to harness models and turn them into your own intelligence, and whether what you learn truly belongs to you, matter more than the data itself.</span></p>
+
+  <div class="hg" data-sec="s4.4"><div class="kicker">4.4</div><h2>We build for you, we build together, we teach you to build</h2></div>
+  <figure class="slide">
+    <img src="img/deck/crop/s65-en.jpg" width="1478" height="677" alt="Three phases to full ownership">
+    <figcaption><b>Fig. 4.3</b>Ownership transfer by design: we build for you, we build together, you run it yourself.</figcaption>
+  </figure>
+  <p>How do you move AI capability over to the company? Take a global agribusiness and food group. We worked in three steps: first, we build it for you; second, we build it together; third, we teach you to build it. Step by step, the whole system and the capabilities on top of it moved over to the company. This matters, it takes a series of steps, and it takes time.</p>
+  <p>Last year every company thought that <span class="add">installing an agent-building platform and a vibe-coding tool (one that lets you program by describing what you want in plain language)</span> meant doing AI. <span class="add">This year many found problems. One company gave each of its roughly 1,000 developers a coding AI last year; this year the results turned out to be a mess, and we went back in to help them sort it out.</span> So there is a threshold, but in the end external capability has to become your own.</p>
+
+  <div class="hg" data-sec="s4.5"><div class="kicker">4.5</div><h2>Full ownership by design</h2></div>
+  <figure class="slide">
+    <img src="img/deck/en/s66.jpg" width="1478" height="832" alt="Own your intelligence">
+    <figcaption><b>Fig. 4.4</b>On top of every layer, one more: own your intelligence.</figcaption>
+  </figure>
+  <p>So on top of all the layers we add one more: own your own intelligence. Be model agnostic, with full ownership by design. From day one, an AI transformation project should be designed to hand control of AI back to the company: it can switch models at any time, is never held hostage by a model, and can move its models and AI capabilities out in full whenever it wants.</p>
+  <div class="stmt"><span class="add">What you rent is capability. What you own is intelligence.</span></div>
+</template>
+
+<template id="f-ch5-en">
+  <div class="hg" data-sec="s5.1"><div class="kicker">5.1</div><h2>1 : 2 : 7</h2></div>
+  <p>Every year I run a not-very-serious poll of entrepreneurs on WeChat Moments: where does AI transformation get stuck?</p>
+  <p>In 2023 people thought the biggest obstacle was AI infrastructure, which really meant data. In 2024 it was model capability. In 2025 the answers were about even. In 2026 the answer was 1 : 2 : 7<span class="add">: model 1, infrastructure (including data) 2, people and organization 7, with 70 per cent saying the obstacle is people and organization</span>. Technology is no longer the big obstacle: people look at their own technology and infrastructure and find them good enough, and their digitization is decent. The obstacle is people and organization.</p>
+  <figure class="slide">
+    <img src="img/deck/en/s67.jpg" width="1478" height="832" alt="1 : 2 : 7">
+    <figcaption><b>Fig. 5.1</b>1 : 2 : 7. In 2023 the obstacle was data and infrastructure, in 2024 the models; in 2026, 70 per cent said it was people and organization.</figcaption>
+  </figure>
+  <p>I think people and organization are both the bottleneck and the opportunity to differentiate. <span class="add">It is the same point as the complementary investment in Chapter 1: what lies beyond the technology is the larger part.</span></p>
+
+  <div class="hg" data-sec="s5.2"><div class="kicker">5.2</div><h2>Build a bridge, don’t teach people to swim</h2></div>
+  <p>There are many ways to transform a company with AI. I want to borrow an idea from the architect Buckminster Fuller. <span class="add">He said that we rarely solve a problem head-on; we should instead find a new solution</span>, one so good that the old problem simply gets done the new way. <span class="add">Think of it like this</span>: to cross a river, I should not teach people to swim, <span class="add">because swimmers can always drown</span>. I should build a bridge, and make swimming look obsolete.</p>
+  <figure class="slide">
+    <img src="img/deck/en/s68.jpg" width="1478" height="832" alt="Inventing a new model">
+    <figcaption><b>Fig. 5.2</b>Invent a new model: rather than fight the old one, build a new one that makes it obsolete.</figcaption>
+  </figure>
+  <p>I think transformation inside a company should work the same way. So lately we have run many labs. We did not walk into a company and tell everyone to switch to the new way. Recently, for example, we worked with a beauty company on a 30-person lab that uses AI-native methods to understand consumers, like the carmaker earlier, and to develop and market new products, to see whether it can produce a new product in six months. This group works the AI-native way and builds an example others can learn from.</p>
+  <p>Say a company develops ten new products a year. Pick one and do it AI-native from start to finish; once it works, the other nine can learn from it. That beats rolling out AI layer by layer across marketing, then sales. When a few people get a small loop working, most people become willing to change. People who haven’t seen it only see problems; once they see it, they see possibilities.</p>
+  <p>Our recent projects all work this way: build it first so the whole company sees the change, instead of forcing the whole company to change completely, which is very hard.</p>
+
+  <div class="hg" data-sec="s5.3"><div class="kicker">5.3</div><h2>Return to the Renaissance man</h2></div>
+  <p>Second, training matters. AI is often called another industrial revolution, but for talent I think it is an anti-industrial revolution. <span class="add">The logic of the industrial revolution is the division of labour:</span> across every industry, each person has a specialty and a role, in universities and even more in companies.</p>
+  <figure class="slide">
+    <img src="img/deck/en/s69.jpg" width="1478" height="832" alt="Return to Renaissance man">
+    <figcaption><b>Fig. 5.3</b>Return to the Renaissance man: raise everyone’s floor, and be responsible for the outcome, not just the output.</figcaption>
+  </figure>
+  <p>Now AI can raise everyone’s floor. Each of us can do more, so each of us can take responsibility for outcomes, not just outputs. Output answers only to your own function; outcome answers to the company’s core goals. When everyone owns outcomes, the organization changes.</p>
+  <p>So finding, training and regrouping talent becomes very important, rather than letting each role tend its own small plot a little more efficiently with AI. Organization matters, and so does finding and developing talent.</p>
+
+  <div class="hg" data-sec="s5.4"><div class="kicker">5.4</div><h2>Hackathons for non-technical people</h2></div>
+  <p>Lately I see many companies running non-tech hackathons. Hackathons used to be for geeks. Now many companies run them for people who are not technical: the people most eager to try AI take a need of their own, solve it with a little AI, and the company gives them some reward.</p>
+  <p>Last year MIT published a <span class="add">headline-grabbing</span> report saying that 95 per cent of generative AI projects fell short of expectations on return.<sup class="n">1</sup> It won’t be that number this year. But <span class="add">another finding is more interesting: many employees were already using their own AI tools, which the researchers call shadow AI.</span> These people quietly use AI to solve problems, and so show the company exactly how to use it: how AI can really solve a finance problem, a legal problem, a design problem, rather than everything coming purely from the top.</p>
+
+  <div class="hg" data-sec="s5.5"><div class="kicker">5.5</div><h2>Hand 0 to 80 to the agents</h2></div>
+  <figure class="slide">
+    <img src="img/deck/en/s70.jpg" width="1478" height="832" alt="Agentic business organization">
+    <figcaption><b>Fig. 5.4</b>The agentic business organization: agents take the work to 80, people take it from 80 to 120.</figcaption>
+  </figure>
+  <p>So we will see organizations change. One thing I strongly believe: hand work from 0 to 80 to agents as much as possible, and work above 80 to people.</p>
+  <figure class="slide">
+    <img src="img/deck/crop/s71-en.jpg" width="1478" height="832" alt="Three ways AI enters the firm">
+    <figcaption><b>Fig. 5.5</b>Three ways AI enters the firm. All three will happen, in part.</figcaption>
+  </figure>
+  <p>AI enters an organization in three ways: beneath people, beside people and between people. Beneath: everyone keeps their seat, a layer of AI labour grows underneath, and each person moves up a step. At <span class="add">a food and beverage group</span>, for example, agents batch-generate channel content for every team. Beside: AI takes on a whole function, sits alongside human teams and reports to the same manager. At <span class="add">a city development group</span>, for example, the market-intelligence agent is a member of the team. Between: AI sits between management and teams, watching the work flow and pushing it forward, like the property-management agent that briefs, reminds and checks the team every day. All three will happen, in part.</p>
+  <p>By now the full picture of AI is coming together: purpose at the top, then the two modes of using AI, the two foundations of AI, the technical choice of owning your intelligence, and finally people and process.</p>
+
+  <section class="notes">
+    <div class="nh">Notes</div>
+    <ol>
+      <li>MIT NANDA, <i>The GenAI Divide: State of AI in Business 2025</i>, 2025.</li>
+    </ol>
+  </section>
+</template>
+
+<template id="f-ch6-en">
+  <div class="hg" data-sec="s6.1"><div class="kicker">6.1</div><h2>We are not consultants. We are builders.</h2></div>
+  <p>Our view has always been that agents are only the means; transformation is the purpose. Or put another way, transformation is the product.</p>
+  <figure class="slide">
+    <img src="img/deck/en/s74.jpg" width="1478" height="832" alt="We are not consultants. We are builders.">
+    <figcaption><b>Fig. 6.1</b>We are not consultants. We are builders.</figcaption>
+  </figure>
+  <p>We are not really a consulting firm; we are a technology company. But I think that in AI transformation, builders like us need to take on consulting work. The reason is that no AI project today is purely technical. To a large extent it is about how a company changes. In other words, a company’s change through AI cannot rest on a slide deck or a theoretical framework.</p>
+
+  <div class="hg" data-sec="s6.2"><div class="kicker">6.2</div><h2>AI is alive: you only know once it runs</h2></div>
+  <p>First, you must have agents really running in production. AI is not like the software systems of old, which stayed the same once they went live. These AIs are almost alive: you have to use them, give feedback, tell them how to get better, even design data and processes specifically for them. So it is alive, and you only know once it runs.</p>
+  <p>Second, as I said earlier, ownership transfer by design. What matters most is that the company has the capability itself, so we build together.</p>
+  <p>Third, you need a good evaluation system. Without evaluation you don’t know what AI transformation means, or what AI should be doing.</p>
+  <p><span class="add">Fourth,</span> go one use case at a time. As Fuller said, do it bit by bit, make it work, then expand.</p>
+  <p><span class="add">Fifth,</span> every round builds up context. The better the context, the better the AI performs.</p>
+  <div class="stmt"><span class="add">If the model changes, we are not worried. What we can truly control is the context.</span></div>
+  <p>Finally, of course, it gradually becomes the company’s own capability.</p>
+
+  <div class="hg" data-sec="s6.3"><div class="kicker">6.3</div><h2>Products, research, community</h2></div>
+  <figure class="slide">
+    <img src="img/deck/en/s75.jpg" width="1478" height="832" alt="Work with AI builders and creators">
+    <figcaption><b>Fig. 6.2</b>Work with AI builders and creators: products, research, community.</figcaption>
+  </figure>
+  <p>We do three things ourselves. First, we build AI-native products; the user-simulation and product-innovation systems I described are our own. Second, we do frontier research on AI: technical R&amp;D at Tongji, <span class="add">business models</span> at CEIBS, and recently a lab at Fudan on management science <span class="add">and</span> talent development. Third, we run all kinds of communities, <span class="add">communities of builders and creators</span>.</p>
+  <p><span class="add">I mention these three because builder-led transformation needs the people doing it to stay at the frontier themselves.</span></p>
+
+  <div class="hg" data-sec="s6.4"><div class="kicker">6.4</div><h2>A few basic principles</h2></div>
+  <figure class="slide">
+    <img src="img/deck/en/s77.jpg" width="1478" height="832" alt="Secure by design. Yours by default.">
+    <figcaption><b>Fig. 6.3</b>Secure by design, yours by default: security and compliance, model and cloud agnostic, own your intelligence.</figcaption>
+  </figure>
+  <p>AI transformation rests on a few basic principles: security and compliance; model and cloud agnostic; and, finally, owning your own intelligence.</p>
+  <figure class="slide">
+    <img src="img/deck/en/s78.jpg" width="1478" height="832" alt="How we work">
+    <figcaption><b>Fig. 6.4</b>How we work: one track for technology, one for organization and people, converging in agentic transformation.</figcaption>
+  </figure>
+  <p>The work runs roughly like this. First an AI diagnosis, then an AI strategy and an AI tech stack. But I have to stress complementary investment again; remember the one-to-nine from Chapter 1? Beneath the technology you need two more things, organization and people: alignment in the leadership team and training for the teams. The company’s own teams have to invest too. Only then does an AI transformation produce results.</p>
+</template>
+
+<template id="f-ch7-en">
+  <div class="hg" data-sec="s7.1"><div class="kicker">7.1</div><h2>Start with a quantified goal</h2></div>
+  <p>One thing really matters. In our discussions with many companies, we talk a lot about use cases, about problems, about opportunities, but not enough about goals. I keep asking: can we have a quantified goal? Without one, it is hard to know which way to go.</p>
+  <p><span class="add">An AI budget does not buy a system; it buys capability. The goal is to change how work is done (not necessarily on day one), to build up knowledge, and to let capability compound.</span></p>
+  <div class="stmt">An AI budget buys capability, not technology. Systems depreciate; capabilities compound.</div>
+  <figure class="slide">
+    <img src="img/deck/en/s80.jpg" width="1478" height="832" alt="An AI budget buys capability, not technology">
+    <figcaption><b>Fig. 7.1</b>An AI budget buys capability, not technology. Systems depreciate; capabilities compound.</figcaption>
+  </figure>
+
+  <div class="hg" data-sec="s7.2"><div class="kicker">7.2</div><h2>How much do companies spend on AI?</h2></div>
+  <p>Some basic numbers first. A survey of 1,330 companies found that average AI spending is about 3.3 per cent of revenue, which is quite a lot.<sup class="n">1</sup> Seen another way, AI takes more than 15 per cent of IT budgets, 36 per cent of digital budgets and 15.3 per cent of marketing budgets.<sup class="n">2</sup> In other words, AI money is spread across all kinds of business lines and budgets.</p>
+  <figure class="slide">
+    <img src="img/deck/en/s82.jpg" width="1478" height="832" alt="80% of AI spending sits outside IT">
+    <figcaption><b>Fig. 7.2</b>80 per cent of AI spending sits outside the IT budget, and most of the value is created in the business units.</figcaption>
+  </figure>
+  <p>Of that 3.3 per cent, 0.5 points sit inside IT and 2.8 points outside it, in business lines and in functions such as HR and finance, where they produce business results directly. Value is distributed the same way: 68 per cent shows up in business results, 21 per cent in functions and 11 per cent in IT infrastructure.<sup class="n">1</sup></p>
+  <p><span class="add">For AI to move from pilots to a standing budget line, it has to extend gradually from the IT budget into business budgets.</span> That is why AI transformation today is usually <span class="add">a project owned by the top boss</span>, by the whole leadership team, not just by the head of IT. As one saying goes, a company that treats AI only as IT has got its first step wrong. So more and more CFOs are taking charge of AI transformation or getting involved, because they see AI as an investment, not just a cost.</p>
+
+  <div class="hg" data-sec="s7.3"><div class="kicker">7.3</div><h2>The 7 is where budgets fall short</h2></div>
+  <figure class="slide">
+    <img src="img/deck/en/s83.jpg" width="1478" height="832" alt="The 7 is where budgets fall short">
+    <figcaption><b>Fig. 7.3</b>The 7 is where budgets fall short.</figcaption>
+  </figure>
+  <p>What is most underfunded is precisely the 7 in 1 : 2 : 7. A few macro statistics: among companies that cut training budgets, 47 per cent raised AI spending at the same time, investing less in people while investing more in AI. Only 27 per cent of executives have a comprehensive AI talent strategy. Fewer than one company in ten is redesigning roles around AI.<sup class="n">3</sup></p>
+  <p>Last year the share was even lower, but this year it has started to grow. We are seeing companies design roles specifically for AI: not a chief AI officer so much as roles that use AI for growth, roles that deploy AI, and so on. These new roles will appear.</p>
+  <p>Between leaders and laggards, 55 per cent versus 17 per cent do strategic workforce planning for AI; between trailblazers and followers, 60 per cent versus 24 per cent of the AI budget goes to upskilling employees.<sup class="n">4</sup> So much of the investment should go into complementary investment, into the 7.</p>
+
+  <div class="hg" data-sec="s7.4"><div class="kicker">7.4</div><h2>One budget, four pockets</h2></div>
+  <p>There are roughly four pockets. The first is the technology foundation, which we have covered. The second is use-case agents. Agents must start from a use case. <span class="add">An agent is not one more system grown on top of some IT system, but AI that solves a specific business problem</span>, so it needs a clear business owner. The third is people and capability. The last is governance and change. All of these need the company’s managers to take part.</p>
+  <figure class="slide">
+    <img src="img/deck/en/s84.jpg" width="1478" height="832" alt="One budget, four pockets">
+    <figcaption><b>Fig. 7.4</b>One budget, four pockets: technology foundation, use-case agents, people and capability, governance and change.</figcaption>
+  </figure>
+  <p>Where does the money go? <span class="add">AI spending is a broad notion, but it breaks down into a few parts.</span> Consulting and development are billed in person-days<span class="add">, that is, by the number of people and days put in</span>. Many foundational products are subscriptions you don’t need to build yourself, because they move fast, such as context systems and harness systems; building them in-house is very costly, and the technology changes too fast to maintain. The third part goes to people and change. Fourth, once people start using AI, especially proactive agents, token consumption rises, and that becomes a cost. Last come advisory and governance: always be clear about what kind of project you are doing.</p>
+  <p><span class="add">In one sentence: whoever benefits pays; whoever will own the capability invests in it. IT funds the 1 and the 2; business units and HR together fund the 7.</span></p>
+
+  <div class="hg" data-sec="s7.5"><div class="kicker">7.5</div><h2>One year is too short, three too long, two just right</h2></div>
+  <figure class="slide">
+    <img src="img/deck/en/s87.jpg" width="1478" height="832" alt="One year is too short, three too long. Two is right.">
+    <figcaption><b>Fig. 7.5</b>One year is too short, three too long, two just right.</figcaption>
+  </figure>
+  <p>How should ROI be measured? This is my own feeling, and also what I hear from many entrepreneur friends and senior executives: one year is too short, three years too long, two years just right. If you <span class="add">expect to break even</span> in one year, the build-up time is probably too short. Three years, and you may not be able to wait, because AI changes so fast. So two years is right.</p>
+  <p>When we work with clients, we plan by the quarter: one use case each quarter, for two years. The data says good companies may see results in 11 months, and laggards see them in 17.<sup class="n">1</sup> So as long as you do it, results come within a certain time.</p>
+  <p>And the use cases multiply, and they iterate. Like the product-innovation agent I described: today you build a simple use case; tomorrow three simple ones can be chained into a complex one. All of this accumulates, as long as you do it.</p>
+
+  <div class="hg" data-sec="s7.6"><div class="kicker">7.6</div><h2>Efficiency, growth, capability</h2></div>
+  <p>Every company has this discussion: what is AI transformation actually worth to us? <span class="add">To put it plainly</span>, because my own company needs to grow too: what is growth? Growth is three things: efficiency, revenue, or <span class="add">building muscle</span>. <span class="add">In English</span>: efficiency, growth, capability.</p>
+  <figure class="slide">
+    <img src="img/deck/en/s90.jpg" width="1478" height="832" alt="Three kinds of return, three rulers">
+    <figcaption><b>Fig. 7.6</b>Three kinds of return, three rulers: efficiency, growth, capability.</figcaption>
+  </figure>
+  <p>What is efficiency? Saving, or working faster: saving time, shortening cycles. What is growth? Finding new opportunities for business growth. What is capability? Whether we can invest in the future: in future talent, future products, future ways of managing.</p>
+  <p>We must have a clear target value before we can choose where AI should go. Without a baseline and without ROI, transformation is hard. So there are three very high-level questions worth discussing: where does the money come from? How fast? What is the return?</p>
+  <div class="stmt">No baseline, no ROI: measure before the pilot.</div>
+
+  <div class="hg" data-sec="s7.7"><div class="kicker">7.7</div><h2>Case: four threes</h2></div>
+  <p>To make this more concrete, take a global pharmaceutical company. Its goal <span class="add">sounds very Chinese</span>, but it was actually set by global headquarters: four threes. <span class="add">The first three is time:</span> within three years, triple the productivity of front-line staff; do the same middle-office work with a third of the people; and make high-quality decisions at the top three times faster. The last three is very hard to measure, but the first two are easy to see.</p>
+  <p>To get there, they have five tracks over three years: marketing, sales, medical (in effect, marketing to doctors), R&amp;D and internal management. Each track covers three basics: re-orchestrating business processes, adjusting the underlying technology and data architecture, and designing and building the organization’s agents.</p>
+  <figure class="slide">
+    <img src="img/deck/en/s92.jpg" width="1478" height="832" alt="Case study: a global pharmaceutical company">
+    <figcaption><b>Fig. 7.7</b>A global pharmaceutical company’s three-year goal: four threes.</figcaption>
+  </figure>
+  <p>Then they decided what to buy and what to build. Buy what? Models, without question; nobody trains their own. An enterprise agent architecture, and a context system. Build what? The agents themselves, and the content of the context. The systems are bought, but the agents and context on top are built in-house. That is the intelligence they can take with them.</p>
+  <p>I am often asked which part of writing such a goal is hardest and most contested. As far as I know, two discussions take the most time.</p>
+  <p>The first: <span class="add">should it be three times, or two, or four?</span> That is a big debate. They chose three for the same reason as one year too short, three too long, two just right: five is too aggressive, one is no challenge, so three. In the end it is an intuitive choice. But three sends a signal: not a small gain today, and not becoming a completely different company today either, but doing our utmost to get what is in front of us right.</p>
+  <p>The second is execution: buy or build? Buying means whether to buy a mature solution; building means deciding what to build yourself. In the end they chose to build together with an AI company, along these tracks.</p>
+  <p><span class="add">From “should we do it” to “what does success look like”: the more concrete this step, the easier the transformation is to start.</span></p>
+
+  <section class="notes">
+    <div class="nh">Notes</div>
+    <ol>
+      <li>BCG, <i>The Formula for Agentic AI Value</i>, September 2026; BCG Applied AI Index, September 2026.</li>
+      <li>McKinsey, <i>The State of AI</i>, August 2026; Deloitte Tech Value Survey, October 2025; Gartner CMO Spend Survey, May 2026.</li>
+      <li>Careerminds survey of 600 HR leaders, 2026; Gartner, 2026; Accenture, <i>Pulse of Change</i>, 2026.</li>
+      <li>BCG, 2026; BCG AI Radar, January 2026.</li>
+    </ol>
+  </section>
+</template>
+
+<template id="f-ch8-en">
+  <div class="hg" data-sec="s8.1"><div class="kicker">8.1</div><h2>Start with a diagnosis</h2></div>
+  <p><span class="add">The first seven chapters covered why and what. This last chapter is about where to start: with an AI diagnosis.</span></p>
+  <figure class="slide">
+    <img src="img/deck/en/s95.jpg" width="1478" height="832" alt="AI diagnosis: see clearly, then transform">
+    <figcaption><b>Fig. 8.1</b>AI diagnosis: see clearly, then transform.</figcaption>
+  </figure>
+  <p>In a diagnosis we first read the market from the outside, then run many interviews inside with the key roles, and analyse what we find with our frameworks to see where the transformation should start. After the diagnosis we define company-wide capability goals and priority use cases, which is the AI strategy; then we build the company’s own platform and agents, which is the AI tech stack, model agnostic and cloud agnostic.</p>
+  <figure class="slide">
+    <img src="img/deck/en/s94.jpg" width="1478" height="832" alt="How we work">
+    <figcaption><b>Fig. 8.2</b>Two tracks after the diagnosis, technology and organization and people, converging in agentic transformation.</figcaption>
+  </figure>
+  <p>But again I have to stress complementary investment. Beside the technology track there is the organization and people track: first align the leadership team, because an organization can only go as far as its leaders; then train the teams, and find and activate the AI champions. Only where the two tracks meet is there an agentic transformation.</p>
+
+  <div class="hg" data-sec="s8.2"><div class="kicker">8.2</div><h2>Six questions, four stages</h2></div>
+  <p><span class="add">In a diagnosis we interview and map around six questions: what role does AI play in the company? How is value counted? How is the quality of output measured? How is data security handled? How will the organization and people change? Who drives it? On each question, a company sits roughly at one of four stages.</span></p>
+  <h3>What role does AI play?</h3>
+  <p>From a tool used now and then, to a colleague inside the workflow, to a way of changing the organization and the business. In leading companies, AI runs inside business processes and changes how work is allocated. <span class="add">McKinsey’s 2025 survey found that AI high performers are nearly three times as likely as other companies to have fundamentally redesigned their workflows.</span> Industries differ, of course: if you are in a fiercely competitive consumer market, you should think further ahead.</p>
+  <h3>How is value counted?</h3>
+  <p>This is something I care about a lot. Awareness anyone can top up by scrolling short videos; how value is counted is tied closely to each company. The first stage is “catch up first”: everyone is talking about AI, but there is no clear model for its future returns, so you start with one or two use cases. The second stage is “saves time, feels good”: AI shortens some piece of work and people feel the difference. The third stage is use cases with baselines and metrics, some kind of benchmark. The fourth is company-level goals that are aligned, with a shared pace.</p>
+  <p><span class="add">Moving from the third stage to the fourth usually takes management to drive it:</span> there has to be a clear sense of direction. Whether it is four threes or something else, it cannot stay qualitative; it needs numbers. Leading companies set baselines and goals first, then choose use cases, and use company-level goals to get everyone aligned on pace.</p>
+  <h3>How is output quality measured?</h3>
+  <p><span class="add">The first stage</span> is to use AI only where it is accurate and not where it isn’t, which is perfectly normal. <span class="add">The second stage</span> relies on individuals to check: people who are good with AI simply use it better than others. I once talked with a senior partner at a consulting firm who felt he used AI far better than the young people under him, with the same tool. Individual skill determines AI performance. <span class="add">The third stage</span> is more advanced and relies on context and standards: can the company build a good environment for AI to run in? That environment really is an environment, like the neighbourhood we live in, except that now the residents are agents. <span class="add">The fourth stage</span> is a feedback loop of continuous evaluation.</p>
+  <p>There are two approaches in AI today. In one, <span class="add">people hard-code the workflow and tell the agent</span> what to do in step one, two, three and four. In the other, you draw the boundaries and let AI work freely. More and more people lean towards the second, because AI keeps getting smarter. It is like children: if a child has no particular gift, you tell them one, two, three; if a child is gifted, you only tell them what not to do and let them get on with the rest. So context and standards become very important, and so do mechanisms for iteration and continuous evaluation.</p>
+  <p>In leading companies, quality depends on the context and standards the company gives AI. That is a capability the company has to build, not something left to each person’s good habits. If everyone uses their own agent, the good conversations and lessons never settle into the company, and never become its capability.</p>
+  <h3>How is data security handled?</h3>
+  <p><span class="add">The first stage</span> is to forbid any input and simply not use it: if we don’t know whether it is safe, don’t use it. <span class="add">The second stage</span> is individuals using outside tools on their own: the company provides nothing, so people take company information to outside AI. You can assume your staff write with AI; I now assume my students write their papers with AI too, and if one gets a character wrong I almost treasure it. The worry is that you don’t know how many outside tools they use, and the information has already left. The third stage is building a controlled environment, and many companies’ IT teams put a lot of effort into this. The fourth stage is smarter. We recently worked with a technology company with very high security requirements. Its pain was that, because security was so tight, nothing could be used at all; it had effectively downgraded its own weapons. We are helping it build a system that grants access by level of risk. For user insight, for example, the data came from outside in the first place, so why can’t it go out? But for user testing of a core product, the product concept must not leave. So some things can live outside and some inside, with better tiering: convenience first for some, security first for others.</p>
+  <p>Leading companies provide a controlled enterprise environment so that people dare to use AI and use it with confidence, instead of quietly using it outside.</p>
+  <h3>How will the organization and people change?</h3>
+  <p>Some people worry: will I be optimized out? Every company’s culture is different. Some create insecurity on purpose; others create security. My own company chose to create security, so we do a lot of training. Many say young people are more AI-native. I don’t think so. I teach at a university, and my students do not become AI-native on their own if nobody teaches them. So everyone has a chance to change. My father is over seventy and uses more tokens than I do. With the will, anyone can become more AI-native.</p>
+  <p>The four stages here run from worrying about being optimized out, to training individual skills, to adjusting roles and processes accordingly, to linking AI with talent systems and career paths, so that AI is tied to a person’s career and to the organization. A company with a clear AI vision can also attract the best talent in its industry.</p>
+  <h3>Who drives it?</h3>
+  <p>The most passive way is to be dragged along, forced to act, waiting for orders from above. The second stage is departments raising needs and running pilots, bottom-up. The third stage is building capability into a system. The fourth is top and bottom moving together, each pulling the other along.</p>
+  <p><span class="add">Throughout this book I have said that managers need a strong vision</span>, which is top-down. But AI also has an important bottom-up dimension. So I have always thought the best way is top and bottom moving together: neither one grand plan nor people quietly experimenting below, but the two combined organically. Many use cases are in fact discovered by people trying things, but they need to point in the direction the company wants to go.</p>
+
+  <div class="hg" data-sec="s8.3"><div class="kicker">8.3</div><h2>Three kinds of problem, three kinds of answer</h2></div>
+  <p>Top-down means crossing departments. Only cross-department matters need to come from the top, and only the bosses can solve them.</p>
+  <p>Bottom-up means you have one very painful problem in one place: can you solve it yourself with AI, using whatever tool? At our company, for example, expense claims were sorted out by colleagues in finance themselves. We run a hackathon every month, with rewards and badges that count towards performance at year end. Another example: last year we wrote about 500 product R&amp;D documents, but the business side always felt R&amp;D did not give them enough “ammunition”. We used to need someone to turn R&amp;D documents into marketing material. Now AI does it, and the tool was built by colleagues on the business side. We strongly encourage this.</p>
+  <p>Then there is AI that truly builds muscle, with no short-term ROI to measure, such as accumulating knowledge. Open questions like these need continuous exploration, and I suggest an AI Lab for them: it doesn’t need much investment, but it needs to keep trying, because new technical possibilities and new ideas can appear any day.</p>
+  <div class="stmt"><span class="add">Cross-department problems, top-down; a single sore point, bottom-up; the future, to an AI Lab.</span></div>
+
+  <div class="hg" data-sec="s8.4"><div class="kicker">8.4</div><h2>Diverge first, then converge</h2></div>
+  <p>Even very mature companies go through a process of diverging first and converging later. They do not converge on day one; converge on day one and you will probably converge on the wrong thing. If you spend too long debating the roadmap while your own trial and error lags behind, the roadmap becomes armchair strategy.</p>
+  <p>So both matter. Some quick wins are obviously worth doing; even if you can’t think them through, they are worth doing, so do them while you plan, and run both at once. That is also why we always say AI transformation is both technology and organization; and once it reaches organization and process, it is management’s job.</p>
+  <div class="stmt">Not investing big before you have thought it through is right. Not investing at all is wrong.</div>
+  <p>Where to start? My advice is to add first, then see where to subtract. <span class="add">Start with what is most distinctive about the company and what it cares about most, such as how it understands its users, and let AI amplify that first. Your existing teams will feel supported rather than replaced. Once the capability has grown, look at which processes can be cut.</span></p>
+  <p><span class="add">Which brings us back to the line in the prologue: automation is the floor, differentiation the ceiling.</span></p>
+</template>
+
+
+<script>
+(function(){
+  var root=document.documentElement, book=document.getElementById('book'), stage=document.getElementById('stage');
+  var BOOK_ZH='当商业成为智能体', BOOK_EN='Agentic Transformation for Business';
+  var CHS=[
+    {k:'pro',f:'pro',num:{zh:'序',en:'00'},part:{zh:'序言',en:'Prologue'},zh:'为什么商业能拯救 AI 内卷',en:'Why business can save AI from involution'},
+    {k:'ch1',f:'ch1',num:'01',zh:'走向 AI 原生企业',en:'Towards an AI-Native Business',sub:{zh:'生产率悖论',en:'The paradox of productivity'}},
+    {k:'ch2',f:'ch2',num:'02',zh:'智能体化转型需要两个世界模型',en:'An agentic transformation starts with two world models'},
+    {k:'ch3',f:'ch3',num:'03',zh:'AI 在企业中的两种应用模式',en:'Two modes of AI adaptation in business'},
+    {k:'ch4',f:'ch4',num:'04',zh:'主权 AI：企业拥有自己的智能',en:'Sovereign AI: companies owning their own intelligence'},
+    {k:'ch5',f:'ch5',num:'05',zh:'智能体化转型的瓶颈，也是机会',en:'The bottleneck, or opportunity, for agentic transformation'},
+    {k:'ch6',f:'ch6',num:'06',zh:'智能体是手段，转型才是产品',en:'Agent is the means, transformation is the product'},
+    {k:'ch7',f:'ch7',num:'07',zh:'能力是投资，度量是回报',en:'Capability is the investment, measurement is the return'},
+    {k:'ch8',f:'ch8',num:'08',zh:'智能体化转型，从 AI 诊断开始',en:'Agentic transformation starts with AI diagnosis'}];
+  var CH={}; CHS.forEach(function(c){CH[c.k]=c;});
+  var ZHNUM=['','一','二','三','四','五','六','七','八','九'];
+  var leaves=[], pages=[], N=0, cur=0, PW=0, PH=0, pgMap={};
+
+  function tpl(id){return document.getElementById(id).content.firstElementChild.cloneNode(true);}
+  function lang(){return root.dataset.lang||'zh';}
+
+  // ---------- page factory ----------
+  function newFlowPage(chKey){
+    var s=document.createElement('section'); s.className='page flow';
+    s.innerHTML='<div class="rh"></div><div class="body"></div><div class="folio"></div>';
+    s._ch=chKey; return s;
+  }
+  function fits(body){return body.scrollHeight<=body.clientHeight+1;}
+
+  // keep first n characters of an element (deep), return clone
+  function cloneFirst(el,n){
+    var c=el.cloneNode(false), left=n;
+    (function walk(src,dst){
+      for(var i=0;i<src.childNodes.length&&left>0;i++){
+        var k=src.childNodes[i];
+        if(k.nodeType===3){var t=k.data.slice(0,left);left-=t.length;dst.appendChild(document.createTextNode(t));}
+        else{var d=k.cloneNode(false);dst.appendChild(d);walk(k,d);}
+      }
+    })(el,c); return c;
+  }
+  function cloneRest(el,n){
+    var c=el.cloneNode(false), skip=n;
+    (function walk(src,dst){
+      for(var i=0;i<src.childNodes.length;i++){
+        var k=src.childNodes[i];
+        if(k.nodeType===3){
+          if(skip>=k.data.length){skip-=k.data.length;continue;}
+          dst.appendChild(document.createTextNode(k.data.slice(skip)));skip=0;
+        }else{
+          var len=k.textContent.length;
+          if(skip>=len){skip-=len;continue;}
+          var d=k.cloneNode(false);dst.appendChild(d);walk(k,d);
+        }
+      }
+    })(el,c); return c;
+  }
+  // break only at a word/character boundary
+  function goodBreak(text,n,en){
+    if(!en){ // Chinese: never split a Latin word or number, never start a line with closing punctuation, never end one with an opening mark
+      var i=n,g=0,W=/[A-Za-z0-9.%'\-]/;
+      while(i>1&&g++<40){
+        var a=text[i-1],b=text[i]||'';
+        if(W.test(a)&&W.test(b)){i--;continue;}
+        if(/[，。、；：？！）」』”’》·…—,.;:!?)]/.test(b)){i--;continue;}
+        if(/[（「『“‘《(]/.test(a)){i--;continue;}
+        break;
+      }
+      return i>0?i:n;
+    }
+    var i=n; while(i>0&&!/\s/.test(text[i-1]))i--; return i>0?i:n;
+  }
+
+  function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+  function esc(t){return String(t).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
+  function opener(c,L){
+    var s=el('section','page opener'); s.setAttribute('aria-label',c[L]);
+    var n=typeof c.num==='string'?c.num:c.num[L];
+    var part=c.part?c.part[L]:(L==='en'?'Chapter '+c.num:'第'+ZHNUM[+c.num]+'章');
+    s.appendChild(el('div','part',esc(part))); s.appendChild(el('div','rule'));
+    s.appendChild(el('div','num'+(/[^\x00-\x7f]/.test(n)?' cjk':''),esc(n))); return s;
+  }
+  function titlePage(c,L,id){
+    var s=el('section','page ct'); s.setAttribute('aria-label',c[L]);
+    s.appendChild(el('h1','',esc(c[L])));
+    if(c.sub)s.appendChild(el('div','sub',esc(c.sub[L])));
+    var ol=el('ol'); var t=document.getElementById(id);
+    [].forEach.call(t.content.querySelectorAll('.hg'),function(h){
+      var li=el('li'); li.appendChild(el('span','',esc(h.querySelector('.kicker').textContent)));
+      li.appendChild(el('span','',esc(h.querySelector('h2').textContent)));
+      var pg=el('span'); pg.dataset.pg=h.dataset.sec; li.appendChild(pg); ol.appendChild(li);
+    });
+    if(!c.sub)ol.style.top='96mm';
+    s.appendChild(ol); return s;
+  }
+  function fillToc(toc,L){
+    var ol=toc.querySelector('#toc-list'); ol.removeAttribute('id');
+    CHS.forEach(function(c){
+      var li=el('li'); li.appendChild(el('span','no',c.k==='pro'?'·':c.num));
+      li.appendChild(el('span','',esc((c.k==='pro'&&L==='zh'?'序　':'')+c[L])));
+      var pg=el('span','pg'); pg.dataset.pg=c.k; li.appendChild(pg); ol.appendChild(li);
+    });
+  }
+  function paginate(){
+    var L=lang(), en=L==='en';
+    var out=[];
+    out.push(tpl('t-cover'),tpl('t-epi'),tpl('t-title'),tpl('t-copy'));
+    var toc=tpl('t-toc'); fillToc(toc,L); out.push(toc);
+    CHS.forEach(function(c){
+      var id='f-'+c.f+'-'+L, has=!!document.getElementById(id);
+      // every chapter opens on a verso (odd index): black opener left, title page right
+      if(out.length%2===0)out.push(blank());
+      pgMap[c.k]=out.length;
+      out.push(opener(c,L));
+      if(has){ out.push(titlePage(c,L,id)); flow(id,c.k,out,en); }
+      else{
+        var w=tpl('t-wip'); w._ch=c.k; out.push(w);
+        // keep the bilingual case spread in English too
+        
+      }
+    });
+    if(out.length%2===0)out.push(blank());
+    out.push(tpl('t-back'));
+    return out;
+  }
+  function blank(){var s=document.createElement('section');s.className='page';s.setAttribute('aria-label','空白页');return s;}
+
+  function flow(id,chKey,out,en){return _flowWithFloats(id,chKey,out,en);}
+  function _flowWithFloats(id,chKey,out,en){
+    var tplEl=document.getElementById(id);
+    var blocks=[].slice.call(tplEl.content.cloneNode(true).children);
+    var meas=document.getElementById('measure');
+    var deferredPages=[], floats=[], page=null, body=null;
+    function open(){
+      // a pair of full pages (a spread) must start on a verso
+      if(deferredPages.length&&(deferredPages.length===1||out.length%2===1))while(deferredPages.length)out.push(deferredPages.shift());
+      page=newFlowPage(chKey); page.classList.add(out.length%2?'verso':'recto');
+      meas.appendChild(page); body=page.querySelector('.body'); out.push(page);
+      if(floats.length)body.appendChild(floats.shift()); // at most one figure per page
+    }
+    function close(){if(page)meas.removeChild(page);page=null;}
+    function mark(x){if(x.dataset&&x.dataset.sec)pgMap[x.dataset.sec]=out.length-1;}
+    open();
+    var guard=0;
+    while(blocks.length&&guard++<2000){
+      var b=blocks.shift();
+      if(b.classList&&b.classList.contains('fullpage')){var fp=tpl(b.dataset.tpl);fp._ch=chKey;deferredPages.push(fp);continue;}
+      if(b.classList&&b.classList.contains('hg')&&[].some.call(body.children,function(x){return x.tagName!=='FIGURE';})){
+        // every section starts on a new page; figures still waiting from the previous section get a page of their own
+        close(); if(!floats.length)fixTail(); while(floats.length){open();close();} open();
+      }
+      if(b.tagName==='FIGURE'){
+        // one figure per page, on the page where its text is: if it does not fit, push trailing text to the next page
+        if(body.querySelector(':scope>figure')){floats.push(b);continue;}
+        body.appendChild(b);
+        if(fits(body))continue;
+        var back=[];
+        while(!fits(body)){
+          var kids=[].filter.call(body.children,function(x){return x.tagName!=='FIGURE';});
+          var t=kids[kids.length-1]; if(!t)break;
+          body.removeChild(t);
+          if(fits(body)&&t.tagName==='P'){ // keep as much of this paragraph as fits
+            var tx=t.textContent, lo2=1, hi2=tx.length, best2=0;
+            while(lo2<=hi2){var m2=(lo2+hi2)>>1, c2=goodBreak(tx,m2,en), pt=cloneFirst(t,c2); body.appendChild(pt); var ok2=fits(body); body.removeChild(pt); if(ok2){best2=c2;lo2=m2+1;}else hi2=m2-1;}
+            if(best2>=(en?55:36)&&tx.length-best2>=(en?25:24)){var f1=cloneFirst(t,best2);f1.classList.add('split');body.appendChild(f1);var r1=cloneRest(t,best2);r1.classList.add('cont');back.unshift(r1);}
+            else back.unshift(t);
+          } else back.unshift(t);
+        }
+        // never leave a heading stranded above the figure
+        var kk=[].filter.call(body.children,function(x){return x.tagName!=='FIGURE';}), lt=kk[kk.length-1];
+        if(lt&&lt.classList.contains('hg')){body.removeChild(lt);back.unshift(lt);}
+        if(back.length){close();open();for(var q=back.length-1;q>=0;q--)blocks.unshift(back[q]);}
+        continue;
+      }
+      body.appendChild(b); mark(b);
+      if(fits(body))continue;
+      body.removeChild(b);
+      var isP=b.tagName==='P', isFig=b.tagName==='FIGURE';
+      if(isP&&body.children.length){
+        var text=b.textContent, lo=1, hi=text.length, best=0;
+        while(lo<=hi){var mid=(lo+hi)>>1; var cut=goodBreak(text,mid,en); var part=cloneFirst(b,cut); body.appendChild(part); var ok=fits(body); body.removeChild(part); if(ok){best=cut;lo=mid+1;}else hi=mid-1;}
+        var minChars=en?55:36, minRest=en?25:24;
+        if(best>=minChars&&text.length-best>=minRest){
+          var first=cloneFirst(b,best); first.classList.add('split'); body.appendChild(first);
+          var rest=cloneRest(b,best); rest.classList.add('cont');
+          close(); open(); blocks.unshift(rest); continue;
+        }
+      }
+      if(isFig&&body.children.length>1&&!floats.length){ floats.push(b); continue; }
+      // move to next page, carrying a heading that would be stranded
+      var carry=[b], last=body.lastElementChild;
+      if(last&&last.classList.contains('hg')){body.removeChild(last);carry.unshift(last);}
+      if(!body.children.length&&!floats.length&&carry.length===1){ // nothing fits even on an empty page: place anyway
+        body.appendChild(b); mark(b); continue;
+      }
+      close(); open();
+      for(var k=carry.length-1;k>=0;k--)blocks.unshift(carry[k]);
+    }
+    while(floats.length){close();open();}
+    close();
+    // a short tail page with no figure: pull its text back and let the previous page's figure close the chapter (or section)
+    function fixTail(){
+      var lp=out[out.length-1], pp=out[out.length-2];
+      var lb=lp&&lp.querySelector&&lp.querySelector('.body'), pb=pp&&pp.querySelector&&pp.querySelector('.body');
+      if(!lb||!pb||lb.querySelector(':scope>figure')||lb.textContent.replace(/\s/g,'').length>=(en?300:120))return;
+      var pf=pb.querySelector(':scope>figure'); if(!pf)return;
+      meas.appendChild(pp); pb.removeChild(pf);
+      var moved=[], ok=true;
+      while(lb.firstElementChild){var x=lb.firstElementChild; pb.appendChild(x); moved.push(x); if(!fits(pb)){ok=false;break;}}
+      if(ok){lb.appendChild(pf);}
+      else{for(var i=moved.length-1;i>=0;i--)lb.insertBefore(moved[i],lb.firstChild); pb.appendChild(pf);}
+      meas.removeChild(pp);
+    }
+    fixTail();
+    // no lonely last line: if the chapter ends with one short paragraph on its own page, bring the block before it along
+    var lp=out[out.length-1], pp=out[out.length-2];
+    var lb=lp&&lp.querySelector&&lp.querySelector('.body'), pb=pp&&pp.querySelector&&pp.querySelector('.body');
+    if(lb&&pb&&lb.children.length===1&&lb.textContent.trim().length<60){
+      var kids=[].filter.call(pb.children,function(x){return x.tagName!=='FIGURE';}), last=kids[kids.length-1];
+      if(last&&kids.length>1&&!last.classList.contains('split')&&!last.classList.contains('hg'))lb.insertBefore(last,lb.firstChild);
+    }
+    if(deferredPages.length>1&&out.length%2===0)out.push(blank());
+    while(deferredPages.length)out.push(deferredPages.shift());
+    return out;
+  }
+
+  function decorate(list){
+    list.forEach(function(p,i){
+      p.classList.remove('recto','verso'); p.classList.add(i%2?'verso':'recto');
+      if(!p._ch)return;
+      var rh=p.querySelector('.rh'); if(!rh){rh=document.createElement('div');rh.className='rh';p.appendChild(rh);}
+      var fo=p.querySelector('.folio'); if(!fo){fo=document.createElement('div');fo.className='folio';p.appendChild(fo);}
+      var en=lang()==='en', c=CH[p._ch];
+      var chName=c?c[en?'en':'zh']:'';
+      rh.textContent=i%2?(en?BOOK_EN:BOOK_ZH):chName;
+      fo.textContent=String(i);
+    });
+    // contents page numbers
+    list.forEach(function(p){[].forEach.call(p.querySelectorAll('[data-pg]'),function(s){var k=s.dataset.pg; if(pgMap[k]!=null)s.textContent=String(pgMap[k]);});});
+  }
+
+  function build(){
+    var keepRatio=N?cur/N:0;
+    pgMap={};
+    book.innerHTML='';
+    var list=paginate();
+    if(list.length%2)list.push(blank());
+    decorate(list);
+    pages=list; leaves=[];
+    for(var i=0;i<list.length;i+=2){
+      var l=document.createElement('div'); l.className='leaf';
+      l.appendChild(list[i]); if(list[i+1])l.appendChild(list[i+1]);
+      book.appendChild(l); leaves.push(l);
+    }
+    N=leaves.length;
+    list.forEach(function(p){var d=document.createElement('div');d.className='shade';p.appendChild(d);});
+    ['r','l','tr v','br v','tl v','bl v'].forEach(function(c){var e=document.createElement('div');e.className='edge '+c;book.appendChild(e);});
+    var sp=document.createElement('div');sp.className='spine';sp.innerHTML='<i>'+(lang()==='en'?'<span class="en">'+BOOK_EN+'</span><em>Ling Fan</em>':'<span>'+BOOK_ZH+'</span><em>范凌 著</em>')+'<b>TEZIGN</b></i>';book.appendChild(sp);
+    var sl=document.getElementById('slider'); sl.max=N;
+    document.getElementById('loading').hidden=true;
+    go(Math.round(keepRatio*N));
+  }
+
+  function mmpx(){var t=document.createElement('div');t.style.width='170mm';document.body.appendChild(t);var w=t.getBoundingClientRect().width;t.remove();return w;}
+  // 3D object: leaves stack in depth, edges show the page block, the closed book can be turned in the hand
+  var rx=0, ry=0, tx0=0, ty0=0, drag=null, DZ=0;
+  function depthOf(i){return i<cur?(cur-1-i):(i-cur);}
+  function closed(){return cur===0||cur===N;}
+  function layout(){
+    var narrow=window.innerWidth<720;
+    document.body.classList.toggle('list',narrow);
+    if(narrow){root.style.setProperty('--z',Math.min(1,(document.body.clientWidth-32)/PW));return;}
+    var r=stage.getBoundingClientRect();
+    var s=Math.min((r.width-40)/(PW*2),(r.height-40)/PH)*(closed()?.86:1);
+    var c=cur===0?PW/2:(cur===N?-PW/2:0);
+    var T=N*DZ, zc=closed()?-T/2:0;
+    book.style.transform='translate(-50%,-50%) scale('+s+') translate3d('+(-c)+'px,0,0) translate3d('+c+'px,0,'+zc+'px) rotateX('+(rx+ty0)+'deg) rotateY('+(ry+tx0)+'deg) translate3d('+(-c)+'px,0,'+(-zc)+'px)';
+    var sh=document.getElementById('shadow'), w=(closed()?PW:PW*2)*s*1.05;
+    sh.style.width=w+'px'; sh.style.height=(PH*s*.12)+'px';
+    sh.style.transform='translate(-50%,'+(PH*s*.47)+'px)';
+    stage.classList.toggle('grab',closed());
+    document.getElementById('hint').style.opacity=closed()?1:0;
+  }
+  function placeLeaves(){
+    leaves.forEach(function(l,i){
+      var f=i<cur, z=-depthOf(i)*DZ;
+      if(!l.classList.contains('drag'))l.style.transform='translateZ('+z+'px) rotateY('+(f?-180:0)+'deg)';
+      l.style.zIndex=f?(i+1):(N-i);
+      l.classList.toggle('far',closed()?(i!==0&&i!==N-1):(depthOf(i)>2&&i!==0&&i!==N-1));
+      l.classList.toggle('top',depthOf(i)===0);
+    });
+    var R=(N-cur)*DZ, Lf=cur*DZ;
+    book.querySelectorAll('.edge.r').forEach(function(e){e.style.width=R+'px';});
+    book.querySelectorAll('.edge.tr,.edge.br').forEach(function(e){e.style.height=R+'px';});
+    book.querySelectorAll('.edge.l').forEach(function(e){e.style.width=Lf+'px';});
+    book.querySelectorAll('.edge.tl,.edge.bl').forEach(function(e){e.style.height=Lf+'px';});
+    var sp=book.querySelector('.spine'); if(sp){sp.style.width=(N*DZ)+'px';sp.style.opacity=closed()?1:0;}
+  }
+  function go(k){
+    var was=cur; cur=Math.max(0,Math.min(N,k));
+    if(!closed()){rx=0;ry=0;}
+    else if(was!==cur){rx=6;ry=cur===0?-18:18;}
+    placeLeaves();
+    document.getElementById('prev').disabled=cur===0;document.getElementById('next').disabled=cur===N;
+    document.getElementById('slider').value=cur;
+    var en=lang()==='en', L=cur*2-1, R=cur*2, total=pages.length-1;
+    var txt=cur===0?(en?'Cover':'封面'):(cur===N?(en?'Back cover':'封底'):(en?'pp. ':'第 ')+L+'–'+R+(en?'':' 页'));
+    document.getElementById('where').textContent=txt+' / '+total;
+    document.getElementById('hint').textContent=en?'Drag to turn the book · click to open':'拖动可转动这本书 · 点击打开';
+    layout();
+  }
+  function setLang(l){root.dataset.lang=l;root.lang=l==='en'?'en':'zh-CN';
+    document.getElementById('bZh').setAttribute('aria-pressed',l==='zh');document.getElementById('bEn').setAttribute('aria-pressed',l==='en');
+    document.getElementById('ver').textContent=l==='en'?'Draft · chapter 1 in English':'全书初稿';
+    try{localStorage.setItem('book-lang',l);}catch(e){}
+    if(PW)build();}
+  function setMarks(on){root.classList.toggle('marks',on);document.getElementById('bMarks').setAttribute('aria-pressed',on);}
+
+  document.getElementById('bZh').onclick=function(){setLang('zh');};
+  document.getElementById('bEn').onclick=function(){setLang('en');};
+  document.getElementById('bMarks').onclick=function(){setMarks(!root.classList.contains('marks'));};
+  document.getElementById('prev').onclick=function(){go(cur-1);};
+  document.getElementById('next').onclick=function(){go(cur+1);};
+  document.getElementById('slider').oninput=function(e){go(+e.target.value);};
+  document.addEventListener('keydown',function(e){if(e.target.tagName==='INPUT')return;if(e.key==='ArrowRight'||e.key==='PageDown'){go(cur+1);}else if(e.key==='ArrowLeft'||e.key==='PageUp'){go(cur-1);}else if(e.key==='l'||e.key==='L'){setLang(lang()==='en'?'zh':'en');}});
+  function listMode(){return document.body.classList.contains('list');}
+  stage.addEventListener('pointermove',function(e){
+    if(listMode())return;
+    if(!drag){ // gentle tilt toward the pointer, like holding the book
+      var r=stage.getBoundingClientRect(), mx=(e.clientX-r.left)/r.width-.5, my=(e.clientY-r.top)/r.height-.5;
+      var k=closed()?1:.35; tx0=mx*14*k; ty0=-my*10*k;
+      book.style.transition='transform .5s cubic-bezier(.2,.7,.2,1)'; layout(); return;
+    }
+    var dx=e.clientX-drag.x, dy=e.clientY-drag.y;
+    if(Math.abs(dx)+Math.abs(dy)>4)drag.moved=true;
+    if(drag.mode==='turn'){
+      ry=drag.ry+dx*.45; rx=Math.max(-40,Math.min(40,drag.rx-dy*.3));
+      book.style.transition='none'; layout();
+    }else if(drag.leaf){
+      var w=drag.pw, p=drag.dir>0?Math.max(0,Math.min(1,-dx/(w*1.6))):Math.max(0,Math.min(1,dx/(w*1.6)));
+      drag.p=p; var ang=drag.dir>0?-180*p:-180*(1-p);
+      drag.leaf.style.transform='translateZ(2px) rotateY('+ang+'deg)';
+      var sh=Math.sin(p*Math.PI)*.9;
+      [].forEach.call(drag.leaf.querySelectorAll('.shade'),function(x){x.style.transition='none';x.style.opacity=sh;});
+    }
+  });
+  stage.addEventListener('pointerdown',function(e){
+    if(listMode()||e.button>0)return;
+    var r=book.getBoundingClientRect(), right=e.clientX>r.left+r.width/2;
+    drag={x:e.clientX,y:e.clientY,moved:false,rx:rx,ry:ry,right:right,p:0,pw:r.width/2};
+    if(closed()){drag.mode='turn';stage.classList.add('grabbing');}
+    else{
+      var i=right?cur:cur-1, dir=right?1:-1;
+      if(i>=0&&i<N){drag.leaf=leaves[i];drag.dir=dir;drag.leaf.classList.add('drag');drag.leaf.style.zIndex=N+5;drag.leaf.classList.remove('far');}
+    }
+    try{stage.setPointerCapture(e.pointerId);}catch(_){}
+  });
+  function endDrag(e){
+    if(!drag)return; var d=drag; drag=null; stage.classList.remove('grabbing');
+    if(d.mode==='turn'){
+      book.style.transition='';
+      if(!d.moved){ry=0;rx=0;layout();go(cur===0?1:N-1);}  // click opens the book
+      return;
+    }
+    if(d.leaf){
+      d.leaf.classList.remove('drag');
+      [].forEach.call(d.leaf.querySelectorAll('.shade'),function(x){x.style.transition='';x.style.opacity=0;});
+      if(!d.moved){go(d.dir>0?cur+1:cur-1);return;}
+      go(d.p>.3?(d.dir>0?cur+1:cur-1):cur);
+    }
+  }
+  stage.addEventListener('pointerup',endDrag);
+  stage.addEventListener('pointercancel',endDrag);
+  stage.addEventListener('pointerleave',function(){if(!drag){tx0=0;ty0=0;layout();}});
+  window.addEventListener('resize',layout);
+
+  var l0='zh';try{l0=localStorage.getItem('book-lang')||'zh';}catch(e){}
+  setMarks(true); setLang(l0);
+  PW=mmpx(); PH=PW*240/170; DZ=PW/170*0.32; rx=6; ry=-18;
+  // warm up fonts with all flow text before measuring
+  var warm=document.createElement('div');
+  [].map.call(document.querySelectorAll('template[id^="f-"]'),function(t){return t.id;}).forEach(function(id){var p=newFlowPage('ch1');p.querySelector('.body').appendChild(document.getElementById(id).content.cloneNode(true));warm.appendChild(p);});
+  document.getElementById('measure').appendChild(warm);
+  var started=false;
+  function start(){if(started)return;started=true;document.getElementById('measure').removeChild(warm);build();}
+  if(document.fonts&&document.fonts.ready){document.fonts.ready.then(function(){setTimeout(start,50);});setTimeout(start,4000);}else start();
+  var rb=null;if(document.fonts&&document.fonts.addEventListener)document.fonts.addEventListener('loadingdone',function(){if(!started)return;clearTimeout(rb);rb=setTimeout(build,300);});
+})();
+</script>
+
+</body></html>
